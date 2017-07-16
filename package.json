@@ -1,0 +1,78 @@
+{
+  "author": {
+    "name": "Akash Babu"
+  },
+  "bugs": {
+    "url": "https://github.com/AkashBabu/express-toppings/issues"
+  },
+  "dependencies": {
+    "async": "^2.5.0",
+    "chance": "^1.0.4",
+    "connect-redis": "^3.3.0",
+    "express-session": "^1.14.2",
+    "jwt-simple": "^0.5.1",
+    "logger-switch": "^3.0.1",
+    "moment": "^2.18.1",
+    "mongojs": "^2.4.0",
+    "package.json": "^2.0.1",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "string": "^3.3.3"
+  },
+  "description": "A Nodejs Lib for easy development on server-side scripting",
+  "devDependencies": {
+    "angular": "^1.6.5",
+    "angular-animate": "^1.6.5",
+    "angular-aria": "^1.6.5",
+    "angular-material": "^1.1.4",
+    "angular-messages": "^1.6.5",
+    "angular-route": "^1.6.5",
+    "angular-route-segment": "^1.5.1",
+    "angular-scroll": "^1.0.2",
+    "autoprefixer-loader": "^3.2.0",
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
+    "body-parser": "^1.15.2",
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "css-loader": "^0.28.4",
+    "express": "^4.14.0",
+    "extract-text-webpack-plugin": "^2.1.2",
+    "jquery": "^3.2.1",
+    "mocha": "^3.2.0",
+    "morgan": "^1.8.2",
+    "prismjs": "^1.6.0",
+    "style-loader": "^0.18.2",
+    "webpack": "^3.1.0"
+  },
+  "homepage": "https://github.com/AkashBabu/express-toppings#readme",
+  "keywords": [
+    "server",
+    "helper",
+    "crud",
+    "mongo",
+    "mongodb",
+    "express",
+    "expressjs"
+  ],
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "maintainers": [
+    {
+      "email": "001akashbabu@gmail.com",
+      "name": "akashbabu"
+    }
+  ],
+  "name": "express-toppings",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AkashBabu/express-toppings.git"
+  },
+  "scripts": {
+    "test": "mocha test/**/* --recursive"
+  },
+  "version": "1.0.0"
+}
