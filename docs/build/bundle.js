@@ -65,14 +65,6 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(7);
-module.exports = angular;
-
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports) {
 
 /*
@@ -154,7 +146,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -200,7 +192,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(19);
+var	fixUrls = __webpack_require__(16);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -513,6 +505,14 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(7);
+module.exports = angular;
+
+
+/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -536,23 +536,23 @@ module.exports = 'ngAnimate';
 
 
 __webpack_require__(6);
-__webpack_require__(0);
+__webpack_require__(2);
 __webpack_require__(3);
 __webpack_require__(4);
 __webpack_require__(10);
 __webpack_require__(12);
 // require("angular-scroll")
 
+__webpack_require__(14);
 __webpack_require__(17);
-__webpack_require__(20);
-__webpack_require__(22);
+__webpack_require__(19);
 
 var app = angular.module('app', ['ngAria', 'ngAnimate', 'ngMaterial'
 // , 'duScroll'
 ]);
 
-__webpack_require__(24)(app);
-__webpack_require__(25)(app);
+__webpack_require__(21)(app);
+__webpack_require__(22)(app);
 // require("./app.directives")(app);
 
 /***/ }),
@@ -49225,7 +49225,7 @@ angular.module('ngAnimate', [], function initAngularHelpers() {
 /***/ (function(module, exports, __webpack_require__) {
 
 // Should already be required, here for clarity
-__webpack_require__(0);
+__webpack_require__(2);
 
 // Load Angular and dependent libs
 __webpack_require__(4);
@@ -86078,16 +86078,13 @@ module.exports = g;
 
 
 /***/ }),
-/* 14 */,
-/* 15 */,
-/* 16 */,
-/* 17 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(18);
+var content = __webpack_require__(15);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -86095,7 +86092,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(2)(content, options);
+var update = __webpack_require__(1)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -86112,10 +86109,10 @@ if(false) {
 }
 
 /***/ }),
-/* 18 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)(undefined);
+exports = module.exports = __webpack_require__(0)(undefined);
 // imports
 
 
@@ -86126,7 +86123,7 @@ exports.push([module.i, "/*!\n * AngularJS Material Design\n * https://github.co
 
 
 /***/ }),
-/* 19 */
+/* 16 */
 /***/ (function(module, exports) {
 
 
@@ -86221,13 +86218,13 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 20 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(21);
+var content = __webpack_require__(18);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -86235,7 +86232,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(2)(content, options);
+var update = __webpack_require__(1)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -86252,10 +86249,10 @@ if(false) {
 }
 
 /***/ }),
-/* 21 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)(undefined);
+exports = module.exports = __webpack_require__(0)(undefined);
 // imports
 
 
@@ -86266,13 +86263,13 @@ exports.push([module.i, "/**\n * prism.js default theme for JavaScript, CSS and 
 
 
 /***/ }),
-/* 22 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(23);
+var content = __webpack_require__(20);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -86280,7 +86277,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(2)(content, options);
+var update = __webpack_require__(1)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -86297,21 +86294,21 @@ if(false) {
 }
 
 /***/ }),
-/* 23 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)(undefined);
+exports = module.exports = __webpack_require__(0)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, "html {\n    padding: 0;\n    margin: 0;\n}\n\n.scroll {\n    overflow: auto;\n}\n\n.cursor {\n    cursor: pointer;\n}\n\n.sidenav-list {\n    margin: 0;\n    padding: 0;\n    list-style-type: none;\n}\n\n.sidenav-list.root>li {\n    margin-bottom: 0.3rem;\n    padding-left: 1rem;\n}\n\n.sidenav-list li {\n    cursor: pointer;\n    padding: 0.2rem 0.2rem 0.2rem 0.5rem;\n}\n\n\n.sidenav-list.root {\n    \n}\n\n.sidenav-list.sub-module-list  {\n    box-shadow: 2px 3px 10px -3px gray;\n}\n\n.sidenav-list.method-list {\n    background-color: rgba(224, 213, 213, 0.5);\n}\n\n/*Main Module heading*/\n.sidenav-list.root>li>span {\n    font-size: 130%;\n    font-weight: 500;\n    margin: 0.5rem 0;\n    display: inline-block;\n}\n\n/*Sub-Module Heading*/\n.sidenav-list.sub-module-list>li>span {\n    font-size: 120%;\n    font-weight: 500;\n    margin: 0;\n}\n\n.sidenav-list.method-list>li {\n    font-size: 90%;\n    font-style: italic;\n    color: darkslategrey;\n    font-weight: 400;\n}\n\n.sidenav-list li>span:hover {\n    text-decoration: underline;\n}\n\n.sidenav-list .leaf:hover {\n    background-color: black;\n    color: white;\n}\n\n.module-details {\n    padding: 0 1rem;\n    /*margin: 0 auto;*/\n}\n.module-details .initial {}\n.module-details .initial .desc {}\n\n.module-details .method-list {\n    list-style-type: none;\n    margin: 0;\n    padding: 0;\n}\n\n.module-details .method-list a {\n    display: block; \n    text-decoration: none;\n    padding: 0.3rem 0.75rem;;\n}\n\n.method {\n    margin: 1rem 0;\n    padding: 0 1rem;\n    /*margin: 0 auto;*/\n}\n\n.method .name {\n    font-size: 110%;\n    padding: 0.5rem;\n    margin-top: 0;\n}\n.method .desc {\n    font-size: 90%;\n    color: rgb(58, 61, 66);\n}\n\n.method .param-list {\n    background-color: rgba(180, 182, 186, 0.3);\n}\n\n.method .param-list .param {}\n\n.method .param-list .param .name {\n    font-size: 90%;\n    font-style: italic;\n}\n.method .param-list .param .desc {}\n.method .param-list .param .default {\n    display: inline-block;\n    padding: 0.1rem 0.3rem;\n    border-radius: 0.3rem;\n    background-color: white;\n    font-size: 90%;\n    font-style: italic;\n    color: gray;\n}\n\n.method .return {\n    font-size: 90%;\n}\n\n.method .return .type{\n    font-style: italic;\n}\n.method .return .desc{}\n\n.method .example {\n    margin-top: 1rem;\n}\n\n.method .example .heading {\n    /*margin-top: 1rem;*/\n    font-weight: 500;\n    font-style: italic;\n}\n\n\n.param-list {\n    \n}", ""]);
+exports.push([module.i, "html {\n    padding: 0;\n    margin: 0;\n    zoom: 0.8;\n    -ms-zoom: 0.8;\n    -webkit-zoom: 0.8;\n    /*-moz-transform:  scale(0.8,0.8);*/\n    -moz-transform-origin: left top;   \n}\n\n.scroll {\n    overflow: auto;\n}\n\n.cursor {\n    cursor: pointer;\n}\n\n.sidenav-list {\n    margin: 0;\n    padding: 0;\n    list-style-type: none;\n}\n\n.sidenav-list.root>li {\n    /*margin-bottom: 0.3rem;*/\n    padding-left: 1rem;\n    border-bottom: 1px solid rgb(216, 205, 205);\n}\n\n.sidenav-list.root>li.active {\n    background-color: rgb(216, 205, 205);\n}\n.sidenav-list.root>li:hover {\n    background-color: rgba(216, 205, 205, 0.5);\n}\n\n.sidenav-list li {\n    cursor: pointer;\n    padding: 0.2rem 0.2rem 0.2rem 0.5rem;\n}\n\n/*Main Module heading*/\n.sidenav-list.root>li>span {\n    font-size: 130%;\n    font-weight: 500;\n    margin: 0.5rem 0;\n    display: inline-block;\n}\n\n.module-details {\n    padding: 0 1rem;\n    /*margin: 0 auto;*/\n}\n.module-details .initial {}\n.module-details .initial .desc {}\n\n.module-details .method-list {\n    list-style-type: none;\n    margin: 0;\n    padding: 0;\n}\n\n.module-details .method-list a {\n    display: block; \n    text-decoration: none;\n    padding: 0.3rem 0.75rem;;\n}\n\n.method {\n    margin: 1rem 0;\n    padding: 0 1rem;\n    /*margin: 0 auto;*/\n}\n\n.method .name {\n    font-size: 110%;\n    padding: 0.5rem;\n    margin-top: 0;\n}\n.method .desc {\n    font-size: 90%;\n    color: rgb(58, 61, 66);\n}\n\n.method .param-list {\n    background-color: rgba(180, 182, 186, 0.3);\n}\n\n.method .param-list .param {}\n\n.method .param-list .param .name {\n    font-size: 90%;\n    font-style: italic;\n}\n.method .param-list .param .desc {}\n.method .param-list .param .default {\n    display: inline-block;\n    padding: 0.1rem 0.3rem;\n    border-radius: 0.3rem;\n    background-color: white;\n    font-size: 90%;\n    font-style: italic;\n    color: gray;\n}\n\n.method .return {\n    font-size: 90%;\n}\n\n.method .return .type{\n    font-style: italic;\n}\n.method .return .desc{}\n\n.method .example {\n    margin-top: 1rem;\n}\n\n.method .example .heading {\n    /*margin-top: 1rem;*/\n    font-weight: 500;\n    font-style: italic;\n}\n\n\n.param-list {\n    \n}", ""]);
 
 // exports
 
 
 /***/ }),
-/* 24 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -86322,7 +86319,7 @@ module.exports = function (app) {
         this.content = {
             "Helper": {
                 desc: "Commonly used functions for input validations, salthash etc",
-                initialCode: "\nvar Helper = require(\"server-helper\").Helper;\nvar helper = new Helper();                    \n                    ",
+                initialCode: "\nvar Helper = require(\"express-toppings\").Helper;\nvar helper = new Helper();                    \n                    ",
                 methods: [{
                     id: 'filterKeysInObj',
                     name: 'filterKeysInObj(obj: string, filter: string[], sameObj?: boolean)  => object',
@@ -86547,7 +86544,7 @@ module.exports = function (app) {
             },
             "Response": {
                 desc: 'HTTP Response helper implementation',
-                initialCode: "\nvar HelperResp = require(\"server-helper\").HelperResp;\nvar helperResp = new HelperResp();\n\n// Please note the response format followed in this library is in the form\n{\n    error: true|false,\n    data: {}\n}\n                ",
+                initialCode: "\nvar HelperResp = require(\"express-toppings\").HelperResp;\nvar helperResp = new HelperResp();\n\n// Please note the response format followed in this library is in the form\n{\n    error: true|false,\n    data: {}\n}\n                ",
                 methods: [{
                     id: 'success',
                     name: 'success(res: express.Response, data?: any)',
@@ -86678,7 +86675,7 @@ module.exports = function (app) {
             },
             "Validations": {
                 desc: "Includes common validation functions",
-                initialCode: "\nvar HelperValidate = require('server-helper').HelperValidate;\nvar helperValidate = new HelperValidate()\n\n// These Helper Function are commonly used in form validation along with helper.validateFieldsCb\n                ",
+                initialCode: "\nvar HelperValidate = require('express-toppings').HelperValidate;\nvar helperValidate = new HelperValidate()\n\n// These Helper Function are commonly used in form validation along with helper.validateFieldsCb\n                ",
                 methods: [{
                     id: 'range',
                     name: 'range(data: number, min: number, max: number) => boolean',
@@ -86833,7 +86830,7 @@ module.exports = function (app) {
             },
             "Transformations": {
                 desc: "Common data transformation functions",
-                initialCode: "\nvar HelperTransform = require('server-helper').HelperTransform;\nvar helperTransform = new HelperTransform();\n\n// These function are typically used for transformation in helper.validateFieldsCb\n                ",
+                initialCode: "\nvar HelperTransform = require('express-toppings').HelperTransform;\nvar helperTransform = new HelperTransform();\n\n// These function are typically used for transformation in helper.validateFieldsCb\n                ",
                 methods: [{
                     id: 'toLowerCase',
                     name: 'toLowerCase(data: string) => string',
@@ -86942,7 +86939,7 @@ module.exports = function (app) {
             },
             "MongoDB": {
                 desc: "Common MongoDb operation for CRUD",
-                initialCode: "\nvar HelperMongo = require('server-helper').HelperMongo;\nvar helperMongo = new HelperMongo(connStr);\n                ",
+                initialCode: "\nvar HelperMongo = require('express-toppings').HelperMongo;\nvar helperMongo = new HelperMongo(connStr);\n                ",
                 methods: [{
                     id: 'validateExistence',
                     name: 'validateExistence(collName: string, validate: any, cb: Function)',
@@ -87253,7 +87250,7 @@ module.exports = function (app) {
             },
             "CRUD": {
                 desc: "Create standard CRUD APIs",
-                initialCode: "\nvar CRUD = require('server-helper').Crud;\nfunction create() {\n    return (req, res, next) => {\n        // Some Operation\n    }\n}\nvar user = {\n    create: create(),\n    get: get(),\n    list: list(),\n    update: update(),\n    remove: remove()\n}            \n\nvar router = express.Router();\n\nrouter.use(\"/user\", new CRUD(user));\n\n// The above line would create 5 APIs as follows\n// POST /user/ -- user.create\n// GET /user/:id -- user.get\n// GET /user/ -- user.list\n// PUT /user/:id -- user.update\n// DELETE /user/:id -- user.remove\n                "
+                initialCode: "\nvar CRUD = require('express-toppings').Crud;\nfunction create() {\n    return (req, res, next) => {\n        // Some Operation\n    }\n}\nvar user = {\n    create: create(),\n    get: get(),\n    list: list(),\n    update: update(),\n    remove: remove()\n}            \n\nvar router = express.Router();\n\nrouter.use(\"/user\", new CRUD(user));\n\n// The above line would create 5 APIs as follows\n// POST /user/ -- user.create\n// GET /user/:id -- user.get\n// GET /user/ -- user.list\n// PUT /user/:id -- user.update\n// DELETE /user/:id -- user.remove\n                "
             },
             // "CRUD-Handlers": {
             //     desc: "",
@@ -87276,7 +87273,7 @@ module.exports = function (app) {
             // },
             "Session-JWT": {
                 desc: "JWT implementation on express",
-                initialCode: "\nvar JWT = require(\"server-helper\").Session.JWT\nvar options = {\n    collName: \"users\", // users collection\n    connStr: 'jwt_test', // MongoDB connection string\n    secret: 'secret',\n    validity: 1, // In days\n    login?: (body, cb) => { cb(null, user) },\n    register?: (body, cb) => { cb(null, user) },\n    validate?: (whiteList?: string | string[], cb) => { cb(err, user) }\n}\nvar jwt = new JWT(options, true);\n\napp.post(\"/login\", jwt.login())\napp.post(\"/register\", jwt.register())\napp.use(jwt.validate())\n\n// all other authenticated routes follow this\n                ",
+                initialCode: "\nvar JWT = require(\"express-toppings\").Session.JWT\nvar options = {\n    collName: \"users\", // users collection\n    connStr: 'jwt_test', // MongoDB connection string\n    secret: 'secret',\n    validity: 1, // In days\n    login?: (body, cb) => { cb(null, user) },\n    register?: (body, cb) => { cb(null, user) },\n    validate?: (whiteList?: string | string[], cb) => { cb(err, user) }\n}\nvar jwt = new JWT(options, true);\n\napp.post(\"/login\", jwt.login())\napp.post(\"/register\", jwt.register())\napp.use(jwt.validate())\n\n// all other authenticated routes follow this\n                ",
                 methods: [{
                     id: 'login',
                     name: 'login() => ExpressMiddleware',
@@ -87311,7 +87308,7 @@ module.exports = function (app) {
             },
             "Session-Cookie": {
                 desc: "Cookie Session implementation in Express",
-                initialCode: "\nvar Cookie = require('server-helper').Session.Cookie;\n\ninterface ICookieOptions {\n    collName: string;\n    connStr: string;\n    login: IPassportOptions;\n    register: IPassportOptions;\n    cookie: Object;\n    secret: string;\n    redisStore: Object;\n    passportSerializer?: (user, cb) => void;\n    passportDeserializer?: (userId, cb) => void;\n    passportLogin?: (req, email, passport, cb) => void;\n    passportRegister?: (req, email, passport, cb) => void;\n}\n\nvar options: ICookieOptions = {\n    collName: 'users', // user collection name\n    connStr: 'test', // mongoDB connection string\n    login: { // Passport Login options\n        successRedirect: '/index.html',\n        failureRedirect: '/login.html',\n        failureFlash: flash\n    },\n    register: { // Passport Register options\n        successRedirect: '/index.html',\n        failureRedirect: '/register.html',\n        failureFlash: flash\n    },\n    cookie: { // express-session cookie options\n        maxAge: 1000 * 60 * 60 * 24,\n        sameSite: true,\n    },\n    secret: 'secret',\n    redisStore: { // Connect-redis connection options\n        ttl: 1000 * 60 * 60 * 24,\n        host: \"localhost\",\n        port: 6379,\n        prefix: \"sess:\"\n    }\n}\n// if you wish to have custom logic for passport local-strategy then you must specify options.passportSerializer, options.passportDeserializer, options.passportLogin and options.passportRegister functions. These function signature are similar to that of passport functions\n\nvar passport = require(\"passport\");\nvar cookie = new Cookie(options);\nvar app = express();\n\n// this order has to be maintained\ncookie.configurePassport(passport);\ncookie.configureSession(app)\n\napp.use(cookie.validate(['/login.html', '/register.html', {method: 'POST', url: '/login'}, '/register'], '/portal/login'))\n\napp.post('/login', cookie.login());\napp.post('/register', cookie.register());\n\napp.get(\"/logout\", cookie.logout());\n                ",
+                initialCode: "\nvar Cookie = require('express-toppings').Session.Cookie;\n\ninterface ICookieOptions {\n    collName: string;\n    connStr: string;\n    login: IPassportOptions;\n    register: IPassportOptions;\n    cookie: Object;\n    secret: string;\n    redisStore: Object;\n    passportSerializer?: (user, cb) => void;\n    passportDeserializer?: (userId, cb) => void;\n    passportLogin?: (req, email, passport, cb) => void;\n    passportRegister?: (req, email, passport, cb) => void;\n}\n\nvar options: ICookieOptions = {\n    collName: 'users', // user collection name\n    connStr: 'test', // mongoDB connection string\n    login: { // Passport Login options\n        successRedirect: '/index.html',\n        failureRedirect: '/login.html',\n        failureFlash: flash\n    },\n    register: { // Passport Register options\n        successRedirect: '/index.html',\n        failureRedirect: '/register.html',\n        failureFlash: flash\n    },\n    cookie: { // express-session cookie options\n        maxAge: 1000 * 60 * 60 * 24,\n        sameSite: true,\n    },\n    secret: 'secret',\n    redisStore: { // Connect-redis connection options\n        ttl: 1000 * 60 * 60 * 24,\n        host: \"localhost\",\n        port: 6379,\n        prefix: \"sess:\"\n    }\n}\n// if you wish to have custom logic for passport local-strategy then you must specify options.passportSerializer, options.passportDeserializer, options.passportLogin and options.passportRegister functions. These function signature are similar to that of passport functions\n\nvar passport = require(\"passport\");\nvar cookie = new Cookie(options);\nvar app = express();\n\n// this order has to be maintained\ncookie.configurePassport(passport);\ncookie.configureSession(app)\n\napp.use(cookie.validate(['/login.html', '/register.html', {method: 'POST', url: '/login'}, '/register'], '/portal/login'))\n\napp.post('/login', cookie.login());\napp.post('/register', cookie.register());\n\napp.get(\"/logout\", cookie.logout());\n                ",
                 methods: [{
                     id: 'login',
                     name: 'login() => Express Middleware',
@@ -87339,7 +87336,7 @@ module.exports = function (app) {
 };
 
 /***/ }),
-/* 25 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

@@ -2,7 +2,7 @@
 <html lang="en" ng-app="app">
 
     <head>
-        <title>Server-Helper</title>
+        <title>Express-Toppings</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
@@ -12,13 +12,13 @@
     <body layout="row" ng-cloak ng-controller="appCtrl as vm">
         <div md-whiteframe="5" flex=80 flex-gt-sm="20" layout="column" layout-align="start center" class="scroll side-nav" ng-show="vm.showSidenav">
             <md-toolbar class="md-primary" layout-align="center center">
-                <span class="md-display-1">Server-Helper</span>
+                <span class="md-display-1">Express-Toppings</span>
             </md-toolbar>
 
             <md-content flex layout-fill style="border-right: 1px solid khaki;">
                 <ul class="sidenav-list root">
-                    <li ng-repeat="(heading, info) in vm.content" ng-init="info.showMenu = false">
-                        <span ng-click="vm.changeContent(heading)" ng-bind="heading"></span>
+                    <li ng-repeat="(heading, info) in vm.content" ng-init="info.showMenu = false" ng-class="vm.currHeading == heading ? 'active': ''"  ng-click="vm.changeContent(heading)">
+                        <span ng-bind="heading"></span>
                     </li>
                 </ul>
             </md-content>

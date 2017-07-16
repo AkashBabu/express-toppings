@@ -4,7 +4,7 @@ module.exports = function (app) {
             "Helper": {
                 desc: "Commonly used functions for input validations, salthash etc",
                 initialCode: `
-var Helper = require("server-helper").Helper;
+var Helper = require("express-toppings").Helper;
 var helper = new Helper();                    
                     `,
                 methods: [
@@ -369,7 +369,7 @@ helper.verifySaltHash(salted, password, 10) // returns true
             "Response": {
                 desc: 'HTTP Response helper implementation',
                 initialCode: `
-var HelperResp = require("server-helper").HelperResp;
+var HelperResp = require("express-toppings").HelperResp;
 var helperResp = new HelperResp();
 
 // Please note the response format followed in this library is in the form
@@ -582,7 +582,7 @@ db.collection('test').find({}, helperResp.handleResult(res));
             "Validations": {
                 desc: "Includes common validation functions",
                 initialCode: `
-var HelperValidate = require('server-helper').HelperValidate;
+var HelperValidate = require('express-toppings').HelperValidate;
 var helperValidate = new HelperValidate()
 
 // These Helper Function are commonly used in form validation along with helper.validateFieldsCb
@@ -785,7 +785,7 @@ helperValidate.isRegex(name, '^[a-fA-F09]+$') // true
             "Transformations": {
                 desc: "Common data transformation functions",
                 initialCode: `
-var HelperTransform = require('server-helper').HelperTransform;
+var HelperTransform = require('express-toppings').HelperTransform;
 var helperTransform = new HelperTransform();
 
 // These function are typically used for transformation in helper.validateFieldsCb
@@ -926,7 +926,7 @@ helperTransform.stripXss(str) // hello
             "MongoDB": {
                 desc: "Common MongoDb operation for CRUD",
                 initialCode: `
-var HelperMongo = require('server-helper').HelperMongo;
+var HelperMongo = require('express-toppings').HelperMongo;
 var helperMongo = new HelperMongo(connStr);
                 `,
                 methods: [{
@@ -1493,7 +1493,7 @@ db.collection("selectNinM1").insert(data, (err, result) => {
             "CRUD": {
                 desc: "Create standard CRUD APIs",
                 initialCode: `
-var CRUD = require('server-helper').Crud;
+var CRUD = require('express-toppings').Crud;
 function create() {
     return (req, res, next) => {
         // Some Operation
@@ -1541,7 +1541,7 @@ router.use("/user", new CRUD(user));
             "Session-JWT": {
                 desc: "JWT implementation on express",
                 initialCode: `
-var JWT = require("server-helper").Session.JWT
+var JWT = require("express-toppings").Session.JWT
 var options = {
     collName: "users", // users collection
     connStr: 'jwt_test', // MongoDB connection string
@@ -1605,7 +1605,7 @@ app.use(jwt.validate())
             "Session-Cookie": {
                 desc: "Cookie Session implementation in Express",
                 initialCode: `
-var Cookie = require('server-helper').Session.Cookie;
+var Cookie = require('express-toppings').Session.Cookie;
 
 interface ICookieOptions {
     collName: string;

@@ -1,6 +1,11 @@
 html {
     padding: 0;
     margin: 0;
+    zoom: 0.8;
+    -ms-zoom: 0.8;
+    -webkit-zoom: 0.8;
+    /*-moz-transform:  scale(0.8,0.8);*/
+    -moz-transform-origin: left top;   
 }
 
 .scroll {
@@ -18,26 +23,21 @@ html {
 }
 
 .sidenav-list.root>li {
-    margin-bottom: 0.3rem;
+    /*margin-bottom: 0.3rem;*/
     padding-left: 1rem;
+    border-bottom: 1px solid rgb(216, 205, 205);
+}
+
+.sidenav-list.root>li.active {
+    background-color: rgb(216, 205, 205);
+}
+.sidenav-list.root>li:hover {
+    background-color: rgba(216, 205, 205, 0.5);
 }
 
 .sidenav-list li {
     cursor: pointer;
     padding: 0.2rem 0.2rem 0.2rem 0.5rem;
-}
-
-
-.sidenav-list.root {
-    
-}
-
-.sidenav-list.sub-module-list  {
-    box-shadow: 2px 3px 10px -3px gray;
-}
-
-.sidenav-list.method-list {
-    background-color: rgba(224, 213, 213, 0.5);
 }
 
 /*Main Module heading*/
@@ -46,29 +46,6 @@ html {
     font-weight: 500;
     margin: 0.5rem 0;
     display: inline-block;
-}
-
-/*Sub-Module Heading*/
-.sidenav-list.sub-module-list>li>span {
-    font-size: 120%;
-    font-weight: 500;
-    margin: 0;
-}
-
-.sidenav-list.method-list>li {
-    font-size: 90%;
-    font-style: italic;
-    color: darkslategrey;
-    font-weight: 400;
-}
-
-.sidenav-list li>span:hover {
-    text-decoration: underline;
-}
-
-.sidenav-list .leaf:hover {
-    background-color: black;
-    color: white;
 }
 
 .module-details {
