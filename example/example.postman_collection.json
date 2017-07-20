@@ -1,0 +1,257 @@
+{
+	"id": "090978db-b14e-acbc-0ee4-74fea7673640",
+	"name": "example",
+	"description": "",
+	"order": [
+		"46e0ebb4-5f68-817a-754a-c0f80251e09d",
+		"9e2b1790-9376-02f1-fb5b-f070637beb4c",
+		"cf0fa748-2b92-2993-58bc-f24d7ae3c350",
+		"b01b298c-b58b-987e-a615-b3af01696160",
+		"0a19a100-88b6-f3b2-88cf-fe63a039ac7c",
+		"a8fac8d7-27d5-8238-2510-ba3d8ba18b08",
+		"75188ef3-5b70-f40e-497d-ea505e8359fb"
+	],
+	"folders": [],
+	"timestamp": 1500388967002,
+	"owner": "1040862",
+	"public": false,
+	"requests": [
+		{
+			"id": "0a19a100-88b6-f3b2-88cf-fe63a039ac7c",
+			"headers": "x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1OTZmOTBmYjA5MmUyZDQ5YzM3NTQyMDkiLCJleHBpcmVzIjoiMjAxNy0wNy0yMFQxNzowNDowMC40MTlaIn0.5Z9ZMIV67IBWBalZMJvKCl1rXc98yzlWFPgwzo_HwwM\n",
+			"headerData": [
+				{
+					"key": "x-access-token",
+					"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1OTZmOTBmYjA5MmUyZDQ5YzM3NTQyMDkiLCJleHBpcmVzIjoiMjAxNy0wNy0yMFQxNzowNDowMC40MTlaIn0.5Z9ZMIV67IBWBalZMJvKCl1rXc98yzlWFPgwzo_HwwM",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8080/api/books/596f9185fd0f334aa488195e",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1500484003422,
+			"name": "Book - Get",
+			"description": "Get a single Book",
+			"collectionId": "090978db-b14e-acbc-0ee4-74fea7673640",
+			"responses": []
+		},
+		{
+			"id": "46e0ebb4-5f68-817a-754a-c0f80251e09d",
+			"headers": "",
+			"headerData": [],
+			"url": "localhost:8080/public-data",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "090978db-b14e-acbc-0ee4-74fea7673640",
+			"data": null,
+			"dataMode": "params",
+			"name": "PublicData Access",
+			"description": "Accessing a public data without a token",
+			"descriptionFormat": "html",
+			"time": 1500399417036,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "75188ef3-5b70-f40e-497d-ea505e8359fb",
+			"headers": "x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1OTZmOTBmYjA5MmUyZDQ5YzM3NTQyMDkiLCJleHBpcmVzIjoiMjAxNy0wNy0yMFQxNzowNDowMC40MTlaIn0.5Z9ZMIV67IBWBalZMJvKCl1rXc98yzlWFPgwzo_HwwM\n",
+			"headerData": [
+				{
+					"key": "x-access-token",
+					"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1OTZmOTBmYjA5MmUyZDQ5YzM3NTQyMDkiLCJleHBpcmVzIjoiMjAxNy0wNy0yMFQxNzowNDowMC40MTlaIn0.5Z9ZMIV67IBWBalZMJvKCl1rXc98yzlWFPgwzo_HwwM",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8080/api/books/596f9185fd0f334aa488195e",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "DELETE",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1500484053031,
+			"name": "Book - remove",
+			"description": "Remove a book",
+			"collectionId": "090978db-b14e-acbc-0ee4-74fea7673640",
+			"responses": []
+		},
+		{
+			"id": "9e2b1790-9376-02f1-fb5b-f070637beb4c",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8080/login",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "090978db-b14e-acbc-0ee4-74fea7673640",
+			"data": [],
+			"dataMode": "raw",
+			"name": "User-Login",
+			"description": "Login ",
+			"descriptionFormat": "html",
+			"time": 1500399386707,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\"email\": \"test@mail.com\",\n\t\"password\": \"test123\"\n}"
+		},
+		{
+			"id": "a8fac8d7-27d5-8238-2510-ba3d8ba18b08",
+			"headers": "x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1OTZmOTBmYjA5MmUyZDQ5YzM3NTQyMDkiLCJleHBpcmVzIjoiMjAxNy0wNy0yMFQxNzowNDowMC40MTlaIn0.5Z9ZMIV67IBWBalZMJvKCl1rXc98yzlWFPgwzo_HwwM\nContent-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "x-access-token",
+					"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1OTZmOTBmYjA5MmUyZDQ5YzM3NTQyMDkiLCJleHBpcmVzIjoiMjAxNy0wNy0yMFQxNzowNDowMC40MTlaIn0.5Z9ZMIV67IBWBalZMJvKCl1rXc98yzlWFPgwzo_HwwM",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8080/api/books/596f9185fd0f334aa488195e",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "PUT",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1500484043075,
+			"name": "Book - update",
+			"description": "Update an existing Book",
+			"collectionId": "090978db-b14e-acbc-0ee4-74fea7673640",
+			"responses": [],
+			"rawModeData": "{\n        \"_id\": \"596f9185fd0f334aa488195e\",\n        \"name\": \"Book 1 updated\"\n    }"
+		},
+		{
+			"id": "b01b298c-b58b-987e-a615-b3af01696160",
+			"headers": "x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1OTZmOTBmYjA5MmUyZDQ5YzM3NTQyMDkiLCJleHBpcmVzIjoiMjAxNy0wNy0yMFQxNzowNDowMC40MTlaIn0.5Z9ZMIV67IBWBalZMJvKCl1rXc98yzlWFPgwzo_HwwM\n",
+			"headerData": [
+				{
+					"key": "x-access-token",
+					"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1OTZmOTBmYjA5MmUyZDQ5YzM3NTQyMDkiLCJleHBpcmVzIjoiMjAxNy0wNy0yMFQxNzowNDowMC40MTlaIn0.5Z9ZMIV67IBWBalZMJvKCl1rXc98yzlWFPgwzo_HwwM",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8080/api/books?pageNo=1&recordsPerPage=10&search=Boo&searchField=name",
+			"queryParams": [
+				{
+					"key": "pageNo",
+					"value": "1",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "recordsPerPage",
+					"value": "10",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "search",
+					"value": "Boo",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "searchField",
+					"value": "name",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1500483983938,
+			"name": "Books - List",
+			"description": "Get a list of books",
+			"collectionId": "090978db-b14e-acbc-0ee4-74fea7673640",
+			"responses": []
+		},
+		{
+			"id": "cf0fa748-2b92-2993-58bc-f24d7ae3c350",
+			"headers": "x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1OTZmOTBmYjA5MmUyZDQ5YzM3NTQyMDkiLCJleHBpcmVzIjoiMjAxNy0wNy0yMFQxNzowNDowMC40MTlaIn0.5Z9ZMIV67IBWBalZMJvKCl1rXc98yzlWFPgwzo_HwwM\nContent-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "x-access-token",
+					"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1OTZmOTBmYjA5MmUyZDQ5YzM3NTQyMDkiLCJleHBpcmVzIjoiMjAxNy0wNy0yMFQxNzowNDowMC40MTlaIn0.5Z9ZMIV67IBWBalZMJvKCl1rXc98yzlWFPgwzo_HwwM",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8080/api/books",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1500483852179,
+			"name": "Books - Create",
+			"description": "Create a new Book",
+			"collectionId": "090978db-b14e-acbc-0ee4-74fea7673640",
+			"responses": [],
+			"rawModeData": "{\n\t\"name\": \"Book 1\"\n}"
+		}
+	]
+}

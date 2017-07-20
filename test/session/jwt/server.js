@@ -10,6 +10,9 @@ var options = Object.assign({}, config.options);
 options.login = login;
 options.register = register;
 options.validate = validate;
+var fieldChangeOptions = Object.assign({}, config.options);
+fieldChangeOptions.emailField = "mail";
+fieldChangeOptions.passwordField = 'passwd';
 
 var db = require('mongojs')(options.connStr)
 
@@ -40,6 +43,7 @@ function validate(userId, cb) {
 }
 var jwt = new JWT(options, true);
 var jwtDefault = new JWT(config.options, true);
+var jwtNewFields = new JWT(fieldChangeOptions, true);
 
 // app.use(logger('dev'))
 app.use(bodyParser.json())
@@ -47,8 +51,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.post('/login', jwt.login());
 app.post("/login-default", jwtDefault.login())
+app.post("/login-with-new-fields", jwtNewFields.login())
 app.post('/register', jwt.register());
 app.post('/register-default', jwtDefault.register());
+app.post("/register-with-new-fields", jwtNewFields.register())
 
 app.post('/validate', jwt.validate(), (req, res) => {
     res.status(200).send({

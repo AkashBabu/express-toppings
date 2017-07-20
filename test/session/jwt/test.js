@@ -21,6 +21,9 @@ describe("SESSION-JWT", () => {
         }, {
             email: 'test3@mail.com',
             password: helper.saltHash('test123')
+        }, {
+            mail: 'test5@mail.com',
+            passwd: helper.saltHash("test123")
         }]
         db.collection(config.options.collName).insert(users, done);
     })
@@ -83,6 +86,29 @@ describe("SESSION-JWT", () => {
                 res.body.should.be.an('object');
                 res.body.error.should.be.ok;
                 res.body.data.should.be.eql("Please specify a password")
+
+                done();
+            })
+    })
+
+    it("should use the specified field names for email and password", done => {
+        var user = {
+            mail: 'test5@mail.com',
+            passwd: 'test123'
+        }
+
+        request.post("/login-with-new-fields")
+            .send(user)
+            .end((err, res) => {
+                should.not.exist(err);
+                res.should.have.status(200);
+                res.body.should.be.an('object');
+                res.body.error.should.not.be.ok;
+                res.body.data.should.be.an("object")
+                res.body.data.should.include.keys(['token', 'expires', "user"])
+                res.body.data.user.should.be.an("object")
+                res.body.data.user.mail.should.be.eql(user.mail)
+                should.not.exist(res.body.data.user.passwd);
 
                 done();
             })
@@ -173,6 +199,30 @@ describe("SESSION-JWT", () => {
                         done(err ? err : true);
                     }
                 })
+            })
+    })
+
+    it("should use the specified fields for email and password on register", done => {
+        var user = {
+            name: 'test',
+            mail: 'test12@mail.com',
+            passwd: 'test123'
+        }
+        request.post("/register-with-new-fields")
+            .send(user)
+            .end((err, res) => {
+                should.not.exist(err)
+                res.should.have.status(200)
+                res.body.should.be.an("object")
+                res.body.error.should.not.be.ok;
+                res.body.data.should.be.an("object")
+                res.body.data.should.include.keys(['token', 'expires', "user"])
+                res.body.data.user.should.be.an("object")
+                res.body.data.user.mail.should.be.eql(user.mail)
+                should.not.exist(res.body.data.user.passwd);
+                // console.log(res.body.data.user);
+
+                done();
             })
     })
 
