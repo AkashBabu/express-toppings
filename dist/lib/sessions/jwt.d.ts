@@ -8,6 +8,8 @@ export interface IJWTOptions {
     connStr: string;
     secret: string;
     validity: number;
+    emailField?: string;
+    passwordField?: string;
     login?: (user, cb) => void;
     register?: (user, cb) => void;
     validate?: (user, cb) => void;

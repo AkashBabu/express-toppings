@@ -42,12 +42,12 @@ class JWT {
                 // Default Login Handler
                 // expecting email, password fields to be present on req.body
                 this.db.collection(this.options.collName).findOne({
-                    email: req.body.email
+                    [this.options.emailField || "email"]: req.body[this.options.emailField || "email"]
                 }, (err, user) => {
                     if (user) {
                         // this.logger.log('user:', user);
-                        if (this.isDefined(req.body.password)) {
-                            let valid = this.helper.verifySaltHash(user.password, req.body.password);
+                        if (this.isDefined(req.body[this.options.passwordField || "password"])) {
+                            let valid = this.helper.verifySaltHash(user[this.options.passwordField || "password"], req.body[this.options.passwordField || "password"]);
                             loginCb.call(this)(err, valid ? user : false);
                         }
                         else {
@@ -89,7 +89,7 @@ class JWT {
                 // Default registration handler
                 // expects email, password to be present in req.body
                 this.db.collection(this.options.collName).findOne({
-                    email: req.body.email
+                    [this.options.emailField || "email"]: req.body[this.options.emailField || "email"]
                 }, (err, user) => {
                     if (err) {
                         this.logger.error(err);
@@ -102,8 +102,8 @@ class JWT {
                         }
                         else {
                             // We are good
-                            if (this.isDefined(req.body.password)) {
-                                req.body.password = this.helper.saltHash(req.body.password);
+                            if (this.isDefined(req.body[this.options.passwordField || "password"])) {
+                                req.body[this.options.passwordField || "password"] = this.helper.saltHash(req.body[this.options.passwordField || "password"]);
                                 // } else if (this.isDefined(req.body.pwd)) {
                                 //     req.body.pwd = this.helper.saltHash(req.body.pwd);
                             }
@@ -211,6 +211,7 @@ class JWT {
             expires: expires
         };
         let encToken = jwt.encode(token, this.options.secret, "HS256");
+        delete user[this.options.passwordField || "password"];
         res.status(200).send({
             error: false,
             data: {
