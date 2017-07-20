@@ -10,7 +10,7 @@ var helper = new Helper();
                 methods: [
                     {
                         id: 'filterKeysInObj',
-                        name: 'filterKeysInObj(obj: string, filter: string[], sameObj?: boolean)  => object',
+                        name: 'filterKeysInObj(obj: string, filter: string[], sameObj?: boolean) => object',
                         nav: 'filterKeysInObj',
                         returns: {
                             type: 'object',
@@ -44,7 +44,7 @@ console.log(obj) // {c: 1}
                     },
                     {
                         id: 'retainKeysInObj',
-                        name: 'retainKeysInObj(obj: string, retain: string[], sameObj?: boolean)',
+                        name: 'retainKeysInObj(obj: string, retain: string[], sameObj?: boolean) => object',
                         nav: 'retainKeysInObj',
                         return: {
                             type: 'object',
@@ -1542,14 +1542,25 @@ router.use("/user", new CRUD(user));
                 desc: "JWT implementation on express",
                 initialCode: `
 var JWT = require("express-toppings").Session.JWT
-var options = {
+interface IJWTOptions {
+    collName: string;
+    connStr: string;
+    secret: string;
+    validity: number;
+    emailField?: string;
+    passwordField?: string;
+    login?: (user, cb) => void;
+    register?: (user, cb) => void;
+    validate?: (user, cb) => void;
+}
+
+var options: IJWTOptions = {
     collName: "users", // users collection
     connStr: 'jwt_test', // MongoDB connection string
     secret: 'secret',
     validity: 1, // In days
-    login?: (body, cb) => { cb(null, user) },
-    register?: (body, cb) => { cb(null, user) },
-    validate?: (whiteList?: string | string[], cb) => { cb(err, user) }
+    emailField: "email",
+    passwordField: "password",
 }
 var jwt = new JWT(options, true);
 
@@ -1646,7 +1657,9 @@ var options: ICookieOptions = {
         prefix: "sess:"
     }
 }
-// if you wish to have custom logic for passport local-strategy then you must specify options.passportSerializer, options.passportDeserializer, options.passportLogin and options.passportRegister functions. These function signature are similar to that of passport functions
+// if you wish to have custom logic for passport local-strategy then
+// you must specify options.passportSerializer, options.passportDeserializer, options.passportLogin and options.passportRegister functions. 
+// These function signature are similar to that of passport functions
 
 var passport = require("passport");
 var cookie = new Cookie(options);

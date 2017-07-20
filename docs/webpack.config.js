@@ -24,28 +24,11 @@ module.exports = {
             }, {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader', 'autoprefixer-loader']
-                // use: [{
-                //     // loader: 'style-loader'
-                //     // loader: ExtractTextPlugin.extract(['css-loader', 'autoprefixer-loader'])
-                //     loader: ExtractTextPlugin.extract({
-                //         fallback: 'style-loader',
-                //         use: ['css-loader', 'autoprefixer-loader']
-                //     })
-                // }, {
-                //     loader: 'css-loader'
-                // }]
+            }, {
+                test: /\.html$/,
+                use: 'file-loader'
             }
         ],
-        loaders: [
-            {
-                test: /\.css$/,
-                // loader: ExtractTextPlugin('style-loader', 'css-loader')
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: 'css-loader!autoprefixer-loader'
-                })
-            }
-        ]
     },
     resolve: {
         extensions: ['.js', '.css', '.html']

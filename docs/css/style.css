@@ -35,6 +35,13 @@ html {
     background-color: rgba(216, 205, 205, 0.5);
 }
 
+.sidenav-list.root>li.api-list {
+    padding-left: 3rem;
+    font-size: 90%;
+    border-bottom: none;
+    background-color: rgba(216, 205, 205, 0.2);
+}
+
 .sidenav-list li {
     cursor: pointer;
     padding: 0.2rem 0.2rem 0.2rem 0.5rem;
@@ -126,4 +133,19 @@ html {
 
 .param-list {
     
+}
+
+.note {
+    background-color: lightgray;
+    font-style: italic;
+    font-size: 105%;
+    padding: 0.5em;
+}
+
+.change-list {
+    list-style-type: none;
+    padding: 0;
+}
+.change-list li {
+    padding: 0.5em;
 }

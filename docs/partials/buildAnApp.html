@@ -1,0 +1,216 @@
+<md-toolbar md-colors="::{background: 'default-pink-50-0.9'}" layout="row" layout-align="space-between center">
+    <md-icon flex md-colors="::{color: 'default-grey-900-1'}" class="material-icons cursor" ng-click="vm.toggleSidenav()">menu</md-icon>
+    <div flex layout="row" layout-align="center center">
+        <span class="md-headline">Building an App with express-toppings</span>
+    </div>
+    <span flex>&nbsp;</span>
+</md-toolbar>
+
+<md-content class="module-details" layout-fill layout-align="start space-around" flex>
+    <p>
+        Create a JWT enabled Expressjs App within 10mins!!.
+        <br> In here we explain on how to use this library along with an example of "JWT Application using Expressjs"
+        <br> The entire example presented below is present at this <a href="https://github.com/AkashBabu/express-toppings/tree/master/example"
+            target="_blank">link</a>
+    </p>
+    <md-divider></md-divider>
+    <span class="md-headline">Sessions</span><br>
+    <p>
+        Currently JWT and Cookies Session has been implemented in express-toppings. But for the example we will be using/demonstrating
+        only JWT.
+    </p>
+    <span class="md-title">JWT</span><br>
+    <pre><code class="language-javascript">
+var express = require("express");
+var toppings = require("express-toppings");
+var bodyParser = require("body-parser")
+
+var app = express();
+
+var JWT = toppings.Session.JWT;
+
+// JWT Options
+var options = {
+    collName: 'users', // user collection name
+    connStr: "test", // MongoDB connection string
+    secret: 'secret',
+    validity: 1, // In days
+}
+var jwt = new JWT(options);
+
+// This is very important
+app.use(bodyParser.json());
+
+app.post("/login", jwt.login())
+app.post("/register", jwt.register())
+
+// Specify all Urls which could be accessed without Logging in.
+var whitelistUrl = [{ method: "GET", url: "/public-data" }];
+app.use(jwt.validate(whitelistUrl));
+        </code></pre>
+    <p>
+        Just the above code is sufficient to enable JWT on Expressjs application.
+        <br> Please note that the login() and register() middlewares depend on req.body, which is set by bodyParser middleware.
+        <br> So make sure that bodyParser middleware is used before login() and register() middlewares. <br>
+    </p>
+    <pre><code class="language-javascript">
+// Register Request
+{
+    "name": "Test User",
+	"email": "test@mail.com",
+	"password": "test123"
+}
+
+// Login Request  
+{
+	"email": "test@mail.com",
+	"password": "test123"
+} 
+
+        
+// Response for valid login/register:
+{
+    "error": false,
+    "data": {
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI1OTZmOTBmYjA5MmUyZDQ5YzM3NTQyMDkiLCJleHBpcmVzIjoiMjAxNy0wNy0yMVQwODozNzoyOS4xNzNaIn0.Q0XfZTi3LAAUSJ0Q6WUqJG61WMLXIQlC9ON5ICPlGeM",
+        "expires": "2017-07-21T08:37:29.173Z",
+        "user": {
+            "_id": "596f90fb092e2d49c3754209",
+            "email": "test@mail.com",
+            "name": "Test User"
+        }
+    }
+}    
+        </code></pre>
+    <p>
+        Optionally you may send any other information while registering a User like address, phone etc. And the same information
+        except password will be returned as user in the response.
+        <br> Also note that the request fields email/password can be configured in JWTOptions
+    </p>
+
+    <!--<span class="md-title">Cookies</span><br>
+    <p>
+
+    </p>-->
+
+    <md-divider></md-divider>
+    <span class="md-headline">Create REST APIs for Books</span><br>
+    <p>
+        Basic REST APIs with express-toppings is just a liner or little extra lines of code which involves input validations or custom
+        logic
+    </p>
+    <span class="md-title">Create - New Entry in the collection</span><br>
+    <pre><code class="language-javascript">
+app.post("/api/books", (req, res) => {
+    var body = req.body;
+
+    // For a complete list of possibilities please take a look at a API documentation
+    var validations = [{
+        name: 'name',
+        type: 'string',
+        validate: helperValidate.isName,
+        validateErrMsg: 'Name can contain only a-z, A-Z, 0-9',
+        errMsg: 'Name is required'
+    }]
+
+    helper.validateFieldsCb(body, validations, true, (err) => {
+        if (err) {
+            helperResp.failed(res, err);
+        } else {
+            db.collection(collName).insert(body, helperResp.handleResult(res));
+        }
+    })
+
+}
+        </code></pre>
+    <p>
+        While creating a new Entry in the collection, we typically validate the received information and then store it into db, which
+        is as shown above
+    </p>
+    <span class="md-title">List - get a list of paginated documents from the collection</span>
+    <pre><code class="language-javascript">
+ app.get("/api/books", (req, res) => {
+
+    // Just the below line will support pagination, sorting, search, project fields and filter(match query)
+    // for further details please look at Api documentation
+    helperMongo.getList(collName, req.query, helperResp.handleResult(res));
+})        
+        </code></pre>
+    <p>
+        Getting a list of entries may sometimes involve retrieving all the entries or page-by-page (pagination).
+        <br> The getList() api supports both of them.
+        <br> When recordsPerPage is sent as a query params, then the entries count in the response is restricted, if not
+        then all the entries are sent.
+    </p>
+    <p class="note">
+        <b>To implement pagination client can make use of the following Query params:</b>
+        <br> &nbsp;&nbsp; <i>pageNo</i> - Page Number
+        <br> &nbsp;&nbsp; <i>recordsPerPage</i> - Number of entries per page
+        <br> &nbsp;&nbsp; <i>search</i> - Search Text
+        <br> &nbsp;&nbsp; <i>searchField</i> - Field name on which search has to be used
+        <br> &nbsp;&nbsp; <i>sort</i> - Sort the entries. ex: name/-name
+        <br> &nbsp;&nbsp; <i>query</i> - MongoDb find() query object ex: {address.city: 'abcd'}
+        <br> &nbsp;&nbsp; <i>project</i> - MongoDB Project fields ex: {name: 1, age: 1, email: 1}
+    </p>
+    <span class="md-title">Get - get a single document from collection</span>
+    <pre><code class="language-javascript">
+app.get("/api/books/:id", (req, res) => {
+    helperMongo.getById(collName, req.params.id, helperResp.handleResult(res));
+})        
+        </code></pre>
+    <p>
+        Get an Entry in a collection by its _id. Here you may notice that path param.id will be a string which the library will convert
+        into ObjectId.
+        <br> Later support will be added to specify _id field in an entry.
+    </p>
+    <span class="md-title">Update - updates a single document in the collection</span>
+    <pre><code class="language-javascript">
+ app.put("/api/books/:id", (req, res) => {
+    helperMongo.update(collName, req.body, ["password"], helperResp.handleResult(res));
+})        
+        </code></pre>
+    <p>
+        Updates all the fields in Request body except for the fields specified in excludeFields (3rd parameter).
+    </p>
+    <p class="note">
+        Request body must include _id.
+    </p>
+    <span class="md-title">Remove - Delete a single document in the collection</span>
+    <pre><code class="language-javascript">
+app.delete("/api/books/:id", (req, res) => {
+    helperMongo.remove(collName, req.params.id, true, helperResp.handleResult(res));
+})        
+        </code></pre>
+    <p>
+        Removes document that matches the given _id in path param.id, if you would desire to retain the document but differentiate
+        from the rest of the data, then you should set the 3rd parameter to <i>false</i>, which would set <i>isDeleted</i>        flag on the document to true. It also sets delTime on the document/entry indicating delete time of the document.
+    </p>
+
+    <md-divider></md-divider>
+    <span class="md-headline">CRUD</span>
+    <p>
+        If you are tired of writing the above code to create same sort of APIs for a standard CRUD Operation, then here is a shortcut
+        for that.
+    </p>
+    <pre><code class="language-javascript"> 
+var Book = {
+    create: createHandler,
+    get: getHandler,
+    list: listHandler,
+    update: updateHandler,
+    remove: removeHandler
+}
+
+var Crud = require("express-toppings").Crud;
+var BookCrud = new Crud(Book);
+
+app.use("/api/books", BookCrud);
+
+// The above line would create 5 APIs as follows
+// POST /api/books/ -- Book.create
+// GET /api/books/:id -- Book.get
+// GET /api/books/ -- Book.list
+// PUT /api/books/:id -- Book.update
+// DELETE /api/books/:id -- Book.remove
+        </code></pre>
+</md-content>

@@ -3,19 +3,52 @@ module.exports = function (app) {
         .value('duScrollDuration', 2000)
         .value('duScrollOffset', 30)
 
-    app.controller("appCtrl", ["$mdSidenav", "$mdMedia", "$scope", "$document", "$timeout", "contentService", function ($mdSidenav, $mdMedia, $scope, $document, $timeout, contentService) {
+    app.controller("navCtrl", ['$mdMedia', '$scope', '$rootScope', '$location', "contentService", function ($mdMedia, $scope, $rootScope, $location, contentService) {
         var vm = this;
+        $rootScope.showSidenav = $mdMedia("gt-sm");
 
         vm.content = contentService.content;
 
-        vm.showSidenav = $mdMedia("gt-sm");
+        vm.changeLocation = (location) => {
+            $location.path(location);
+        }
+
+        // Watch if the screen has been resized and Show/Hide the sidenav accordingly
+        $scope.$watch(() => {
+            return !$mdMedia("gt-sm")
+        }, (newVal) => {
+            if (newVal) {
+                $rootScope.showSidenav = false;
+            } else {
+                $rootScope.showSidenav = true;
+            }
+        })
+
+
+    }])
+
+    app.controller("introductionCtrl", ["$rootScope", function ($rootScope) {
+        var vm = this;
+        vm.toggleSidenav = () => {
+            $rootScope.showSidenav = !$rootScope.showSidenav;
+        }
+    }])
+
+    app.controller("apiCtrl", ["$mdMedia", "$rootScope", "$timeout", "$routeSegment", "$anchorScroll", "contentService", function ($mdMedia, $rootScope, $timeout, $routeSegment, $anchorScroll, contentService) {
+        var vm = this;
+
+        vm.content = contentService.content;
 
         vm.isString = (data) => {
             return typeof data == 'string';
         }
 
         vm.toggleSidenav = () => {
-            vm.showSidenav = !vm.showSidenav;
+            $rootScope.showSidenav = !$rootScope.showSidenav;
+        }
+
+        vm.goto = (id) => {
+            $anchorScroll(id);
         }
 
         vm.changeContent = (heading) => {
@@ -65,27 +98,28 @@ module.exports = function (app) {
             }
         }
 
-        // vm.navigateTo = (location) => {
-        //     console.log('navigating to:', location);
-        //     $timeout(() => {
-        //         var navEl = angular.element(document.getElementById(location));
+        vm.changeContent($routeSegment.$routeParams.module || "Helper");
+    }])
 
-        //         $document.duScrollToElement(navEl, 30, 1000);
-        //         // $document.scrollToElementAnimated(navEl);
-        //     }, 10)
-        // }
+    app.controller("buildAnAppCtrl", ["$rootScope", "$timeout", function ($rootScope, $timeout) {
+        var vm = this;
+        vm.toggleSidenav = () => {
+            $rootScope.showSidenav = !$rootScope.showSidenav;
+        }
 
-        $scope.$watch(() => {
-            return !$mdMedia("gt-sm")
-        }, (newVal) => {
-            if (newVal) {
-                vm.showSidenav = false;
-            } else {
-                vm.showSidenav = true;
-            }
+        $timeout(() => {
+            Prism.highlightAll();
         })
+    }])
 
+    app.controller("changeLogCtrl", ["$rootScope", "$timeout", function ($rootScope, $timeout) {
+        var vm = this;
+        vm.toggleSidenav = () => {
+            $rootScope.showSidenav = !$rootScope.showSidenav;
+        }
 
-        vm.changeContent("Helper")
+        $timeout(() => {
+            Prism.highlightAll();
+        })
     }])
 }

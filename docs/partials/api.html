@@ -1,0 +1,60 @@
+<md-toolbar md-colors="::{background: 'default-pink-50-0.9'}" layout="row" layout-align="space-between center">
+    <md-icon flex md-colors="::{color: 'default-grey-900-1'}" class="material-icons cursor" ng-click="vm.toggleSidenav()">menu</md-icon>
+    <div flex layout="row" layout-align="center center">
+        <span class="md-headline" ng-bind="vm.currHeading"></span>
+    </div>
+    <span flex>&nbsp;</span>
+</md-toolbar>
+
+<md-content class="module-details" layout-fill layout="column" layout-align="start space-around" flex>
+
+    <!--Initialisation Code-->
+    <div class="initial">
+        <p class="desc" ng-bind="vm.currContent.desc"></p>
+        <pre><code class="language-javascript"  ng-bind="vm.currContent.initialCode"></code></pre>
+    </div>
+
+    <!--Method links-->
+    <span class="md-headline" ng-if="vm.currContent.methods">Methods</span>
+    <ul class="method-list" ng-if="::vm.currContent.methods">
+        <li du-scrollspy="{{method.id}}" ng-repeat="method in vm.currContent.methods">
+            <a href="javascript:void(0)" ng-click="vm.goto(method.id)">{{method.nav}}</a>
+        </li>
+    </ul>
+
+    <!--Method Desc-->
+    <div class="method" md-whiteframe="2" ng-repeat="method in vm.currContent.methods" id="{{method.id}}">
+
+        <md-subheader class="name" md-colors="::{background: 'default-blue-A400-0.8'}" ng-bind="method.name"></md-subheader>
+        <p class="desc" ng-bind="method.desc"></p>
+
+        <div class="param-list" ng-if="method.params" layout="column" layout-align="start start" layout-padding>
+            Params:
+            <span class="param" ng-repeat="param in method.params">
+                    <span class="name" >{{param.name}}<span ng-if="::vm.getType(param)"> ({{vm.getType(param)}})</span></span>-
+            <span class="desc">{{vm.getDesc(param)}}</span>
+            <span class="default" ng-if="::param.default">Defaults to {{param.default}}</span>
+            </span>
+        </div>
+
+        <div class="return" ng-if="::!!method.return">
+            Returns:
+            <span class="type" ng-bind="method.return.type"></span> -
+            <span class="desc" ng-bind="method.return.desc"></span>
+        </div>
+
+        <div class="example">
+            <span class="heading">Examples:</span>
+            <span ng-switch="::vm.isString(method.example)">
+                        <span ng-switch-when="true">
+                            <!--<js-code ng-bind="method.example"></js-code>-->
+                            <pre><code class="language-javascript"  ng-bind="method.example"></code></pre>
+                        </span>
+            <span ng-switch-when="false">
+                            <pre ng-repeat="example in method.example"><code class="language-javascript" ng-bind="example"></code></pre>
+                        </span>
+            </span>
+        </div>
+
+    </div>
+</md-content>
