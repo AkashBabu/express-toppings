@@ -11,7 +11,6 @@ var request = chai.request(require("./server"));
 
 describe("SESSION-JWT", () => {
     before((done) => {
-        // db.dropDatabase(done)
         var users = [{
             email: "test1@mail.com",
             pwd: 'test123'
