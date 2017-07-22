@@ -136,7 +136,8 @@ html {
 }
 
 .note {
-    background-color: lightgray;
+    border-radius: 1em;
+    background-color: rgba(100, 100, 100, 0.13);
     font-style: italic;
     font-size: 105%;
     padding: 0.5em;
@@ -148,4 +149,9 @@ html {
 }
 .change-list li {
     padding: 0.5em;
+}
+
+p {
+    line-height: 1.5em;
+    word-spacing: 0.1em;
 }
