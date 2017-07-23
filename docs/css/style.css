@@ -31,7 +31,7 @@ html {
 .sidenav-list.root>li.active {
     background-color: rgb(216, 205, 205);
 }
-.sidenav-list.root>li:hover {
+.sidenav-list.root>li:hover:not(.active) {
     background-color: rgba(216, 205, 205, 0.5);
 }
 
@@ -39,7 +39,10 @@ html {
     padding-left: 3rem;
     font-size: 90%;
     border-bottom: none;
-    background-color: rgba(216, 205, 205, 0.2);
+    background-color: rgba(165, 165, 165, 0.2);
+}
+.sidenav-list.root>li.api-list.active {
+    background-color: rgb(176, 196, 226);
 }
 
 .sidenav-list li {

@@ -3,7 +3,7 @@ module.exports = function (app) {
         .value('duScrollDuration', 2000)
         .value('duScrollOffset', 30)
 
-    app.controller("navCtrl", ['$mdMedia', '$scope', '$rootScope', '$location', "contentService", function ($mdMedia, $scope, $rootScope, $location, contentService) {
+    app.controller("navCtrl", ['$mdMedia', '$scope', '$rootScope', '$location', "contentService", "$routeSegment", function ($mdMedia, $scope, $rootScope, $location, contentService, $routeSegment) {
         var vm = this;
         $rootScope.showSidenav = $mdMedia("gt-sm");
 
@@ -11,6 +11,18 @@ module.exports = function (app) {
 
         vm.changeLocation = (location) => {
             $location.path(location);
+        }
+
+        vm.isSegment = (segment) => {
+            return $location.path() == $routeSegment.getSegmentUrl(segment);
+        }
+
+        vm.isUrl = (url ) => {
+            return $location.path() == url;
+        }
+
+        vm.isApiSelected = () => {
+            return $location.path().startsWith("/api");
         }
 
         // Watch if the screen has been resized and Show/Hide the sidenav accordingly

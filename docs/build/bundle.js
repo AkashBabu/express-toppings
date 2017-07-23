@@ -88575,7 +88575,7 @@ exports = module.exports = __webpack_require__(0)(undefined);
 
 
 // module
-exports.push([module.i, "html {\n    padding: 0;\n    margin: 0;\n    zoom: 0.8;\n    -ms-zoom: 0.8;\n    -webkit-zoom: 0.8;\n    /*-moz-transform:  scale(0.8,0.8);*/\n    -moz-transform-origin: left top;   \n}\n\n.scroll {\n    overflow: auto;\n}\n\n.cursor {\n    cursor: pointer;\n}\n\n.sidenav-list {\n    margin: 0;\n    padding: 0;\n    list-style-type: none;\n}\n\n.sidenav-list.root>li {\n    /*margin-bottom: 0.3rem;*/\n    padding-left: 1rem;\n    border-bottom: 1px solid rgb(216, 205, 205);\n}\n\n.sidenav-list.root>li.active {\n    background-color: rgb(216, 205, 205);\n}\n.sidenav-list.root>li:hover {\n    background-color: rgba(216, 205, 205, 0.5);\n}\n\n.sidenav-list.root>li.api-list {\n    padding-left: 3rem;\n    font-size: 90%;\n    border-bottom: none;\n    background-color: rgba(216, 205, 205, 0.2);\n}\n\n.sidenav-list li {\n    cursor: pointer;\n    padding: 0.2rem 0.2rem 0.2rem 0.5rem;\n}\n\n/*Main Module heading*/\n.sidenav-list.root>li>span {\n    font-size: 130%;\n    font-weight: 500;\n    margin: 0.5rem 0;\n    display: inline-block;\n}\n\n.module-details {\n    padding: 0 1rem;\n    /*margin: 0 auto;*/\n}\n.module-details .initial {}\n.module-details .initial .desc {}\n\n.module-details .method-list {\n    list-style-type: none;\n    margin: 0;\n    padding: 0;\n}\n\n.module-details .method-list a {\n    display: block; \n    text-decoration: none;\n    padding: 0.3rem 0.75rem;;\n}\n\n.method {\n    margin: 1rem 0;\n    padding: 0 1rem;\n    /*margin: 0 auto;*/\n}\n\n.method .name {\n    font-size: 110%;\n    padding: 0.5rem;\n    margin-top: 0;\n}\n.method .desc {\n    font-size: 90%;\n    color: rgb(58, 61, 66);\n}\n\n.method .param-list {\n    background-color: rgba(180, 182, 186, 0.3);\n}\n\n.method .param-list .param {}\n\n.method .param-list .param .name {\n    font-size: 90%;\n    font-style: italic;\n}\n.method .param-list .param .desc {}\n.method .param-list .param .default {\n    display: inline-block;\n    padding: 0.1rem 0.3rem;\n    border-radius: 0.3rem;\n    background-color: white;\n    font-size: 90%;\n    font-style: italic;\n    color: gray;\n}\n\n.method .return {\n    font-size: 90%;\n}\n\n.method .return .type{\n    font-style: italic;\n}\n.method .return .desc{}\n\n.method .example {\n    margin-top: 1rem;\n}\n\n.method .example .heading {\n    /*margin-top: 1rem;*/\n    font-weight: 500;\n    font-style: italic;\n}\n\n\n.param-list {\n    \n}\n\n.note {\n    border-radius: 1em;\n    background-color: rgba(100, 100, 100, 0.13);\n    font-style: italic;\n    font-size: 105%;\n    padding: 0.5em;\n}\n\n.change-list {\n    list-style-type: none;\n    padding: 0;\n}\n.change-list li {\n    padding: 0.5em;\n}\n\np {\n    line-height: 1.5em;\n    word-spacing: 0.1em;\n}", ""]);
+exports.push([module.i, "html {\n    padding: 0;\n    margin: 0;\n    zoom: 0.8;\n    -ms-zoom: 0.8;\n    -webkit-zoom: 0.8;\n    /*-moz-transform:  scale(0.8,0.8);*/\n    -moz-transform-origin: left top;   \n}\n\n.scroll {\n    overflow: auto;\n}\n\n.cursor {\n    cursor: pointer;\n}\n\n.sidenav-list {\n    margin: 0;\n    padding: 0;\n    list-style-type: none;\n}\n\n.sidenav-list.root>li {\n    /*margin-bottom: 0.3rem;*/\n    padding-left: 1rem;\n    border-bottom: 1px solid rgb(216, 205, 205);\n}\n\n.sidenav-list.root>li.active {\n    background-color: rgb(216, 205, 205);\n}\n.sidenav-list.root>li:hover:not(.active) {\n    background-color: rgba(216, 205, 205, 0.5);\n}\n\n.sidenav-list.root>li.api-list {\n    padding-left: 3rem;\n    font-size: 90%;\n    border-bottom: none;\n    background-color: rgba(165, 165, 165, 0.2);\n}\n.sidenav-list.root>li.api-list.active {\n    background-color: rgb(176, 196, 226);\n}\n\n.sidenav-list li {\n    cursor: pointer;\n    padding: 0.2rem 0.2rem 0.2rem 0.5rem;\n}\n\n/*Main Module heading*/\n.sidenav-list.root>li>span {\n    font-size: 130%;\n    font-weight: 500;\n    margin: 0.5rem 0;\n    display: inline-block;\n}\n\n.module-details {\n    padding: 0 1rem;\n    /*margin: 0 auto;*/\n}\n.module-details .initial {}\n.module-details .initial .desc {}\n\n.module-details .method-list {\n    list-style-type: none;\n    margin: 0;\n    padding: 0;\n}\n\n.module-details .method-list a {\n    display: block; \n    text-decoration: none;\n    padding: 0.3rem 0.75rem;;\n}\n\n.method {\n    margin: 1rem 0;\n    padding: 0 1rem;\n    /*margin: 0 auto;*/\n}\n\n.method .name {\n    font-size: 110%;\n    padding: 0.5rem;\n    margin-top: 0;\n}\n.method .desc {\n    font-size: 90%;\n    color: rgb(58, 61, 66);\n}\n\n.method .param-list {\n    background-color: rgba(180, 182, 186, 0.3);\n}\n\n.method .param-list .param {}\n\n.method .param-list .param .name {\n    font-size: 90%;\n    font-style: italic;\n}\n.method .param-list .param .desc {}\n.method .param-list .param .default {\n    display: inline-block;\n    padding: 0.1rem 0.3rem;\n    border-radius: 0.3rem;\n    background-color: white;\n    font-size: 90%;\n    font-style: italic;\n    color: gray;\n}\n\n.method .return {\n    font-size: 90%;\n}\n\n.method .return .type{\n    font-style: italic;\n}\n.method .return .desc{}\n\n.method .example {\n    margin-top: 1rem;\n}\n\n.method .example .heading {\n    /*margin-top: 1rem;*/\n    font-weight: 500;\n    font-style: italic;\n}\n\n\n.param-list {\n    \n}\n\n.note {\n    border-radius: 1em;\n    background-color: rgba(100, 100, 100, 0.13);\n    font-style: italic;\n    font-size: 105%;\n    padding: 0.5em;\n}\n\n.change-list {\n    list-style-type: none;\n    padding: 0;\n}\n.change-list li {\n    padding: 0.5em;\n}\n\np {\n    line-height: 1.5em;\n    word-spacing: 0.1em;\n}", ""]);
 
 // exports
 
@@ -89664,7 +89664,7 @@ module.exports = function (app) {
 module.exports = function (app) {
     app.value('duScrollDuration', 2000).value('duScrollOffset', 30);
 
-    app.controller("navCtrl", ['$mdMedia', '$scope', '$rootScope', '$location', "contentService", function ($mdMedia, $scope, $rootScope, $location, contentService) {
+    app.controller("navCtrl", ['$mdMedia', '$scope', '$rootScope', '$location', "contentService", "$routeSegment", function ($mdMedia, $scope, $rootScope, $location, contentService, $routeSegment) {
         var vm = this;
         $rootScope.showSidenav = $mdMedia("gt-sm");
 
@@ -89672,6 +89672,18 @@ module.exports = function (app) {
 
         vm.changeLocation = function (location) {
             $location.path(location);
+        };
+
+        vm.isSegment = function (segment) {
+            return $location.path() == $routeSegment.getSegmentUrl(segment);
+        };
+
+        vm.isUrl = function (url) {
+            return $location.path() == url;
+        };
+
+        vm.isApiSelected = function () {
+            return $location.path().startsWith("/api");
         };
 
         // Watch if the screen has been resized and Show/Hide the sidenav accordingly

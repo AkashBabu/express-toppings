@@ -16,25 +16,27 @@
                 <span class="md-display-1">Express-Toppings</span>
             </md-toolbar>
 
-            <md-content flex layout-fill style="border-right: 1px solid khaki;">
+            <md-content flex layout-fill style="border-right: 1px solid khaki;" ng-cloak>
                 <ul class="sidenav-list root">
                     <!--<li ng-click="vm.changeLocation(('introduction' | routeSegmentUrl))" ng-class="{'active': $routeSegment.startsWith('introduction')}">
                         <span>Introduction</span>
                     </li>-->
 
-                    <li ng-init="vm.showAPI=true" ng-click="vm.showAPI=!vm.showAPI" ng-class="{'active': $routeSegment.startsWith('api')}">
+                    <li ng-init="vm.showAPI=true" ng-click="vm.showAPI=!vm.showAPI" ng-class="{'active': vm.isApiSelected()}" layout="row" layout-align="space-between center">
                         <span>API</span>
+                        <i class="material-icons" ng-show="vm.showAPI">keyboard_arrow_down</i>
+                        <i class="material-icons" ng-show="!vm.showAPI">keyboard_arrow_right</i>
                     </li>
-                    <li class="api-list" ng-repeat="(heading, info) in vm.content" ng-if="vm.showAPI" ng-class="(vm.currApi == 'api.' + heading) ? 'active': ''"
+                    <li class="api-list" ng-repeat="(heading, info) in vm.content" ng-if="vm.showAPI" ng-class="{'active' : vm.isUrl('/api/' + heading)}"
                         ng-click="vm.changeLocation(('api' | routeSegmentUrl) + '/' + heading)">
                         <span ng-bind="heading"></span>
                     </li>
 
-                    <li ng-click="vm.changeLocation(('buildAnApp' | routeSegmentUrl))" ng-class="{'active': $routeSegment.startsWith('buildAnApp')}">
+                    <li ng-click="vm.changeLocation(('buildAnApp' | routeSegmentUrl))" ng-class="{'active': vm.isSegment('buildAnApp')}">
                         <span>Example</span>
                     </li>
 
-                    <li ng-click="vm.changeLocation(('changeLog' | routeSegmentUrl))" ng-class="{'active': $routeSegment.startsWith('changeLog')}">
+                    <li ng-click="vm.changeLocation(('changeLog' | routeSegmentUrl))" ng-class="{'active': vm.isSegment('changeLog')}">
                         <span>ChangeLog</span>
                     </li>
                 </ul>
