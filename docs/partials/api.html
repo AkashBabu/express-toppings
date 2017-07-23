@@ -1,10 +1,5 @@
-<md-toolbar md-colors="::{background: 'default-pink-50-0.9'}" layout="row" layout-align="space-between center">
-    <md-icon flex md-colors="::{color: 'default-grey-900-1'}" class="material-icons cursor" ng-click="vm.toggleSidenav()">menu</md-icon>
-    <div flex layout="row" layout-align="center center">
-        <span class="md-headline" ng-bind="vm.currHeading"></span>
-    </div>
-    <span flex>&nbsp;</span>
-</md-toolbar>
+<div ng-include="'/partials/topNav.html'" style="min-width: 100%;">
+</div>
 
 <md-content class="module-details" layout-fill layout="column" layout-align="start space-around" flex>
 
