@@ -13,6 +13,8 @@ class JWT {
         this.helper = new index_1.Helper(debug);
         this.helperResp = new index_1.HelperResp(debug);
         this.logger[debug ? "activate" : "deactivate"]();
+        this.options.emailField = this.options.emailField || "email";
+        this.options.passwordField = this.options.passwordField || "password";
     }
     /**
      * Login Handler
@@ -42,11 +44,11 @@ class JWT {
                 // Default Login Handler
                 // expecting email, password fields to be present on req.body
                 this.db.collection(this.options.collName).findOne({
-                    [this.options.emailField || "email"]: req.body[this.options.emailField || "email"]
+                    [this.options.emailField]: req.body[this.options.emailField]
                 }, (err, user) => {
                     if (user) {
-                        if (this.isDefined(req.body[this.options.passwordField || "password"])) {
-                            let valid = this.helper.verifySaltHash(user[this.options.passwordField || "password"], req.body[this.options.passwordField || "password"]);
+                        if (this.isDefined(req.body[this.options.passwordField])) {
+                            let valid = this.helper.verifySaltHash(user[this.options.passwordField], req.body[this.options.passwordField]);
                             loginCb.call(this)(err, valid ? user : false);
                         }
                         else {
@@ -88,7 +90,7 @@ class JWT {
                 // Default registration handler
                 // expects email, password to be present in req.body
                 this.db.collection(this.options.collName).findOne({
-                    [this.options.emailField || "email"]: req.body[this.options.emailField || "email"]
+                    [this.options.emailField]: req.body[this.options.emailField]
                 }, (err, user) => {
                     if (err) {
                         this.logger.error(err);
@@ -101,8 +103,8 @@ class JWT {
                         }
                         else {
                             // We are good
-                            if (this.isDefined(req.body[this.options.passwordField || "password"])) {
-                                req.body[this.options.passwordField || "password"] = this.helper.saltHash(req.body[this.options.passwordField || "password"]);
+                            if (this.isDefined(req.body[this.options.passwordField])) {
+                                req.body[this.options.passwordField] = this.helper.saltHash(req.body[this.options.passwordField]);
                                 // } else if (this.isDefined(req.body.pwd)) {
                                 //     req.body.pwd = this.helper.saltHash(req.body.pwd);
                             }
@@ -210,7 +212,7 @@ class JWT {
             expires: expires
         };
         let encToken = jwt.encode(token, this.options.secret, "HS256");
-        delete user[this.options.passwordField || "password"];
+        delete user[this.options.passwordField];
         res.status(200).send({
             error: false,
             data: {
