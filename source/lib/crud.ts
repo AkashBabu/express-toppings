@@ -1,17 +1,14 @@
 import * as express from "express"
 
-export interface IHTTPResp {
-    status(code: number): { send(data: any): void }
-}
-
 export interface IRestHandler {
-    (req: object, res: IHTTPResp, next?: Function): void;
+    (req: express.Request, res: express.Response, next?: express.NextFunction): void;
 }
 
 export interface ICRUD {
     create: IRestHandler;
     update: IRestHandler;
     remove: IRestHandler;
+    removeMulti: IRestHandler;
     get: IRestHandler;
     list: IRestHandler;
 }
@@ -19,17 +16,18 @@ export interface ICRUD {
 export class CRUD {
     public router;
     constructor(crud: ICRUD) {
-        this.router = express.Router({mergeParams: true})
+        this.router = express.Router({ mergeParams: true })
         this.router.route("/")
             .get(crud.list || this.next)
             .post(crud.create || this.next)
-            // .all(this.methodNotAllowed())
+            .delete(crud.removeMulti || this.next)
+        // .all(this.methodNotAllowed())
 
         this.router.route("/:id")
             .get(crud.get || this.next)
             .put(crud.update || this.next)
             .delete(crud.remove || this.next)
-            // .all(this.methodNotAllowed())
+        // .all(this.methodNotAllowed())
 
         return this.router;
     }
