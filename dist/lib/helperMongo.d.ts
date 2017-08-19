@@ -18,6 +18,10 @@ export interface IKey {
     min: Date | number;
     max: Date | number;
 }
+export interface IGetByIdOptions {
+    query: object;
+    project: object;
+}
 export interface ISplitTimeThenGrp {
     key: IKey;
     project: string[];
@@ -54,11 +58,12 @@ export interface IHelperMongo {
     validateExistence(collName: string, validate: object, cb: Function): void;
     validateNonExistence(collName: string, validate: IValidationNonExistence | IValidationNonExistence[], cb: Function): void;
     validateNonExistenceOnUpdate(collName: string, obj: object | object[], validations: IValidationNonExistenceUpdate[] | IValidationNonExistenceUpdate, cb: Function): void;
-    getById(collName: string, id: string, cb: Function): void;
+    getById(collName: string, id: string, options: IGetByIdOptions, cb: Function): void;
     getNextSeqNo(collName: string, obj: object, cb: Function): void;
     update(collName: string, obj: object, exclude?: string[], cb?: Function): void;
-    getList(collName: string, obj: object, cb: Function): void;
+    getList(collName: string, obj: object, options: IGetByIdOptions, cb: Function): void;
     remove(collName: string, id: string, removeDoc: boolean, cb: Function): void;
+    removeMulti(collName: string, ids: string[], removeDocs: boolean, verbose: boolean, cb: Function): void;
     splitTimeThenGrp(collName: string, obj: ISplitTimeThenGrp, cb: Function): void;
     selectNinM(collName: string, obj: ISelectNinM, cb: Function): void;
 }
@@ -100,14 +105,7 @@ export declare class HelperMongo implements IHelperMongo {
      * @param id mongoDB document id
      * @param cb
      */
-    getById(collName: string, id: string, cb: ICallback): void;
-    /**
-     * Get the max value of a numerical field in a collection
-     * @param collName collection name
-     * @param obj options
-     * @param cb Callback
-     */
-    private getMaxValue(collName, obj, cb);
+    getById(collName: string, id: string, options: IGetByIdOptions, cb: ICallback): void;
     /**
      * Get the next sequence number of a numerical field in a collection
      * @param collName collection name
@@ -129,7 +127,7 @@ export declare class HelperMongo implements IHelperMongo {
      * @param obj options
      * @param cb Callback
      */
-    getList(collName: string, obj: IGetList, cb: Function): void;
+    getList(collName: string, obj: IGetList, options: IGetByIdOptions, cb: Function): void;
     /**
      * Removes a document/sets isDeleted flag on the document
      * @param collName collection name
@@ -138,6 +136,15 @@ export declare class HelperMongo implements IHelperMongo {
      * @param cb Callback
      */
     remove(collName: string, id: string, removeDoc: boolean | Function, cb?: Function): void;
+    /**
+     * Removes multiple documents at once
+     * @param collName Collection Name
+     * @param ids List of Mongo id
+     * @param removeDoc document will be removed if true, else will set isDeleted flag on the document
+     * @param verbose When true, each document is removed individually and if any failure is seen then individual messages is associated with each failed Id
+     * @param cb Callback
+     */
+    removeMulti(collName: string, ids: string[], removeDoc: boolean, verbose: boolean, cb: Function): void;
     /**
      * Splits the selected range of documents by time and then groups them based on grouping logic
      * @param collName collection name
@@ -152,7 +159,22 @@ export declare class HelperMongo implements IHelperMongo {
      * @param cb Callback
      */
     selectNinM(collName: string, obj: ISelectNinM, cb: Function): void;
+    /**
+     * Get the max value of a numerical field in a collection
+     * @param collName collection name
+     * @param obj options
+     * @param cb Callback
+     */
+    private getMaxValue(collName, obj, cb);
     private isValidationOnUpdate(data);
     private isValidateObject(data);
+    /**
+     * Convert object/string to object, it also converts -name --> {name: -1} [Useful for sort]
+     * Used in getList API
+     * @param data
+     * @param sort
+     *
+     * @returns {object}
+     */
     private getObj(data, sort?);
 }

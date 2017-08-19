@@ -48,7 +48,7 @@ class JWT {
                 }, (err, user) => {
                     if (user) {
                         if (this.isDefined(req.body[this.options.passwordField])) {
-                            let valid = this.helper.verifySaltHash(user[this.options.passwordField], req.body[this.options.passwordField]);
+                            const valid = this.helper.verifySaltHash(user[this.options.passwordField], req.body[this.options.passwordField]);
                             loginCb.call(this)(err, valid ? user : false);
                         }
                         else {
@@ -161,7 +161,7 @@ class JWT {
              * token expiry date is validated
              * Token issuer(iss) is validated
              */
-            let token = (req.headers["x-access-token"] || req.body && req.body.access_token) || (req.query && req.query.access_token) || null; // Get JWT Token
+            const token = (req.headers["x-access-token"] || req.body && req.body.access_token) || (req.query && req.query.access_token) || null; // Get JWT Token
             if (token) {
                 let decToken;
                 try {
@@ -206,12 +206,12 @@ class JWT {
         return (data != undefined && data != null);
     }
     sendToken(res, user) {
-        let expires = moment().add(this.options.validity, "day").toDate();
-        let token = {
+        const expires = moment().add(this.options.validity, "day").toDate();
+        const token = {
             iss: user._id,
             expires: expires
         };
-        let encToken = jwt.encode(token, this.options.secret, "HS256");
+        const encToken = jwt.encode(token, this.options.secret, "HS256");
         delete user[this.options.passwordField];
         res.status(200).send({
             error: false,

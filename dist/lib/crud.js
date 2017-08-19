@@ -6,7 +6,8 @@ class CRUD {
         this.router = express.Router({ mergeParams: true });
         this.router.route("/")
             .get(crud.list || this.next)
-            .post(crud.create || this.next);
+            .post(crud.create || this.next)
+            .delete(crud.removeMulti || this.next);
         // .all(this.methodNotAllowed())
         this.router.route("/:id")
             .get(crud.get || this.next)

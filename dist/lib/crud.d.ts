@@ -1,15 +1,12 @@
-export interface IHTTPResp {
-    status(code: number): {
-        send(data: any): void;
-    };
-}
+import * as express from "express";
 export interface IRestHandler {
-    (req: object, res: IHTTPResp, next?: Function): void;
+    (req: express.Request, res: express.Response, next?: express.NextFunction): void;
 }
 export interface ICRUD {
     create: IRestHandler;
     update: IRestHandler;
     remove: IRestHandler;
+    removeMulti: IRestHandler;
     get: IRestHandler;
     list: IRestHandler;
 }

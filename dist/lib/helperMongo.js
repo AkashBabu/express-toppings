@@ -154,58 +154,28 @@ class HelperMongo {
      * @param id mongoDB document id
      * @param cb
      */
-    getById(collName, id, cb) {
+    getById(collName, id, options, cb) {
+        if (!cb && typeof options === "function") {
+            cb = options;
+            options = null;
+        }
         try {
             id = this.db.ObjectId(id);
         }
         catch (err) {
             return cb("Invalid Id");
         }
-        this.db.collection(collName).findOne({
-            _id: id
-        }, cb);
-    }
-    /**
-     * Get the max value of a numerical field in a collection
-     * @param collName collection name
-     * @param obj options
-     * @param cb Callback
-     */
-    getMaxValue(collName, obj, cb) {
-        /**
-         * Flow
-         * match -> unwind(optional) -> group (To find max)
-         */
-        let group = {
-            _id: null,
-            sno: {
-                $max: "$" + obj.key
+        const query = { _id: id };
+        const project = {};
+        if (options) {
+            if (options.query) {
+                Object.assign(query, options.query);
             }
-        };
-        let aggregate = [
-            { $match: obj.query || {} }
-        ];
-        if (obj.unwind) {
-            aggregate.push({
-                "$unwind": obj.unwind[0] == "$" ? obj.unwind : "$" + obj.unwind
-            });
+            if (options.project) {
+                Object.assign(project, options.project);
+            }
         }
-        aggregate.push({
-            "$group": group
-        });
-        this.db.collection(collName).aggregate(aggregate, (err, result) => {
-            if (!err) {
-                if (result && result[0]) {
-                    cb(null, result[0].sno);
-                }
-                else {
-                    cb(null, 0);
-                }
-            }
-            else {
-                cb(err);
-            }
-        });
+        this.db.collection(collName).findOne(query, project, cb);
     }
     /**
      * Get the next sequence number of a numerical field in a collection
@@ -220,7 +190,7 @@ class HelperMongo {
                 if (obj.maxValue && sno > obj.maxValue) {
                     let i = (obj.hasOwnProperty("minValue") ? obj.minValue : 1);
                     let found = false;
-                    let find = Object.assign({}, obj.query);
+                    const find = Object.assign({}, obj.query);
                     sh_async.whilst(() => {
                         if (i > obj.maxValue) {
                             return false;
@@ -269,7 +239,7 @@ class HelperMongo {
         if (!exclude) {
             throw Error("Callback not specified");
         }
-        if (!cb && typeof exclude == 'function') {
+        if (!cb && typeof exclude == "function") {
             cb = exclude;
             exclude = [];
         }
@@ -280,10 +250,10 @@ class HelperMongo {
         catch (err) {
             return cb("Invalid Id");
         }
-        let updateObj = Object.assign({}, obj);
+        const updateObj = Object.assign({}, obj);
         delete updateObj._id;
         updateObj.utime = new Date();
-        exclude.forEach(key => delete updateObj[key]);
+        exclude.forEach((key) => delete updateObj[key]);
         this.db.collection(collName).update({
             _id: id
         }, {
@@ -299,16 +269,28 @@ class HelperMongo {
      * @param obj options
      * @param cb Callback
      */
-    getList(collName, obj, cb) {
+    getList(collName, obj, options, cb) {
+        if (!cb && typeof options === "function") {
+            cb = options;
+            options = null;
+        }
         obj = obj || {};
         obj.query = this.getObj(obj.query);
         obj.project = this.getObj(obj.project);
         obj.sort = this.getObj(obj.sort, true);
         if (obj.search) {
-            let regex = new RegExp(".*" + obj.search + ".*", "i");
+            const regex = new RegExp(".*" + obj.search + ".*", "i");
             (obj.query)[obj.searchField || "name"] = {
                 $regex: regex
             };
+        }
+        if (options) {
+            if (options.query) {
+                Object.assign(obj.query, options.query);
+            }
+            if (options.project) {
+                Object.assign(obj.project, options.project);
+            }
         }
         sh_async.autoInject({
             getCount: (cb1) => {
@@ -316,8 +298,8 @@ class HelperMongo {
             },
             getList: (cb1) => {
                 if (obj.recordsPerPage) {
-                    let limit = parseInt(obj.recordsPerPage.toString());
-                    let skip = (parseInt(obj.pageNo ? obj.pageNo.toString() : "1") - 1) * limit;
+                    const limit = parseInt(obj.recordsPerPage.toString());
+                    const skip = (parseInt(obj.pageNo ? obj.pageNo.toString() : "1") - 1) * limit;
                     this.db.collection(collName).find(obj.query, obj.project)
                         .sort(obj.sort)
                         .skip(skip)
@@ -373,6 +355,95 @@ class HelperMongo {
         }
     }
     /**
+     * Removes multiple documents at once
+     * @param collName Collection Name
+     * @param ids List of Mongo id
+     * @param removeDoc document will be removed if true, else will set isDeleted flag on the document
+     * @param verbose When true, each document is removed individually and if any failure is seen then individual messages is associated with each failed Id
+     * @param cb Callback
+     */
+    removeMulti(collName, ids, removeDoc, verbose, cb) {
+        if (!cb) {
+            if (!verbose) {
+                if (typeof removeDoc === "function") {
+                    cb = removeDoc;
+                    removeDoc = true;
+                    verbose = false;
+                }
+            }
+            else {
+                if (typeof verbose === "function") {
+                    cb = verbose;
+                    verbose = false;
+                }
+            }
+        }
+        if (verbose) {
+            const results = {
+                removed: 0,
+                failed: {}
+            };
+            const removeIterator = (id, selfCb) => {
+                this.remove(collName, id, removeDoc, (err, result) => {
+                    if (err) {
+                        results.failed[id] = typeof err === "string" ? err : err.reason;
+                    }
+                    else if (result && result.n == 1) {
+                        results.removed++;
+                    }
+                    else {
+                        results.failed[id] = "Document matching the given id does not exist";
+                    }
+                    selfCb();
+                });
+            };
+            sh_async.each(ids, removeIterator, (err, done) => {
+                if (err) {
+                    this.logger.error("Error while removing multiple documents:", err);
+                }
+                cb(err, results);
+            });
+        }
+        else {
+            // validate Each id
+            const validIds = ids.map((id) => {
+                try {
+                    id = this.db.ObjectId(id);
+                    return id;
+                }
+                catch (err) {
+                    return null;
+                }
+            }).filter((id) => {
+                return !!id;
+            });
+            // Remove document from Mongodb
+            if (removeDoc) {
+                this.db.collection(collName).remove({
+                    _id: {
+                        $in: validIds
+                    }
+                }, cb);
+                // Persist the document with isDeleted: true flag
+            }
+            else {
+                this.db.collection(collName).update({
+                    _id: {
+                        $in: validIds
+                    }
+                }, {
+                    $set: {
+                        isDeleted: true,
+                        deltime: new Date()
+                    }
+                }, {
+                    multi: true,
+                    upsert: false
+                }, cb);
+            }
+        }
+    }
+    /**
      * Splits the selected range of documents by time and then groups them based on grouping logic
      * @param collName collection name
      * @param obj options
@@ -382,7 +453,7 @@ class HelperMongo {
         /**
          * LOGIC
          * find match -> required docs
-         * then project -> generate n attach date with each item based on 'groupBy'/'interval'
+         * then project -> generate n attach date with each item based on "groupBy"/"interval"
          * then group -> with date as id and project required fields
          *
          * 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
@@ -390,8 +461,8 @@ class HelperMongo {
          * project -> 3.date = a, 4.date = a, 5.date = b, 6.date = b,
          * group($first) -> 3, 5
          */
-        let self = this;
-        let match = {};
+        const self = this;
+        const match = {};
         match[obj.key.name] = {
             $gte: obj.key.min,
             $lt: obj.key.max
@@ -402,7 +473,7 @@ class HelperMongo {
                 $add: [new Date(0), "$" + obj.key.name]
             };
         }
-        let project1 = {
+        const project1 = {
             date: {
                 $dateToString: {
                     format: self.getDateFormat(obj.groupBy),
@@ -413,14 +484,14 @@ class HelperMongo {
         obj.project.forEach((reqField) => {
             project1[reqField] = 1;
         });
-        let group = {
+        const group = {
             _id: "$date"
         };
         obj.project.forEach((reqField) => {
             group[reqField] = {};
             group[reqField][obj.groupLogic || "$first"] = "$" + reqField;
         });
-        let project2 = {};
+        const project2 = {};
         if (obj.key.type && obj.key.type.toLowerCase() == "unix") {
             project2[obj.key.name] = {
                 $subtract: ["$_id", new Date(0)]
@@ -435,7 +506,7 @@ class HelperMongo {
                 project2[reqField] = 1;
             });
         }
-        let aggregate = [
+        const aggregate = [
             { $match: match },
             { $project: project1 },
             { $group: group },
@@ -456,8 +527,8 @@ class HelperMongo {
          * match -> the required docs
          * then group -> to form an array of matched docs
          * then unwind -> to assign index to each doc
-         * then project -> generate and attach 'n' which is computed using 'numOfPoints' to return
-         * then group -> with n as _id to return 'numOfPoints' documents
+         * then project -> generate and attach "n" which is computed using "numOfPoints" to return
+         * then group -> with n as _id to return "numOfPoints" documents
          *
          * 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
          * match -> 3 4 5 6 7 8 9 10 11 12 13
@@ -466,12 +537,12 @@ class HelperMongo {
          * project -> 3.nth = 1, 4.nth = 1, 5.nth = 2, 6.nth = 2 ...
          * group -> 3, 5, 7
          */
-        let match = obj.query;
-        let push = {};
+        const match = obj.query;
+        const push = {};
         obj.project.forEach((key) => {
             push[key] = "$" + key;
         });
-        let group1 = {
+        const group1 = {
             _id: null,
             data: {
                 $push: push
@@ -480,11 +551,11 @@ class HelperMongo {
                 $sum: 1
             }
         };
-        let unwind = {
+        const unwind = {
             path: "$data",
             includeArrayIndex: "index"
         };
-        let project = {
+        const project = {
             nth: {
                 $floor: {
                     $divide: ["$index", {
@@ -494,12 +565,12 @@ class HelperMongo {
             },
             data: 1
         };
-        let group2 = {
+        const group2 = {
             _id: "$nth",
         };
         group2.data = {};
         group2.data[obj.groupLogic] = "$data";
-        let aggregate = [{
+        const aggregate = [{
                 $match: match
             }, {
                 $group: group1
@@ -512,12 +583,62 @@ class HelperMongo {
             }];
         this.db.collection(collName).aggregate(aggregate, cb);
     }
+    /**
+     * Get the max value of a numerical field in a collection
+     * @param collName collection name
+     * @param obj options
+     * @param cb Callback
+     */
+    getMaxValue(collName, obj, cb) {
+        /**
+         * Flow
+         * match -> unwind(optional) -> group (To find max)
+         */
+        const group = {
+            _id: null,
+            sno: {
+                $max: "$" + obj.key
+            }
+        };
+        const aggregate = [
+            { $match: obj.query || {} }
+        ];
+        if (obj.unwind) {
+            aggregate.push({
+                "$unwind": obj.unwind[0] == "$" ? obj.unwind : "$" + obj.unwind
+            });
+        }
+        aggregate.push({
+            "$group": group
+        });
+        this.db.collection(collName).aggregate(aggregate, (err, result) => {
+            if (!err) {
+                if (result && result[0]) {
+                    cb(null, result[0].sno);
+                }
+                else {
+                    cb(null, 0);
+                }
+            }
+            else {
+                cb(err);
+            }
+        });
+    }
     isValidationOnUpdate(data) {
         return data.length !== undefined;
     }
     isValidateObject(data) {
         return data.length !== undefined;
     }
+    /**
+     * Convert object/string to object, it also converts -name --> {name: -1} [Useful for sort]
+     * Used in getList API
+     * @param data
+     * @param sort
+     *
+     * @returns {object}
+     */
     getObj(data, sort) {
         if (data) {
             if (typeof data == "string") {
@@ -526,16 +647,16 @@ class HelperMongo {
                     return data;
                 }
                 catch (err) {
-                    // this.logger.error(err);
+                    // if parsing fails, then check if its sort
                     if (sort == true) {
                         data = data.replace(/ /g, "");
                         if (data[0] == "-") {
-                            let val = data.slice(1);
+                            const val = data.slice(1);
                             data = {};
                             data[val] = -1;
                         }
                         else {
-                            let val = data;
+                            const val = data;
                             data = {};
                             data[val] = 1;
                         }
