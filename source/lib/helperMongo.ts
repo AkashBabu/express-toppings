@@ -27,6 +27,11 @@ export interface IKey {
     max: Date | number;
 }
 
+export interface IGetByIdOptions {
+    query: object;
+    project: object;
+}
+
 export interface ISplitTimeThenGrp {
     key: IKey;
     project: string[];
@@ -64,11 +69,12 @@ export interface IHelperMongo {
     validateExistence(collName: string, validate: object, cb: Function): void;
     validateNonExistence(collName: string, validate: IValidationNonExistence | IValidationNonExistence[], cb: Function): void;
     validateNonExistenceOnUpdate(collName: string, obj: object | object[], validations: IValidationNonExistenceUpdate[] | IValidationNonExistenceUpdate, cb: Function): void;
-    getById(collName: string, id: string, cb: Function): void;
+    getById(collName: string, id: string, options: IGetByIdOptions, cb: Function): void;
     getNextSeqNo(collName: string, obj: object, cb: Function): void;
     update(collName: string, obj: object, exclude?: string[], cb?: Function): void;
-    getList(collName: string, obj: object, cb: Function): void;
+    getList(collName: string, obj: object, options: IGetByIdOptions, cb: Function): void;
     remove(collName: string, id: string, removeDoc: boolean, cb: Function): void;
+    removeMulti(collName: string, ids: string[], removeDocs: boolean, verbose: boolean, cb: Function): void;
     splitTimeThenGrp(collName: string, obj: ISplitTimeThenGrp, cb: Function): void;
     selectNinM(collName: string, obj: ISelectNinM, cb: Function): void;
 }
@@ -247,59 +253,31 @@ export class HelperMongo implements IHelperMongo {
      * @param id mongoDB document id
      * @param cb 
      */
-    public getById(collName: string, id: string, cb: ICallback): void {
+    public getById(collName: string, id: string, options: IGetByIdOptions, cb: ICallback): void {
+        if (!cb && typeof options === "function") {
+            cb = options;
+            options = null;
+        }
+
         try {
             id = this.db.ObjectId(id);
         } catch (err) {
             return cb("Invalid Id")
         }
 
-        this.db.collection(collName).findOne({
-            _id: id
-        }, cb)
-    }
+        const query = { _id: id }
+        const project = {}
 
-    /**
-     * Get the max value of a numerical field in a collection
-     * @param collName collection name
-     * @param obj options
-     * @param cb Callback
-     */
-    private getMaxValue(collName: string, obj: IMaxValue, cb: Function): void {
-        /**
-         * Flow 
-         * match -> unwind(optional) -> group (To find max)
-         */
-
-        let group = {
-            _id: null,
-            sno: {
-                $max: "$" + obj.key
+        if (options) {
+            if (options.query) {
+                Object.assign(query, options.query)
+            }
+            if (options.project) {
+                Object.assign(project, options.project)
             }
         }
 
-        let aggregate: Array<object> = [
-            { $match: obj.query || {} }
-        ]
-        if (obj.unwind) { // Use aggregate only when unwind is specified
-            aggregate.push({
-                "$unwind": obj.unwind[0] == "$" ? obj.unwind : "$" + obj.unwind
-            })
-        }
-        aggregate.push({
-            "$group": group
-        })
-        this.db.collection(collName).aggregate(aggregate, (err, result) => {
-            if (!err) {
-                if (result && result[0]) {
-                    cb(null, result[0].sno);
-                } else {
-                    cb(null, 0);
-                }
-            } else {
-                cb(err);
-            }
-        });
+        this.db.collection(collName).findOne(query, project, cb)
     }
 
     /**
@@ -315,7 +293,7 @@ export class HelperMongo implements IHelperMongo {
                 if (obj.maxValue && sno > obj.maxValue) {
                     let i = (obj.hasOwnProperty("minValue") ? obj.minValue : 1);
                     let found = false;
-                    let find = Object.assign({}, obj.query);
+                    const find = Object.assign({}, obj.query);
                     sh_async.whilst(
                         () => {
                             if (i > obj.maxValue) {
@@ -364,7 +342,7 @@ export class HelperMongo implements IHelperMongo {
         if (!exclude) {
             throw Error("Callback not specified");
         }
-        if (!cb && typeof exclude == 'function') {
+        if (!cb && typeof exclude == "function") {
             cb = exclude;
             exclude = [];
         }
@@ -375,11 +353,11 @@ export class HelperMongo implements IHelperMongo {
         } catch (err) {
             return cb("Invalid Id");
         }
-        let updateObj = Object.assign({}, obj);
+        const updateObj = Object.assign({}, obj);
         delete updateObj._id;
         updateObj.utime = new Date();
 
-        exclude.forEach(key => delete updateObj[key]);
+        exclude.forEach((key) => delete updateObj[key]);
 
         this.db.collection(collName).update({
             _id: id
@@ -397,16 +375,32 @@ export class HelperMongo implements IHelperMongo {
      * @param obj options
      * @param cb Callback
      */
-    public getList(collName: string, obj: IGetList, cb: Function): void {
+    public getList(collName: string, obj: IGetList, options: IGetByIdOptions, cb: Function): void {
+        if (!cb && typeof options === "function") {
+            cb = options;
+            options = null;
+        }
+
+
         obj = obj || {};
         obj.query = this.getObj(obj.query);
         obj.project = this.getObj(obj.project);
         obj.sort = this.getObj(obj.sort, true);
 
         if (obj.search) {
-            let regex = new RegExp(".*" + obj.search + ".*", "i");
+            const regex = new RegExp(".*" + obj.search + ".*", "i");
             (obj.query)[obj.searchField || "name"] = {
                 $regex: regex
+            }
+        }
+
+        if (options) {
+            if (options.query) {
+                Object.assign(obj.query, options.query)
+            }
+
+            if (options.project) {
+                Object.assign(obj.project, options.project)
             }
         }
 
@@ -416,8 +410,8 @@ export class HelperMongo implements IHelperMongo {
             },
             getList: (cb1) => {
                 if (obj.recordsPerPage) {
-                    let limit = parseInt(obj.recordsPerPage.toString());
-                    let skip = (parseInt(obj.pageNo ? obj.pageNo.toString() : "1") - 1) * limit;
+                    const limit = parseInt(obj.recordsPerPage.toString());
+                    const skip = (parseInt(obj.pageNo ? obj.pageNo.toString() : "1") - 1) * limit;
 
                     this.db.collection(collName).find(obj.query, obj.project)
                         .sort(obj.sort)
@@ -476,6 +470,104 @@ export class HelperMongo implements IHelperMongo {
     }
 
     /**
+     * Removes multiple documents at once
+     * @param collName Collection Name
+     * @param ids List of Mongo id
+     * @param removeDoc document will be removed if true, else will set isDeleted flag on the document
+     * @param verbose When true, each document is removed individually and if any failure is seen then individual messages is associated with each failed Id
+     * @param cb Callback
+     */
+    public removeMulti(collName: string, ids: string[], removeDoc: boolean, verbose: boolean, cb: Function): void {
+        if (!cb) {
+            if (!verbose) {
+                if (typeof removeDoc === "function") {
+                    cb = removeDoc;
+                    removeDoc = true;
+                    verbose = false;
+                }
+            } else {
+                if (typeof verbose === "function") {
+                    cb = verbose;
+                    verbose = false;
+                }
+            }
+        }
+
+        if (verbose) {
+            const results = {
+                removed: 0,
+                failed: {}
+            };
+
+            const removeIterator = (id, selfCb) => {
+                this.remove(collName, id, removeDoc, (err, result) => {
+                    if (err) {
+                        results.failed[id] = typeof err === "string" ? err : err.reason
+                    } else if (result && result.n == 1) {
+                        results.removed++;
+                    } else {
+                        results.failed[id] = "Document matching the given id does not exist"
+                    }
+
+                    selfCb();
+                })
+            }
+
+            sh_async.each(
+                ids,
+                removeIterator,
+                (err, done) => {
+                    if (err) {
+                        this.logger.error("Error while removing multiple documents:", err)
+                    }
+
+                    cb(err, results);
+                }
+            )
+
+        } else {
+
+            // validate Each id
+            const validIds = ids.map((id) => {
+                try {
+                    id = this.db.ObjectId(id);
+                    return id;
+                } catch (err) {
+                    return null;
+                }
+            }).filter((id) => {
+                return !!id;
+            })
+
+            // Remove document from Mongodb
+            if (removeDoc) {
+                this.db.collection(collName).remove({
+                    _id: {
+                        $in: validIds
+                    }
+                }, cb)
+
+                // Persist the document with isDeleted: true flag
+            } else {
+                this.db.collection(collName).update({
+                    _id: {
+                        $in: validIds
+                    }
+                }, {
+                        $set: {
+                            isDeleted: true,
+                            deltime: new Date()
+                        }
+                    }, {
+                        multi: true,
+                        upsert: false
+                    }, cb)
+            }
+        }
+    }
+
+
+    /**
      * Splits the selected range of documents by time and then groups them based on grouping logic
      * @param collName collection name
      * @param obj options
@@ -485,7 +577,7 @@ export class HelperMongo implements IHelperMongo {
         /**
          * LOGIC
          * find match -> required docs
-         * then project -> generate n attach date with each item based on 'groupBy'/'interval'
+         * then project -> generate n attach date with each item based on "groupBy"/"interval"
          * then group -> with date as id and project required fields
          * 
          * 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
@@ -494,8 +586,8 @@ export class HelperMongo implements IHelperMongo {
          * group($first) -> 3, 5
          */
 
-        let self = this;
-        let match = {};
+        const self = this;
+        const match = {};
         match[obj.key.name] = {
             $gte: obj.key.min,
             $lt: obj.key.max
@@ -508,7 +600,7 @@ export class HelperMongo implements IHelperMongo {
             }
         }
 
-        let project1 = {
+        const project1 = {
             date: {
                 $dateToString: {
                     format: self.getDateFormat(obj.groupBy),
@@ -520,7 +612,7 @@ export class HelperMongo implements IHelperMongo {
             project1[reqField] = 1
         })
 
-        let group = {
+        const group = {
             _id: "$date"
         };
         obj.project.forEach((reqField) => {
@@ -528,7 +620,7 @@ export class HelperMongo implements IHelperMongo {
             group[reqField][obj.groupLogic || "$first"] = "$" + reqField;
         })
 
-        let project2 = {}
+        const project2 = {}
         if (obj.key.type && obj.key.type.toLowerCase() == "unix") {
             project2[obj.key.name] = {
                 $subtract: ["$_id", new Date(0)]
@@ -544,7 +636,7 @@ export class HelperMongo implements IHelperMongo {
             })
         }
 
-        let aggregate: object[] = [
+        const aggregate: object[] = [
             { $match: match },
             { $project: project1 },
             { $group: group },
@@ -567,8 +659,8 @@ export class HelperMongo implements IHelperMongo {
          * match -> the required docs
          * then group -> to form an array of matched docs
          * then unwind -> to assign index to each doc
-         * then project -> generate and attach 'n' which is computed using 'numOfPoints' to return
-         * then group -> with n as _id to return 'numOfPoints' documents
+         * then project -> generate and attach "n" which is computed using "numOfPoints" to return
+         * then group -> with n as _id to return "numOfPoints" documents
          * 
          * 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
          * match -> 3 4 5 6 7 8 9 10 11 12 13
@@ -578,14 +670,14 @@ export class HelperMongo implements IHelperMongo {
          * group -> 3, 5, 7
          */
 
-        let match = obj.query;
+        const match = obj.query;
 
-        let push = {};
+        const push = {};
         obj.project.forEach((key) => {
             push[key] = "$" + key;
         })
 
-        let group1 = {
+        const group1 = {
             _id: null,
             data: {
                 $push: push
@@ -595,12 +687,12 @@ export class HelperMongo implements IHelperMongo {
             }
         }
 
-        let unwind = {
+        const unwind = {
             path: "$data",
             includeArrayIndex: "index"
         }
 
-        let project = {
+        const project = {
             nth: {
                 $floor: {
                     $divide: ["$index", {
@@ -611,13 +703,13 @@ export class HelperMongo implements IHelperMongo {
             data: 1
         }
 
-        let group2: any = {
+        const group2: any = {
             _id: "$nth",
         }
         group2.data = {}
         group2.data[obj.groupLogic] = "$data";
 
-        let aggregate = [{
+        const aggregate = [{
             $match: match
         }, {
             $group: group1
@@ -633,6 +725,49 @@ export class HelperMongo implements IHelperMongo {
     }
 
 
+    /**
+     * Get the max value of a numerical field in a collection
+     * @param collName collection name
+     * @param obj options
+     * @param cb Callback
+     */
+    private getMaxValue(collName: string, obj: IMaxValue, cb: Function): void {
+        /**
+         * Flow 
+         * match -> unwind(optional) -> group (To find max)
+         */
+
+        const group = {
+            _id: null,
+            sno: {
+                $max: "$" + obj.key
+            }
+        }
+
+        const aggregate: Array<object> = [
+            { $match: obj.query || {} }
+        ]
+        if (obj.unwind) { // Use aggregate only when unwind is specified
+            aggregate.push({
+                "$unwind": obj.unwind[0] == "$" ? obj.unwind : "$" + obj.unwind
+            })
+        }
+        aggregate.push({
+            "$group": group
+        })
+        this.db.collection(collName).aggregate(aggregate, (err, result) => {
+            if (!err) {
+                if (result && result[0]) {
+                    cb(null, result[0].sno);
+                } else {
+                    cb(null, 0);
+                }
+            } else {
+                cb(err);
+            }
+        });
+    }
+
     private isValidationOnUpdate(data: IValidationNonExistenceUpdate | IValidationNonExistenceUpdate[]): data is IValidationNonExistenceUpdate {
         return (<IValidationNonExistenceUpdate[]>data).length !== undefined;
     }
@@ -640,22 +775,31 @@ export class HelperMongo implements IHelperMongo {
     private isValidateObject(data: IValidationNonExistence | IValidationNonExistence[]): data is IValidationNonExistence {
         return (<IValidationNonExistence[]>data).length !== undefined;
     }
+
+    /**
+     * Convert object/string to object, it also converts -name --> {name: -1} [Useful for sort]
+     * Used in getList API
+     * @param data 
+     * @param sort 
+     * 
+     * @returns {object}
+     */
     private getObj(data: string | object, sort?: boolean): object {
         if (data) {
-            if (typeof data == "string") {
+            if (typeof data == "string") { // if string then parse
                 try {
                     data = JSON.parse(data);
                     return <object>data;
                 } catch (err) {
-                    // this.logger.error(err);
+                    // if parsing fails, then check if its sort
                     if (sort == true) {
                         data = data.replace(/ /g, "");
                         if (data[0] == "-") {
-                            let val = data.slice(1);
+                            const val = data.slice(1);
                             data = {};
                             data[val] = -1;
                         } else {
-                            let val = data
+                            const val = data
                             data = {};
                             data[val] = 1;
                         }
