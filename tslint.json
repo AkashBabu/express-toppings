@@ -21,7 +21,12 @@
             }
         ],
         "no-empty-interface": false,
-        "no-import-side-effect": [true, {"ignore-module": "(\\.html|\\.css)$"}],
+        "no-import-side-effect": [
+            true,
+            {
+                "ignore-module": "(\\.html|\\.css)$"
+            }
+        ],
         "curly": true,
         "no-arg": true,
         "no-conditional-assignment": true,
@@ -47,15 +52,17 @@
         "semicolon": [
             false,
             "never"
-        ],  
+        ],
         "deprecation": true,
         "cyclomatic-complexity": [
-            true, 20
+            true,
+            20
         ],
         "eofline": false,
         "indent": [
             true
         ],
+        "prefer-const": true,
         "object-literal-sort-keys": false,
         "class-name": true,
         "interface-name": [
