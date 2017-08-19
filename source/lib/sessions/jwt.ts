@@ -74,7 +74,7 @@ export class JWT implements IJWT {
                 }, (err, user) => {
                     if (user) {
                         if (this.isDefined(req.body[this.options.passwordField])) {
-                            let valid = this.helper.verifySaltHash(user[this.options.passwordField], req.body[this.options.passwordField]);
+                            const valid = this.helper.verifySaltHash(user[this.options.passwordField], req.body[this.options.passwordField]);
                             loginCb.call(this)(err, valid ? user : false);
                         } else {
                             loginCb.call(this)(null, null, "Please specify a password");
@@ -184,7 +184,7 @@ export class JWT implements IJWT {
              * token expiry date is validated
              * Token issuer(iss) is validated
              */
-            let token = (req.headers["x-access-token"] || req.body && req.body.access_token) || (req.query && req.query.access_token) || null; // Get JWT Token
+            const token = (req.headers["x-access-token"] || req.body && req.body.access_token) || (req.query && req.query.access_token) || null; // Get JWT Token
             if (token) {
                 let decToken;
                 try {
@@ -229,13 +229,13 @@ export class JWT implements IJWT {
     }
 
     private sendToken(res, user) {
-        let expires = moment().add(this.options.validity, "day").toDate();
-        let token = {
+        const expires = moment().add(this.options.validity, "day").toDate();
+        const token = {
             iss: user._id,
             expires: expires
         }
 
-        let encToken = (<any>jwt).encode(token, this.options.secret, "HS256");
+        const encToken = (<any>jwt).encode(token, this.options.secret, "HS256");
 
         delete user[this.options.passwordField];
 
