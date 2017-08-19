@@ -88633,1023 +88633,18 @@ module.exports = function (app) {
 "use strict";
 
 
+// console.log("helper:", require("./data/helper"));
 module.exports = function (app) {
     app.service('contentService', [function () {
         this.content = {
-            "Helper": {
-                desc: "Commonly used functions for input validations, salthash etc",
-                initialCode: "\nvar Helper = require(\"express-toppings\").Helper;\nvar helper = new Helper();                    \n                    ",
-                methods: [{
-                    id: 'filterKeysInObj',
-                    name: 'filterKeysInObj(obj: string, filter: string[], sameObj?: boolean) => object',
-                    nav: 'filterKeysInObj',
-                    returns: {
-                        type: 'object',
-                        desc: 'An object that would not include the keys specified in the filter'
-                    },
-                    params: [{
-                        name: 'obj',
-                        desc: '[object] Input object'
-                    }, {
-                        name: 'filter',
-                        desc: '[string[]] Array of keys to be removed'
-                    }, {
-                        name: 'sameObj (optional)',
-                        desc: '[boolean] If the filter operation has to be applied on the same obj or a copy of it.',
-                        default: "false"
-                    }],
-                    desc: "Filters out/removes the keys for the given object",
-                    example: "\nvar obj = {a: 1, b: 1, c: 1},\n    filter = [\"a\", \"b\"];\n\nconsole.log(helper.filterKeysInObj(obj, filter, false)) // {c: 1}\n// obj = {a: 1, b: 1, c: 1}\n\n\nconsole.log(helper.filterKeysInObj(obj, filter, true)) // {c: 1}\nconsole.log(obj) // {c: 1}\n                    "
-                }, {
-                    id: 'retainKeysInObj',
-                    name: 'retainKeysInObj(obj: string, retain: string[], sameObj?: boolean) => object',
-                    nav: 'retainKeysInObj',
-                    return: {
-                        type: 'object',
-                        desc: 'An Object whose keys would include only the ones specified'
-                    },
-                    params: [{
-                        name: 'obj',
-                        desc: '[object] Input object'
-                    }, {
-                        name: 'retain',
-                        desc: '[string[]] Array of keys to be retained'
-                    }, {
-                        name: 'sameObj (optional)',
-                        desc: '[boolean] If the filter operation has to be applied on the same obj or a copy of it.',
-                        default: "false"
-                    }],
-                    desc: "Retains only the given keys in the object",
-                    example: "\nvar obj = {a: 1, b: 1, c: 1},\n    retain = [\"a\", \"b\"];\n\nconsole.log(helper.retainKeysInObj(obj, filter, false)) // {a: 1, b: 1}\n// obj = {a: 1, b: 1, c: 1}\n\n\nconsole.log(helper.retainKeysInObj(obj, filter, true)) // {a: 1, b: 1}\nconsole.log(obj) // {a: 1, b: 1}\n                    "
-                }, {
-                    id: 'weakPwd',
-                    name: 'weakPwd(password: string, config: object) => string',
-                    nav: 'weakPassword',
-                    return: {
-                        type: 'string',
-                        desc: 'Error, if the given string does not satisfy the conditions specified in the config object'
-                    },
-                    params: [{
-                        name: 'password',
-                        desc: '[string] String to check for weak password'
-                    }, {
-                        name: 'config',
-                        desc: '[object] Weak password Options'
-                    }, {
-                        name: '-> config.minLen (optional)',
-                        desc: '[boolean] Minimum length of password expected'
-                    }, {
-                        name: '-> config.maxLen (optional)',
-                        desc: '[boolean] Maximum length of password expected'
-                    }, {
-                        name: '-> config.upperCase (optional)',
-                        desc: '[boolean] If password should contain an UpperCase letter'
-                    }, {
-                        name: '-> config.lowerCase (optional)',
-                        desc: '[boolean] If password should contain an LowerCase letter'
-                    }, {
-                        name: '-> config.specialChars (optional)',
-                        desc: '[string[]] If password must contain atleast one special character from the given list'
-                    }],
-                    desc: "Checks if the given string is a weak password",
-                    example: ["\nvar password = \"Test123\"\nconsole.log(helper.weakPwd(password, {minLen: 3, maxLen: 5}))\n// Please choose a password length of atmost 5 characters\n                    "]
-                }, {
-                    id: 'prefixToQueryObject',
-                    name: 'prefixToQueryObject(prefix: string, obj: object) => object',
-                    nav: 'prefixToQueryObject',
-                    return: {
-                        type: 'object',
-                        desc: 'Object with prefixed keys'
-                    },
-                    params: [{
-                        name: 'prefix',
-                        desc: '[string] String to be prefixed to each key'
-                    }, {
-                        name: 'obj',
-                        desc: "[object] Object whose keys has to be prefixed"
-                    }],
-                    desc: "Prefix the given key to each string in the object",
-                    example: ["\nvar obj = {a: 1, b: 1};\nvar prefix = \"test\"\nconsole.log(helper.prefixToQueryObject(prefix, obj))\n// {\"test.a\" : 1, \"test.b\": 1}\n                    "]
-                }, {
-                    id: 'validateFieldsCb',
-                    name: 'validateFieldsCb(obj: object, fieldSpecs: IFieldSpec[], strict: boolean, callback: Function): void;',
-                    nav: 'validateFieldsCb',
-                    params: [{
-                        name: 'obj',
-                        desc: '[object] Object to be validated'
-                    }, {
-                        name: 'fieldSpecs',
-                        desc: "[object[]] Field Validation Options"
-                    }, {
-                        name: '-> fieldSpec.name',
-                        desc: "[string] Name of the field"
-                    }, {
-                        name: '-> fieldSpec.type',
-                        desc: "[string] Expected type of the field"
-                    }, {
-                        name: '-> fieldSpec.required (optional)',
-                        desc: "[boolean] If the field is required to be present"
-                    }, {
-                        name: '-> fieldSpec.preTransform',
-                        desc: "[Function : (data, ...preTransformArgs) => any]. Returned Data would be futher used for validation"
-                    }, {
-                        name: '-> fieldSpec.preTransformArgs',
-                        desc: "[any[]] Arguments to be passed to fieldSpec.preTranform function"
-                    }, {
-                        name: '-> fieldSpec.validate',
-                        desc: "[Function| Function[] : (data, ...validateArgs[index], done?: (err, isValid: boolean))]. Validation Function/s. If the number of args(data + validateArgs) > function.arguments.length then the last param is considered as a callback and the same is passed to the validation function"
-                    }, {
-                        name: '-> fieldSpec.validateArgs',
-                        desc: "[any[]] Arguments to be passed to fieldSpec.validate function"
-                    }, {
-                        name: '-> fieldSpec.validateErrMsg',
-                        desc: "[string | string[]] Error Messages to be returned on validation failure"
-                    }, {
-                        name: '-> fieldSpec.transform',
-                        desc: "[Function | Function[] : (data, ...transformArgs, done?: (err, transformedData) => void)]: any. Transform Function/s. If the number of args(data + transformArgs) > function.arguments.length then the last param is considered as a callback and the same is passed to the transform function"
-                    }, {
-                        name: '-> fieldSpec.transformArgs',
-                        desc: "[any | any[]] Arguments to be passed to fieldSpec.transform function"
-                    }, {
-                        name: '-> fieldSpec.errMsg',
-                        desc: "This will be return when fieldName is not present/type mismatch is found/validation errMsg is not specified"
-                    }, {
-                        name: 'strict',
-                        desc: 'If this is true, then the fields that are not specified in fieldSpecs will be removed'
-                    }],
-                    desc: "Asynchronous form validations",
-                    example: ["\nvar obj = {a: 1, b: \"asdf\", c: [], d: {}, e: '2'};\nvar validations = [\n    {\n        name: 'a',\n        type: \"number\",\n        errMsg: \"'a' is a required field and must be a number\"\n    }, {\n        name: 'b',\n        type: 'string',\n        validate: (data, len) => data.length > len,\n        validateArgs: 2,\n        validateErrMsg: \"'b' must have a atleast 2 characters\",\n        errMsg: \"'b' is a required field\"\n    }, {\n        name: 'c',\n        type: 'array',\n        errMsg: \"'c' must be an array\"\n    }, {\n        name: 'd',\n        type: 'object',\n        errMsg: \"'d' must be an object\"\n    }, {\n        name: 'e',\n        type: ['string', 'number'],\n        preTransform: (data) => parseInt(data),\n        validate: (data, minVal) => data > minVal,\n        validateArgs: 2\n    }, {\n        name: 'f',\n        type: 'string',\n        required: false,\n        errMsg: \"'f' must be a string\"\n    }\n]\n\nhelper.validateFieldsCb(obj, validations, false, (err) => console.log(err))\n// null\n                    "]
-                }, {
-                    id: 'validateFields',
-                    name: 'validateFields(obj: object, fieldSpecs: IFieldSpec[], strict: boolean): boolean;',
-                    return: {
-                        type: 'boolean',
-                        desc: 'true - if all the fields are valid'
-                    },
-                    nav: 'validateFields',
-                    desc: "(Recommend to use validateFieldsCb) Synchronous form validations. Params are same as validateFieldsCb except that validateFns and transformFns are all synchronous functions",
-                    params: [{
-                        name: 'obj',
-                        desc: '[object] object to be validated'
-                    }, {
-                        name: 'fieldSpecs',
-                        desc: '[object] Field Validation options'
-                    }, {
-                        name: '-> fieldSpec.name',
-                        desc: '[string] Name of field'
-                    }, {
-                        name: '-> fieldSpec.type',
-                        desc: '[string | string[]] Expected type of the field'
-                    }, {
-                        name: '-> fieldSpec.preTransform',
-                        desc: '[(data, ...preTransformArgs) => any] Pre-Transform function'
-                    }, {
-                        name: '-> fieldSpec.preTransformArgs',
-                        desc: '[any[]] Arguments for preTransform function'
-                    }, {
-                        name: '-> fieldSpec.validate',
-                        desc: '[Function | Function[] : (data, ...validateArgs) => boolean] Validation function/s '
-                    }, {
-                        name: '-> fieldSpec.validateArgs',
-                        desc: '[any[]] Arguments for validate function/s'
-                    }, {
-                        name: '-> fieldSpec.transform',
-                        desc: '[(data, ...transformArgs) => any] Transform function'
-                    }, {
-                        name: '-> fieldSpec.transformArgs',
-                        desc: '[any[]] Arguments for tranform function'
-                    }],
-                    example: ["\nvar obj = {a: 1, b: \"asdf\", c: [], d: {}, e: '2'};\nvar validations = [\n    {\n        name: 'a',\n        type: \"number\",\n    }, {\n        name: 'b',\n        type: 'string',\n        validate: (data, len) => data.length > len,\n        validateArgs: 2,\n    }, {\n        name: 'c',\n        type: 'array',\n    }, {\n        name: 'd',\n        type: 'object',\n    }, {\n        name: 'e',\n        type: ['string', 'number'],\n        preTransform: (data) => parseInt(data),\n        validate:  [ minValueCheck, maxValueCheck ],\n        validateArgs: 2\n    }, {\n        name: 'f',\n        type: 'string',\n        required: false,\n    }\n]\n\nif(helper.validateFields(obj, validations, false)) {\n    // All Fields are valid\n}\n                    "]
-                }, {
-                    id: 'saltHash',
-                    name: 'saltHashsaltHash(pwd: string, saltLength?: number) => string',
-                    nav: 'saltHash',
-                    return: {
-                        type: 'string',
-                        desc: 'Salted and hashed password'
-                    },
-                    params: [{
-                        name: 'pwd',
-                        desc: '[string] String to be salted and hashed'
-                    }, {
-                        name: 'saltLength (optional)',
-                        desc: "[number] Length of salt to be Prefixed",
-                        default: '16'
-                    }],
-                    desc: "Adds a salt and hashes the password",
-                    example: ["\nvar password = \"password\";\nconsole.log(helper.saltHash(password, 10));\n// 567981784abc67f9678fa760bc679e67879a7c - this is just an indicative password\n                    "]
-                }, {
-                    id: 'verifySaltHash',
-                    name: 'verifySaltHash(salted: string, pwd: string, saltLength?: number) => boolean',
-                    nav: 'verifySaltHash',
-                    return: {
-                        type: 'boolean',
-                        desc: 'true - if the password matches the salted hash'
-                    },
-                    params: [{
-                        name: 'salted',
-                        desc: '[string] Salted and hashed password'
-                    }, {
-                        name: 'pwd',
-                        desc: "[string] Password to be validated"
-                    }, {
-                        name: 'saltLength (optional)',
-                        desc: "[number] Length of salt prefix in the salted hash",
-                        default: '16'
-                    }],
-                    desc: "Verifies if the salted hash password matches the password",
-                    example: ["\nvar password = \"password\"\nvar salted = \"567981784abc67f9678fa760bc679e67879a7c\"; // this is just an indicative password\nhelper.verifySaltHash(salted, password, 10) // returns true\n                    "]
-                }]
-            },
-            "Response": {
-                desc: 'HTTP Response helper implementation',
-                initialCode: "\nvar HelperResp = require(\"express-toppings\").HelperResp;\nvar helperResp = new HelperResp();\n\n// Please note the response format followed in this library is in the form\n{\n    error: true|false,\n    data: {}\n}\n                ",
-                methods: [{
-                    id: 'success',
-                    name: 'success(res: express.Response, data?: any)',
-                    nav: 'success',
-                    desc: 'HTTP 200 Success handler',
-                    params: [{
-                        name: 'res',
-                        desc: 'Express Response object'
-                    }, {
-                        name: 'data',
-                        desc: '[any] Response data'
-                    }],
-                    example: ["\n// if the request was a success then\nhelperResp.success(res);\n                        "]
-                }, {
-                    id: 'failed',
-                    name: 'failed(res: express.Response, msg?: string)',
-                    nav: 'failed',
-                    desc: 'HTTP 400 Success handler',
-                    params: [{
-                        name: 'res',
-                        desc: 'Express Response object'
-                    }, {
-                        name: 'msg',
-                        default: 'Failed',
-                        desc: '[string] Error Message'
-                    }],
-                    example: ["\n// if the request was a failure\nhelperResp.failed(res, 'Name missing')\n                        "]
-                }, {
-                    id: 'post',
-                    name: 'post(res: express.Response, data?: any)',
-                    nav: 'post',
-                    desc: 'CRUD - Create handler',
-                    params: [{
-                        name: 'res',
-                        desc: 'Express Response object'
-                    }, {
-                        name: 'data',
-                        desc: '[any] Response data',
-                        default: "CREATED"
-                    }],
-                    example: ["\n// If the data was successfully inserted into DB then\ndb.collection('test').insert(data, (err, result) => {\n    if(result) {\n        helperResp.post(res, result)\n    } else {\n        if(err) {\n            helperResp.serverError(res, err)\n        } else {\n            helperResp.failed(res, \"Creation Failed\")\n        }\n    }\n})\n                    "]
-                }, {
-                    id: 'put',
-                    name: 'put(res: express.Response, data?: any)',
-                    nav: 'put',
-                    desc: 'CRUD - Update handler',
-                    params: [{
-                        name: 'res',
-                        desc: 'Express Response object'
-                    }, {
-                        name: 'data',
-                        desc: '[any] Response data',
-                        default: "UPDATED"
-                    }],
-                    example: ["\n// If the data was successfully updated in DB then\ndb.collection('test').update({}, {$set: data}, (err, result) => {\n    if(result && result.nModified) {\n        helperResp.put(res, result)\n    } else {\n        if(err) {\n            helperResp.serverError(res, err)\n        } else {\n            helperResp.failed(res, \"Update Failed\")\n        }\n    }\n})\n                    "]
-                }, {
-                    id: 'delete',
-                    name: 'delete(res: express.Response, data?: any)',
-                    nav: 'delete',
-                    desc: 'CRUD - Delete Handler',
-                    params: [{
-                        name: 'res',
-                        desc: 'Express Response object'
-                    }, {
-                        name: 'data',
-                        desc: '[any] Response data',
-                        default: "DELETED"
-                    }],
-                    example: ["\n// If the data was successfully removed from DB then\ndb.collection('test').remove(data, (err, result) => {\n    if(result) {\n        helperResp.delete(res, result)\n    } else {\n        if(err) {\n            helperResp.serverError(res, err)\n        } else {\n            helperResp.failed(res, \"Delete Failed\")\n        }\n    }\n})\n                    "]
-                }, {
-                    id: 'get',
-                    name: 'get(res: express.Response, data?: any, list?: boolean)',
-                    nav: 'get',
-                    desc: 'CRUD - get n list Handler',
-                    params: [{
-                        name: 'res',
-                        desc: 'Express Response object'
-                    }, {
-                        name: 'data',
-                        desc: '[any] Response data',
-                        default: "[] | {} depending on .list"
-                    }, {
-                        name: 'list',
-                        type: 'boolean',
-                        default: 'true',
-                        desc: '[boolean] if true then data defaults to [] else {}'
-                    }],
-                    example: ["\n// If the data was successfully obtained from DB then\ndb.collection('test').find({}, (err, result) => {\n    if(result) {\n        helperResp.get(res, result, true);\n    } else {\n        if(err) {\n            helperResp.serverError(res, err)\n        } else {\n            helperResp.failed(res, \"Failed to get data from DB\")\n        }\n    }\n})\n                    "]
-                }, {
-                    id: 'unauth',
-                    name: 'unauth(res: express.Response, msg?: string)',
-                    nav: 'unatuh',
-                    desc: 'HTTP 401 handler',
-                    params: [{
-                        name: 'res',
-                        desc: 'Express Response object'
-                    }, {
-                        name: 'msg',
-                        desc: '[string] Response data',
-                        default: "UNAUTHORIZED ACCESS"
-                    }],
-                    example: ["\n// If the user is unauthorized\nhelperResp.unauth(res);\n                    "]
-                }, {
-                    id: 'serverError',
-                    name: 'serverError(res: express.Response, msg?: string)',
-                    nav: 'serverError',
-                    desc: 'HTTP 500 Handler',
-                    params: [{
-                        name: 'res',
-                        desc: 'Express Response object'
-                    }, {
-                        name: 'msg',
-                        desc: '[string] Response data',
-                        default: "INTERNAL SERVER ERROR"
-                    }],
-                    example: ["\n// On Internal Server Error                     \nhelperResp.serverError(res);\n                    "]
-                }, {
-                    id: 'handleResult',
-                    name: 'handleResult(res: express.Response) => (err: any, result: any, type: string)',
-                    nav: 'handleResult',
-                    desc: 'Generic Callback Result handler',
-                    params: [{
-                        name: 'res',
-                        desc: 'Express Response Object'
-                    }]
-                }],
-                example: ["\n// If data is obtained from a callback(err, result), then replace it with handleResult\ndb.collection('test').find({}, helperResp.handleResult(res));                \n                "]
-            },
-            "Validations": {
-                desc: "Includes common validation functions",
-                initialCode: "\nvar HelperValidate = require('express-toppings').HelperValidate;\nvar helperValidate = new HelperValidate()\n\n// These Helper Function are commonly used in form validation along with helper.validateFieldsCb\n                ",
-                methods: [{
-                    id: 'range',
-                    name: 'range(data: number, min: number, max: number) => boolean',
-                    nav: 'range',
-                    desc: "Validates if the given number if within the specified range",
-                    params: [{
-                        name: 'data',
-                        type: 'number',
-                        desc: 'Data to be validated'
-                    }, {
-                        name: 'min',
-                        type: 'number',
-                        desc: 'Lower Limit'
-                    }, {
-                        name: 'max',
-                        type: 'number',
-                        desc: 'Upper Limit'
-                    }],
-                    example: ["\nvar data = 10;\nhelperValidate.range(10, 5, 15) // true                \n                    "]
-                }, {
-                    id: 'length',
-                    name: 'length(data: string, min: number, max?: number) => boolean',
-                    nav: 'length',
-                    desc: "Validates if the length of the array|string is within the limits",
-                    params: [{
-                        name: 'data',
-                        type: 'string|array',
-                        desc: 'Data to be validated'
-
-                    }, {
-                        name: 'min',
-                        type: 'number',
-                        desc: 'Lower Limit'
-                    }, {
-                        name: 'max (optional)',
-                        type: 'number',
-                        desc: 'Upper Limit. If this param is not provided then only lower limit validation is performed'
-                    }],
-                    example: ["\nvar data = \"test\";\nhelperValidate.length(data, 2, 6) // true\nvar arr = [1, 2]\nhelperValidate.length(data, 3, 5) // false                    \n                    "]
-                }, {
-                    id: 'isMongoId',
-                    name: 'isMongoId(id: string) => boolean',
-                    nav: 'isMongoId',
-                    desc: "Validates if the given string is a valid MongoId",
-                    params: [{
-                        name: 'id',
-                        type: 'string',
-                        desc: 'Id to be validated'
-                    }],
-                    example: ["\nvar id = \"5968d825f7031236fed9ec5f\"\nhelperValidate.isMongoId(id) // true                    \n                    "]
-                }, {
-                    id: 'in',
-                    name: 'in(data: any, arr: any[]) => boolean',
-                    nav: 'in',
-                    desc: 'Checks if the data is present in the given array',
-                    params: [{
-                        name: 'data',
-                        type: 'string|number|object|array',
-                        desc: 'Data to be checked'
-                    }, {
-                        name: 'arr',
-                        type: 'array',
-                        desc: 'Array to be searched for Data'
-                    }],
-                    example: ["\nvar data = 'a',\n    arr = ['a', 'b']\n\nhelperValidate.in(data, arr) // true                    \n                    ", "\nvar data = { name: 1, age: 3 }\nvar data2 = [1, 2]\nvar arr = [{ name: 2 }, { name: 1, age: 3 }, [1, 2]]\nhelperValidate.in(data, arr) // true\nhelperValidate.in(data2, arr) // true\n                    "]
-                }, {
-                    id: 'isName',
-                    name: 'isName(name: string) => boolean',
-                    nav: 'isName',
-                    desc: 'validate if the given string matches the Name format',
-                    params: [{
-                        name: 'name',
-                        type: 'string',
-                        desc: 'Data to be checked'
-                    }],
-                    example: ["\nvar name = 'isName_123';\nhelperValidate.isName(name) // true                    \n                    "]
-                }, {
-                    id: 'isEmail',
-                    name: 'isEmail(email: string) => boolean',
-                    nav: 'isEmail',
-                    desc: 'Validate if the given string matches the Eamil format',
-                    params: [{
-                        name: 'email',
-                        type: 'string',
-                        desc: 'Data to be checked'
-                    }],
-                    example: ["\nvar email = '123_asdf.jkl@co.com';\nhelperValidate.isEmail(email) // true                    \n                    "]
-                }, {
-                    id: 'isAlpha',
-                    name: 'isAlpha(data: string) => boolean',
-                    nav: 'isAlpha',
-                    desc: 'validate if the given string contains only Alphabets',
-                    params: [{
-                        name: 'data',
-                        type: 'string',
-                        desc: 'Data to be checked'
-                    }],
-                    example: ["\nvar str = 'asdfAASDF';\nhelperValidate.isAlpha(str) // true                    \n                    "]
-                }, {
-                    id: 'isNumeric',
-                    name: 'isNumeric(data: string): boolean',
-                    nav: 'isNumeric',
-                    desc: 'validate if the given string contains only numbers',
-                    params: [{
-                        name: 'data',
-                        type: 'string',
-                        desc: 'Data to be checked'
-                    }],
-                    example: ["\nvar str = '2345678';\nhelperValidate.isNumeric(str) // true                    \n                    "]
-                }, {
-                    id: 'isAlphaNumeric',
-                    name: 'isAlphaNumeric(data: string) => boolean',
-                    nav: 'isAlphaNumeric',
-                    desc: 'validate if the given string is Alphabets and numbers',
-                    params: [{
-                        name: 'data',
-                        type: 'string',
-                        desc: 'Data to be checked'
-                    }],
-                    example: ["\nvar str = 'isName123';\nhelperValidate.isAlphaNumeric(str) // true                    \n                    "]
-                }, {
-                    id: 'isDate',
-                    name: 'isDate(dateStr: string, format?: string) => boolean',
-                    nav: 'isDate',
-                    desc: 'Validate if the given string is in Data format',
-                    params: [{
-                        name: 'dateStr',
-                        type: 'string',
-                        desc: 'Data to be checked'
-                    }, {
-                        name: 'format (optional)',
-                        type: 'string',
-                        desc: 'Moment Date format'
-                    }],
-                    example: ["\nvar dateStr = '12-07-1993';\nhelperValidate.isDate(dateStr, 'DD-MM-YYYY') // true                    \n                    "]
-                }, {
-                    id: 'isRegex',
-                    name: 'isRegex(data: string, regexStr: string) => boolean',
-                    nav: 'isRegex',
-                    desc: 'Check if the data matches the regexStr pattern',
-                    params: [{
-                        name: 'data',
-                        type: 'string',
-                        desc: 'Data to be checked'
-                    }, {
-                        name: 'regexStr',
-                        type: 'string',
-                        desc: 'regex pattern to be used for validation'
-                    }],
-                    example: ["\nvar name = 'asdfASD_09';\nhelperValidate.isRegex(name, '^[a-fA-F09]+$') // true                    \n                    "]
-                }]
-            },
-            "Transformations": {
-                desc: "Common data transformation functions",
-                initialCode: "\nvar HelperTransform = require('express-toppings').HelperTransform;\nvar helperTransform = new HelperTransform();\n\n// These function are typically used for transformation in helper.validateFieldsCb\n                ",
-                methods: [{
-                    id: 'toLowerCase',
-                    name: 'toLowerCase(data: string) => string',
-                    nav: 'toLowerCase',
-                    desc: 'Transforms the given string to Lower Case',
-                    params: [{
-                        name: 'data',
-                        type: 'string',
-                        desc: 'Data to be transformed'
-                    }],
-                    example: ["\nvar str = \"asdfASDF\";\nhelperTransform.toLowerCase(str) // asdfasdf\n                   "]
-                }, {
-                    id: 'toUpperCase',
-                    name: 'toUpperCase(data: string) => string',
-                    nav: 'toUpperCase',
-                    desc: 'Transforms the given string to Upper Case',
-                    params: [{
-                        name: 'data',
-                        type: 'string',
-                        desc: 'Data to be transformed'
-                    }],
-                    example: ["\nvar str = \"asdfASDF\";\nhelperTransform.toUpperCase(str) // ASDFASDF\n                   "]
-                }, {
-                    id: 'toMongoId',
-                    name: 'toMongoId(id: string) => object',
-                    nav: 'toMongoId',
-                    desc: 'Transforms mongo id to Mongo Object id',
-                    params: [{
-                        name: 'id',
-                        type: 'string',
-                        desc: 'Mongo document id as string'
-                    }],
-                    example: ["\nvar id = \"5968d825f7031236fed9ec5f\";\nhelperTransform.toMongoId(id) // ObjectId(\"5968d825f7031236fed9ec5f\")\n                   "]
-                }, {
-                    id: 'toDate',
-                    name: 'toDate(dateStr: string) => Date',
-                    nav: 'toDate',
-                    desc: 'Transforms the given string to Date Object',
-                    params: [{
-                        name: 'dateStr',
-                        type: 'string',
-                        desc: 'Date string'
-                    }],
-                    example: ["\nvar dateStr = \"1993-07-12T00:00:00.000Z\"\nhelperTransform.toDate(dateStr) // Date()\n                   "]
-                }, {
-                    id: 'toMoment',
-                    name: 'toMoment(dateStr: string) => object',
-                    nav: 'toMoment',
-                    desc: 'Transforms the given string to moment object',
-                    params: [{
-                        name: 'dateStr',
-                        type: 'string',
-                        desc: 'Date String'
-                    }],
-                    example: ["\nvar dateStr = \"1993-07-12\"\nhelperTransform.toMoment(dateStr) // moment()\n                   "]
-                }, {
-                    id: 'toInt',
-                    name: 'toInt(data: string) => number',
-                    nav: 'toInt',
-                    desc: 'Parse string to number',
-                    params: [{
-                        name: 'data',
-                        type: 'string',
-                        desc: 'number in string'
-                    }],
-                    example: ["\nvar data = \"2\"\nhelperTransform.toInt(data) // 2\n                   "]
-                }, {
-                    id: 'toFloat',
-                    name: 'toFloat(data: string, decPoints?: number) => number',
-                    nav: 'toFloat',
-                    desc: 'Parse string to float',
-                    params: [{
-                        name: 'data',
-                        type: 'string',
-                        desc: 'number in string'
-                    }, {
-                        name: 'decPoints (optional)',
-                        type: 'number',
-                        desc: "Decimal points to be included in float",
-                        default: "5"
-                    }],
-                    example: ["\nvar data = \"2.1234\"\nhelperTransform.toFloat(data, 2) // 2.12\n                   "]
-                }, {
-                    id: 'toSaltHash',
-                    name: 'toSaltHash(pwd: string) => string',
-                    nav: 'toSaltHash',
-                    desc: 'Adds salt and hashes the given the string',
-                    params: [{
-                        name: 'pwd',
-                        type: 'string',
-                        desc: 'password'
-                    }],
-                    example: ["\nvar pwd = \"asdf\";\nhelperTransform.toSaltHash(pwd) // 5678ab98fe988a98b67c89322efa779\n                   "]
-                }, {
-                    id: 'stripXss',
-                    name: 'stripXss(str: string) => string',
-                    nav: 'stripXss',
-                    desc: 'Removes all the html tags and the data inbetween the tags',
-                    params: [{
-                        name: 'str',
-                        type: 'string',
-                        desc: ''
-                    }],
-                    example: ["\nvar str = \"hello <script>World</script>\";\nhelperTransform.stripXss(str) // hello \n                   "]
-                }]
-            },
-            "MongoDB": {
-                desc: "Common MongoDb operation for CRUD",
-                initialCode: "\nvar HelperMongo = require('express-toppings').HelperMongo;\nvar helperMongo = new HelperMongo(connStr);\n                ",
-                methods: [{
-                    id: 'validateExistence',
-                    name: 'validateExistence(collName: string, validate: any, cb: Function)',
-                    nav: 'validateExistence',
-                    desc: 'Validates if there is any document matching the given query',
-                    params: [{
-                        name: 'collName',
-                        type: 'string',
-                        desc: 'Collection Name'
-                    }, {
-                        name: 'validate',
-                        type: 'object',
-                        desc: 'Mongo find() query object'
-                    }, {
-                        name: 'cb',
-                        type: '(err, result) => void',
-                        desc: 'Callback'
-                    }],
-                    example: ["\nvar data = {\n    name: \"test\"\n}\ndb.collection(\"validateExistenceColl\").insert(data, (err, result) => {\n    if (result) {\n        helperMongo.validateExistence(\"validateExistenceColl\", { name: \"test\" }, (err, result) => {\n            console.log(result)\n        })\n    } else {\n        console.warn(\"Unable to insert data to test validateExistence\")\n    }\n})\n                   "]
-                }, {
-                    id: 'validateNonExistence',
-                    name: 'validateNonExistence(collName: string, validations: object | object[], cb: ICallback)',
-                    nav: 'validateNonExistence',
-                    desc: 'Validate no document matches for all the given validations(queries)',
-                    params: [{
-                        name: 'collName',
-                        type: 'string',
-                        desc: 'Collection Name'
-                    }, {
-                        name: 'validations',
-                        type: 'object | object[]',
-                        desc: 'Validations for document'
-                    }, {
-                        name: '-> validation.query',
-                        type: 'object',
-                        desc: 'Mongo find() query object'
-                    }, {
-                        name: '-> validation.errMsg',
-                        type: 'object | object[]',
-                        desc: 'Validations for document'
-                    }],
-                    example: ["\nvar data1 = {\n    name: 'test1',\n    checking: 'validations',\n    type: \"multi\"\n}\nvar data2 = {\n    name: 'test2',\n    checking: 'validations',\n    type: \"multi\"\n}\n\ndb.collection('validateNonExistence').insert([data1, data2], (err, result) => {\n    if (!err) {\n        let validations = [\n            {\n                query: {\n                    name: 'test3'\n                },\n                errMsg: \"Duplicate Name\"\n            }, {\n                query: {\n                    checking: 'validations',\n                    type: 'multi'\n                },\n                errMsg: 'Duplicate Methods'\n            }\n        ]\n        helperMongo.validateNonExistence('validateNonExistence', validations, (err, result) => {\n            should.exist(err);\n            should.not.exist(result);\n            err.should.be.eql(\"Duplicate Methods\")\n\n            done()\n        })\n    }\n})\n                   "]
-                }, {
-                    id: 'validateNonExistenceOnUpdate',
-                    name: 'validateNonExistenceOnUpdate(collName: string, obj: IMongoDoc, validations: object | object[], cb: Function)',
-                    nav: 'validateNonExistenceOnUpdate',
-                    desc: 'Validates that the updated document does not collide with unique fields in the collection',
-                    params: [{
-                        name: 'collName',
-                        type: 'string',
-                        desc: 'Collection Name'
-                    }, {
-                        name: 'obj',
-                        type: 'object',
-                        desc: 'Updated object that has to updated in mongoDB'
-                    }, {
-                        name: 'validations',
-                        type: 'object',
-                        desc: 'Set of validations to avoid collision of unique field on update'
-                    }, {
-                        name: '-> validation.name',
-                        type: 'string',
-                        desc: 'Document field name'
-                    }, {
-                        name: '-> validation.query',
-                        type: 'object',
-                        desc: 'Mongo find() query object'
-                    }, {
-                        name: '-> validation.errMsg',
-                        type: 'string',
-                        desc: 'Error message to return on validation failure'
-                    }, {
-                        name: 'cb',
-                        type: '(err, result) => void',
-                        desc: 'Callback`'
-                    }],
-                    example: ["\nvar data1 = {\n    name: \"test1\",\n    checking: 'validateNonExistenceOnUpdate'\n}\nvar data2 = {\n    name: \"test2\",\n    checking: 'validateNonExistenceOnUpdate'\n}\ndb.collection(\"validateNonExistenceOnUpdate2\").insert([data1, data2], (err, result) => {\n    if (!err) {\n        var validations = [\n            {\n                name: \"name\"\n            }\n        ]\n        result[0].name = 'test2'\n        helperMongo.validateNonExistenceOnUpdate('validateNonExistenceOnUpdate2', result[0], validations, (err, result) => {\n            should.exist(err);\n            err.should.be.eql(\"Duplicate name\");\n            result.should.be.eql(1)\n\n            done()\n        })\n\n    }\n})\n                   "]
-                }, {
-                    id: 'getById',
-                    name: 'getById(collName: string, id: string, cb: ICallback)',
-                    nav: 'getById',
-                    desc: 'Get a document that matches the given id',
-                    params: [{
-                        name: 'collName',
-                        type: 'string',
-                        desc: 'Collection Name'
-                    }, {
-                        name: 'id',
-                        type: 'string',
-                        desc: 'Mongo Document id'
-                    }, {
-                        name: 'cb',
-                        type: "(err, document) => void",
-                        desc: 'Callback'
-                    }],
-                    example: ["\n var data = {\n    name: 'test'\n}\ndb.collection(\"getById2\").insert(data, (err, result) => {\n    if (!err) {\n        helperMongo.getById(\"getById2\", result._id, (err, result1) => {\n            should.not.exist(err);\n            result1._id.should.be.eql(result._id);\n            result1.name.should.be.eql(result.name);\n\n            done();\n        })\n    }\n})\n                   "]
-                }, {
-                    id: 'getNextSeqNo',
-                    name: 'getNextSeqNo(collName: string, obj: IMaxValue, cb: Function)',
-                    nav: 'getNextSeqNo',
-                    desc: 'Get the next sequence number of a numerical field in a collection',
-                    params: [{
-                        name: 'collName',
-                        type: 'string',
-                        desc: 'Collection Name'
-                    }, {
-                        name: 'obj',
-                        type: 'object',
-                        desc: 'Options'
-                    }, {
-                        name: '-> obj.key',
-                        type: 'string',
-                        desc: 'Key for which max value has to be found. Make sure that this field is of type number else erroneous output would be expected'
-                    }, {
-                        name: "-> obj.query",
-                        type: 'object',
-                        desc: 'MongoDB $match query object'
-                    }, {
-                        name: '-> obj.unwind',
-                        type: 'object',
-                        desc: 'if the max value has to be found within an array in a document, then specify the key',
-                        default: 'null'
-                    }, {
-                        name: '-> obj.maxValue (optional)',
-                        default: 'infinite',
-                        type: 'number',
-                        desc: 'Maximum allowed sequence number'
-                    }, {
-                        name: '-> obj.minValue (optional)',
-                        default: '0',
-                        type: 'number',
-                        desc: 'Minimum allowed sequence number'
-                    }, {
-                        name: '-> obj.errMsg (optional)',
-                        default: 'Could not Get Next Sequence Number',
-                        type: 'string',
-                        desc: "Error Message to return when a sequence number could not be found"
-                    }],
-                    example: ["\nvar data = [\n    {\n        num: 1\n    }, {\n        num: 2\n    }, {\n        num: 10\n    },\n]\ndb.collection(\"getNextSeqNo1\").insert(data, (err) => {\n    if (!err) {\n        var nextSeqQuery = {\n            // query: {},\n            key: 'num'\n        }\n        helperMongo.getNextSeqNo('getNextSeqNo1', nextSeqQuery, (err, result) => {\n            should.not.exist(err);\n            result.should.be.eql(11);\n\n            done()\n        })\n    }\n})\n                   "]
-                }, {
-                    id: 'update',
-                    name: 'update(collName: string, obj: object, exclude?: string[], cb?: Function)',
-                    nav: 'update',
-                    desc: 'Updates the document excluding the specified fields from the object ',
-                    params: [{
-                        name: 'collName',
-                        type: 'string',
-                        desc: 'Collection Name'
-                    }, {
-                        name: 'obj',
-                        type: 'object',
-                        desc: 'Mongo document'
-                    }, {
-                        name: 'exclude (optional)',
-                        default: '[]',
-                        type: 'string[]',
-                        desc: 'fields to excluded while updating the document'
-                    }, {
-                        name: 'cb',
-                        type: '(err, result) => void',
-                        desc: "Callback"
-                    }],
-                    example: ["\nvar data = {\n    name: 'test',\n    field2: 'should Not Be Updated'\n}\ndb.collection('update4').insert(data, (err, result) => {\n    if (!err) {\n        result.field2 = \"updated data\";\n        result.name = \"updated name\";\n\n        helperMongo.update('update4', result, [\"field2\"], (err, result1) => {\n            should.not.exist(err);\n            result1.should.be.an(\"object\");\n            result1.n.should.be.eql(1);\n\n            db.collection(\"update4\").findOne({ _id: result._id }, (err, result2) => {\n                should.not.exist(err);\n                result2.should.be.an(\"object\");\n                result2.field2.should.be.eql(\"should Not Be Updated\")\n                result2.name.should.be.eql(\"updated name\")\n\n                done()\n            })\n        })\n    }\n})\n                   "]
-                }, {
-                    id: 'getList',
-                    name: 'getList(collName: string, obj: object, cb: Function)',
-                    nav: 'getList',
-                    desc: 'Get a list of documents in a collection - can be used for CRUD - list apis',
-                    params: [{
-                        name: 'collName',
-                        type: 'string',
-                        desc: 'Collection Name'
-                    }, {
-                        name: 'obj',
-                        type: 'object',
-                        desc: 'options'
-                    }, {
-                        name: '-> obj.pageNo (optional)',
-                        default: '1',
-                        type: 'number',
-                        desc: 'Page number for pagination'
-                    }, {
-                        name: '-> obj.recordsPerPage (optional)',
-                        default: 'all',
-                        type: 'number',
-                        desc: 'Number of records per page'
-                    }, {
-                        name: '-> obj.query (optional)',
-                        default: '{}',
-                        type: 'object',
-                        desc: 'Mongo query filter for the list'
-                    }, {
-                        name: '-> obj.project (optional)',
-                        default: '{}',
-                        type: 'object',
-                        desc: 'Mongo find() project object'
-                    }, {
-                        name: '-> obj.search (optional)',
-                        type: 'string',
-                        desc: 'Search Text'
-                    }, {
-                        name: "-> obj.searchField (optional)",
-                        sdefault: 'name',
-                        type: 'string',
-                        desc: 'Field on which search text must be filtered'
-                    }, {
-                        name: '-> obj.sort (optional)',
-                        default: '{}',
-                        type: 'object',
-                        desc: 'Order in which the documents must be sorted ex: -name| name'
-                    }],
-                    example: ["\n var data = [\n    {\n        name: 'test1'\n    }, {\n        name: 'test2'\n    }, {\n        name: 'test3'\n    }\n]\ndb.collection('getList8').insert(data, (err, result) => {\n    if (!err) {\n        helperMongo.getList(\"getList8\", {\n            project: { name: 1, _id: 0 },\n            sort: '-name'\n        }, (err, result1) => {\n            should.not.exist(err);\n            result1.should.be.an(\"object\");\n            result1.count.should.be.eql(3);\n            result1.list.length.should.be.eql(3);\n            result1.list[0].name.should.be.eql(\"test3\")\n            result1.list[1].name.should.be.eql(\"test2\")\n            result1.list[2].name.should.be.eql(\"test1\")\n\n            done();\n        })\n    }\n})\n                   "]
-                }, {
-                    id: 'remove',
-                    name: 'remove(collName: string, id: string, removeDoc?: boolean, cb: Function)',
-                    nav: 'remove',
-                    desc: 'Remove a document',
-                    params: [{
-                        name: 'collName',
-                        type: 'string',
-                        desc: 'Collection Name'
-                    }, {
-                        name: 'id',
-                        type: 'string',
-                        desc: 'Mongo Document Id'
-                    }, {
-                        name: 'removeDoc (optional)',
-                        default: 'true',
-                        type: 'boolean',
-                        desc: 'if true would remove the document else would set isDeleted flag and delTime(Deleted time) on the document. Please note that if isDeleted flag is set, then the corresponding query should be maintained while fetching the documents that are not deleted. This can be used only when a history is crucial'
-                    }],
-                    example: ["\nvar data = {\n    name: 'test'\n}\ndb.collection('remove3').insert(data, (err, result) => {\n    if (!err) {\n        helperMongo.remove(\"remove3\", result._id, false, (err, result1) => {\n            should.not.exist(err);\n\n            db.collection('remove3').findOne({ _id: result._id }, (err, result2) => {\n                should.not.exist(err);\n                result2.should.be.an(\"object\");\n                result2.isDeleted.should.be.ok;\n                should.exist(result2.deltime)\n\n                done();\n            })\n        })\n    }\n})\n                   "]
-                }, {
-                    id: 'splitTimeThenGrp',
-                    name: 'splitTimeThenGrp(collName: string, obj: object, cb: Function)',
-                    nav: 'splitTimeThenGrp',
-                    desc: 'Splits the selected range of documents by time and then groups them based on grouping logic',
-                    params: [{
-                        name: 'collName',
-                        type: 'string',
-                        desc: 'Collection Name'
-                    }, {
-                        name: 'obj',
-                        type: 'object',
-                        desc: 'options'
-                    }, {
-                        name: '-> obj.key',
-                        type: 'object',
-                        desc: 'Timestamp key Options'
-                    }, {
-                        name: '---> obj.key.name',
-                        type: 'string',
-                        desc: 'Timestamp field name in the document'
-                    }, {
-                        name: '---> obj.key.min',
-                        type: 'Date',
-                        desc: 'Lower limit of query selection for timestamp field'
-                    }, {
-                        name: '---> obj.key.max',
-                        type: 'Date',
-                        desc: 'Upper limit of query selection for timestamp field'
-                    }, {
-                        name: '-> obj.project',
-                        type: 'string[]',
-                        desc: 'Fields to included in the final result'
-                    }, {
-                        name: '-> obj.groupBy',
-                        type: 'string',
-                        desc: 'Grouping interval. Possible values are : year, month, day, hour, minute, second, millisecond'
-                    }, {
-                        name: '-> obj.groupLogic',
-                        type: 'string',
-                        desc: 'Mongo Aggregation Group logic ex: $first, $last, $avg, $sum etc'
-                    }],
-                    example: ["\nvar data = []\nvar currTs = moment()\nvar count = 1000;\nvar interval = 10;\nfor (var i = 0; i < count; i++) {\n    data.push({\n        ts: moment().add(i * interval, \"seconds\")._d,\n        // ts: currTs + i * 10,\n        x: i\n    })\n}\nvar totalSeconds = count * interval\ndb.collection(\"splitTimeThenGroup1\").insert(data, (err, result) => {\n    if (!err) {\n        var option = {\n            key: {\n                name: \"ts\",\n                min: moment()._d,\n                max: moment().add(totalSeconds, \"seconds\")._d,\n            },\n            project: ['x'],\n            groupBy: 'hour',\n            groupLogic: '$first'\n        }\n        var expectedCount = Math.ceil(totalSeconds / 60 / 60);\n\n        helperMongo.splitTimeThenGrp(\"splitTimeThenGroup1\", option, (err, result1) => {\n            result1.should.be.an(\"array\");\n            console.log(\"Result:\", result)\n\n            done();\n        })\n    } else {\n        console.error(\"Failed to insert into splitTimeThenGroup1\", err)\n    }\n})\n                   "]
-                }, {
-                    id: 'selectNinM',
-                    name: 'selectNinM(collName: string, obj: object, cb: Function)',
-                    nav: 'selectNinM',
-                    desc: 'Selects n number of documents from m range of selected documents based on grouping logic',
-                    params: [{
-                        name: 'collName',
-                        type: 'string',
-                        desc: 'Collection Name'
-                    }, {
-                        name: 'obj',
-                        type: 'object',
-                        desc: 'Options'
-                    }, {
-                        name: '-> obj.numOfPoints',
-                        type: 'number',
-                        desc: 'Number of points expected in result (M)'
-                    }, {
-                        name: '-> obj.query',
-                        type: 'object',
-                        desc: 'Mongo find() query object'
-                    }, {
-                        name: '-> obj.project',
-                        type: 'object',
-                        desc: 'Fields to be projected in final result'
-                    }, {
-                        name: '-> obj.groupLogic',
-                        type: 'string',
-                        desc: 'Mongo Aggregation Group logic ex: $first, $last, $avg, $sum etc'
-                    }],
-                    example: ["\nvar data = [];\nfor (var i = 0; i < 100; i++) {\n    data.push({\n        name: 'test' + i,\n        num: i\n    })\n}\n\ndb.collection(\"selectNinM1\").insert(data, (err, result) => {\n    if (!err) {\n        var obj = {\n            numOfPoints: 10,\n            groupLogic: '$first',\n            project: ['name', 'num'],\n            query: {}\n        }\n        helperMongo.selectNinM('selectNinM1', obj, (err, result1) => {\n            should.not.exist(err);\n            result1.should.be.an('array');\n            result1.length.should.be.eql(10);\n\n            done()\n        })\n    }\n})\n                   "]
-                }]
-            },
-            "CRUD": {
-                desc: "Create standard CRUD APIs",
-                initialCode: "\nvar CRUD = require('express-toppings').Crud;\nfunction create() {\n    return (req, res, next) => {\n        // Some Operation\n    }\n}\nvar user = {\n    create: create(),\n    get: get(),\n    list: list(),\n    update: update(),\n    remove: remove()\n}            \n\nvar router = express.Router();\n\nrouter.use(\"/user\", new CRUD(user));\n\n// The above line would create 5 APIs as follows\n// POST /user/ -- user.create\n// GET /user/:id -- user.get\n// GET /user/ -- user.list\n// PUT /user/:id -- user.update\n// DELETE /user/:id -- user.remove\n                "
-            },
-            // "CRUD-Handlers": {
-            //     desc: "",
-            //     initialCode: ``,
-            //     methods: [{
-            //         id: '',
-            //         name: '',
-            //         nav: '',
-            //         desc: '',
-            //         params: [{
-            //             name: '',
-            //             type: '',
-            //             desc: '',
-            //             default: ''
-            //         }],
-            //         example: [`
-
-            //        `]
-            //     }]
-            // },
-            "Session-JWT": {
-                desc: "JWT implementation on express",
-                initialCode: "\nvar JWT = require(\"express-toppings\").Session.JWT\ninterface IJWTOptions {\n    collName: string;\n    connStr: string;\n    secret: string;\n    validity: number;\n    emailField?: string;\n    passwordField?: string;\n    login?: (user, cb) => void;\n    register?: (user, cb) => void;\n    validate?: (user, cb) => void;\n}\n\nvar options: IJWTOptions = {\n    collName: \"users\", // users collection\n    connStr: 'jwt_test', // MongoDB connection string\n    secret: 'secret',\n    validity: 1, // In days\n    emailField: \"email\",\n    passwordField: \"password\",\n}\nvar jwt = new JWT(options, true);\n\napp.post(\"/login\", jwt.login())\napp.post(\"/register\", jwt.register())\napp.use(jwt.validate())\n\n// all other authenticated routes follow this\n                ",
-                methods: [{
-                    id: 'login',
-                    name: 'login() => ExpressMiddleware',
-                    nav: 'login',
-                    return: {
-                        type: 'ExpressMiddleware',
-                        desc: 'Middleware that can handle user login'
-                    },
-                    desc: "Middleware that by default handles user login by fetching an user matching the email and verifying saltHash of the password field and returning JWT token, if a login fn is provided then the same would be used for fetching and validating a user",
-                    example: ["\napp.post(\"/login\", jwt.login())\n                    "]
-                }, {
-                    id: 'register',
-                    name: "register() => ExpressMiddleware",
-                    nav: 'register',
-                    return: {
-                        type: 'ExpressMiddleware',
-                        desc: 'Middleware that can handle user register'
-                    },
-                    desc: 'Middleware that by default handles user register by checking uniqueness of email and salthashing password field and returning JWT token, if a register fn is provided then the same would be used',
-                    example: ["\napp.post(\"/register\", jwt.register())\n                        "]
-                }, {
-                    id: 'validate',
-                    name: 'validate() => ExpressMiddleware',
-                    nav: 'validate',
-                    return: {
-                        type: 'ExpressMiddleware',
-                        desc: 'Middleware that can handle validation'
-                    },
-                    desc: 'Middleware that by default handles validation by checking if the token has not been expired and the corresponding id is valid, if a validate fn is provided then the same would be used to fetch the user corresponding to the id',
-                    example: ["\n// Use it from the point where authentication is expected\napp.use(jwt.validate())\n                        "]
-                }]
-            },
-            "Session-Cookie": {
-                desc: "Cookie Session implementation in Express",
-                initialCode: "\nvar Cookie = require('express-toppings').Session.Cookie;\n\ninterface ICookieOptions {\n    collName: string;\n    connStr: string;\n    login: IPassportOptions;\n    register: IPassportOptions;\n    cookie: Object;\n    secret: string;\n    redisStore: Object;\n    passportSerializer?: (user, cb) => void;\n    passportDeserializer?: (userId, cb) => void;\n    passportLogin?: (req, email, passport, cb) => void;\n    passportRegister?: (req, email, passport, cb) => void;\n}\n\nvar options: ICookieOptions = {\n    collName: 'users', // user collection name\n    connStr: 'test', // mongoDB connection string\n    login: { // Passport Login options\n        successRedirect: '/index.html',\n        failureRedirect: '/login.html',\n        failureFlash: flash\n    },\n    register: { // Passport Register options\n        successRedirect: '/index.html',\n        failureRedirect: '/register.html',\n        failureFlash: flash\n    },\n    cookie: { // express-session cookie options\n        maxAge: 1000 * 60 * 60 * 24,\n        sameSite: true,\n    },\n    secret: 'secret',\n    redisStore: { // Connect-redis connection options\n        ttl: 1000 * 60 * 60 * 24,\n        host: \"localhost\",\n        port: 6379,\n        prefix: \"sess:\"\n    }\n}\n// if you wish to have custom logic for passport local-strategy then\n// you must specify options.passportSerializer, options.passportDeserializer, options.passportLogin and options.passportRegister functions. \n// These function signature are similar to that of passport functions\n\nvar passport = require(\"passport\");\nvar cookie = new Cookie(options);\nvar app = express();\n\n// this order has to be maintained\ncookie.configurePassport(passport);\ncookie.configureSession(app)\n\napp.use(cookie.validate(['/login.html', '/register.html', {method: 'POST', url: '/login'}, '/register'], '/portal/login'))\n\napp.post('/login', cookie.login());\napp.post('/register', cookie.register());\n\napp.get(\"/logout\", cookie.logout());\n                ",
-                methods: [{
-                    id: 'login',
-                    name: 'login() => Express Middleware',
-                    nav: 'login',
-                    desc: 'Validates if the user exists and then sets Session Cookie on the express response object'
-                }, {
-                    id: 'register',
-                    name: 'register() => Express Middleware',
-                    nav: 'register',
-                    desc: 'Will create and insert a User and sets Session Cookies on the express response object'
-                }, {
-                    id: 'logout',
-                    name: 'logout() => Express Middleware',
-                    nav: 'logout',
-                    desc: 'Will remove cookie session and go to next() router in the middlewares'
-                }, {
-                    id: 'validate',
-                    name: 'validate(whitelist?: (string | IUrl)[], failureRedirect?: string): Express Middleware',
-                    nav: 'validate',
-                    desc: 'If the url is whitelisted next() middleware is called. If the cookie exists n if the cookie is valid then req.user is set on express request object. If not then the user is redirected to failureRedirectUrl else 401 is sent'
-                }]
-            }
+            "Helper": __webpack_require__(27),
+            "Response": __webpack_require__(28),
+            "Validations": __webpack_require__(29),
+            "Transformations": __webpack_require__(30),
+            "MongoDB": __webpack_require__(31),
+            "CRUD": __webpack_require__(32),
+            "Session-JWT": __webpack_require__(33),
+            "Session-Cookie": __webpack_require__(34)
         };
     }]);
 };
@@ -89791,6 +88786,1129 @@ module.exports = function (app) {
         angular.extend(vm, $controller("commonCtrl", { $scope: $scope }));
         vm.heading = 'Change Log';
     }]);
+};
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    desc: "Commonly used functions for input validations, salthash etc",
+    initialCode: '\nvar Helper = require("express-toppings").Helper;\nvar helper = new Helper();                    \n                    ',
+    methods: [{
+        id: 'filterKeysInObj',
+        name: 'filterKeysInObj(obj: string, filter: string[], sameObj?: boolean) => object',
+        nav: 'filterKeysInObj',
+        returns: {
+            type: 'object',
+            desc: 'An object that would not include the keys specified in the filter'
+        },
+        params: [{
+            name: 'obj',
+            desc: '[object] Input object'
+        }, {
+            name: 'filter',
+            desc: '[string[]] Array of keys to be removed'
+        }, {
+            name: 'sameObj (optional)',
+            desc: '[boolean] If the filter operation has to be applied on the same obj or a copy of it.',
+            default: "false"
+        }],
+        desc: "Filters out/removes the keys for the given object",
+        example: '\nvar obj = {a: 1, b: 1, c: 1},\n    filter = ["a", "b"];\n\nconsole.log(helper.filterKeysInObj(obj, filter, false)) // {c: 1}\n// obj = {a: 1, b: 1, c: 1}\n\n\nconsole.log(helper.filterKeysInObj(obj, filter, true)) // {c: 1}\nconsole.log(obj) // {c: 1}\n                    '
+    }, {
+        id: 'retainKeysInObj',
+        name: 'retainKeysInObj(obj: string, retain: string[], sameObj?: boolean) => object',
+        nav: 'retainKeysInObj',
+        return: {
+            type: 'object',
+            desc: 'An Object whose keys would include only the ones specified'
+        },
+        params: [{
+            name: 'obj',
+            desc: '[object] Input object'
+        }, {
+            name: 'retain',
+            desc: '[string[]] Array of keys to be retained'
+        }, {
+            name: 'sameObj (optional)',
+            desc: '[boolean] If the filter operation has to be applied on the same obj or a copy of it.',
+            default: "false"
+        }],
+        desc: "Retains only the given keys in the object",
+        example: '\nvar obj = {a: 1, b: 1, c: 1},\n    retain = ["a", "b"];\n\nconsole.log(helper.retainKeysInObj(obj, filter, false)) // {a: 1, b: 1}\n// obj = {a: 1, b: 1, c: 1}\n\n\nconsole.log(helper.retainKeysInObj(obj, filter, true)) // {a: 1, b: 1}\nconsole.log(obj) // {a: 1, b: 1}\n                    '
+    }, {
+        id: 'weakPwd',
+        name: 'weakPwd(password: string, config: object) => string',
+        nav: 'weakPassword',
+        return: {
+            type: 'string',
+            desc: 'Error, if the given string does not satisfy the conditions specified in the config object'
+        },
+        params: [{
+            name: 'password',
+            desc: '[string] String to check for weak password'
+        }, {
+            name: 'config',
+            desc: '[object] Weak password Options'
+        }, {
+            name: '-> config.minLen (optional)',
+            desc: '[boolean] Minimum length of password expected'
+        }, {
+            name: '-> config.maxLen (optional)',
+            desc: '[boolean] Maximum length of password expected'
+        }, {
+            name: '-> config.upperCase (optional)',
+            desc: '[boolean] If password should contain atleast one UpperCase letter'
+        }, {
+            name: '-> config.lowerCase (optional)',
+            desc: '[boolean] If password should contain atleast one LowerCase letter'
+        }, {
+            name: '-> config.numbers (optional)',
+            desc: '[boolean] If password should contain atleast one numbers'
+        }, {
+            name: '-> config.specialChars (optional)',
+            desc: '[string[]] If password must contain atleast one special character from the given list'
+        }],
+        desc: 'Checks if the given string is a weak password',
+        example: ['\nvar password = "Test123"\nconsole.log(helper.weakPwd(password, {minLen: 3, maxLen: 5}))\n// Please choose a password length of atmost 5 characters\n                    ']
+    }, {
+        id: 'prefixToQueryObject',
+        name: 'prefixToQueryObject(prefix: string, obj: object) => object',
+        nav: 'prefixToQueryObject',
+        return: {
+            type: 'object',
+            desc: 'Object with prefixed keys'
+        },
+        params: [{
+            name: 'prefix',
+            desc: '[string] String to be prefixed to each key'
+        }, {
+            name: 'obj',
+            desc: '[object] Object whose keys has to be prefixed'
+        }],
+        desc: 'Prefix the given key to each string in the object',
+        example: ['\nvar obj = {a: 1, b: 1};\nvar prefix = "test"\nconsole.log(helper.prefixToQueryObject(prefix, obj))\n// {"test.a" : 1, "test.b": 1}\n                    ']
+    }, {
+        id: 'validateFieldsCb',
+        name: 'validateFieldsCb(obj: object, fieldSpecs: IFieldSpec[], strict: boolean, callback: Function): void;',
+        nav: 'validateFieldsCb',
+        params: [{
+            name: 'obj',
+            desc: '[object] Object to be validated'
+        }, {
+            name: 'fieldSpecs',
+            desc: "[object[]] Field Validation Options"
+        }, {
+            name: '-> fieldSpec.name',
+            desc: '[string] Name of the field'
+        }, {
+            name: '-> fieldSpec.type',
+            desc: '[string] Expected type of the field'
+        }, {
+            name: '-> fieldSpec.required (optional)',
+            desc: '[boolean] If the field is required to be present'
+        }, {
+            name: '-> fieldSpec.preTransform',
+            desc: '[Function : (data, ...preTransformArgs) => any]. Returned Data would be futher used for validation'
+        }, {
+            name: '-> fieldSpec.preTransformArgs',
+            desc: '[any[]] Arguments to be passed to fieldSpec.preTranform function'
+        }, {
+            name: '-> fieldSpec.validate',
+            desc: '[Function| Function[] : (data, ...validateArgs[index], done?: (err, isValid: boolean))]. Validation Function/s. If the number of args(data + validateArgs) > function.arguments.length then the last param is considered as a callback and the same is passed to the validation function'
+        }, {
+            name: '-> fieldSpec.validateArgs',
+            desc: '[any[]] Arguments to be passed to fieldSpec.validate function'
+        }, {
+            name: '-> fieldSpec.validateErrMsg',
+            desc: '[string | string[]] Error Messages to be returned on validation failure'
+        }, {
+            name: '-> fieldSpec.transform',
+            desc: '[Function | Function[] : (data, ...transformArgs, done?: (err, transformedData) => void)]: any. Transform Function/s. If the number of args(data + transformArgs) > function.arguments.length then the last param is considered as a callback and the same is passed to the transform function'
+        }, {
+            name: '-> fieldSpec.transformArgs',
+            desc: '[any | any[]] Arguments to be passed to fieldSpec.transform function'
+        }, {
+            name: '-> fieldSpec.errMsg',
+            desc: 'This will be return when fieldName is not present/type mismatch is found/validation errMsg is not specified'
+        }, {
+            name: 'strict',
+            desc: 'If this is true, then the fields that are not specified in fieldSpecs will be removed'
+        }],
+        desc: 'Asynchronous form validations',
+        example: ['\nvar obj = {a: 1, b: "asdf", c: [], d: {}, e: \'2\'};\nvar validations = [\n    {\n        name: \'a\',\n        type: "number",\n        errMsg: "\'a\' is a required field and must be a number"\n    }, {\n        name: \'b\',\n        type: \'string\',\n        validate: (data, len) => data.length > len,\n        validateArgs: 2,\n        validateErrMsg: "\'b\' must have a atleast 2 characters",\n        errMsg: "\'b\' is a required field"\n    }, {\n        name: \'c\',\n        type: \'array\',\n        errMsg: "\'c\' must be an array"\n    }, {\n        name: \'d\',\n        type: \'object\',\n        errMsg: "\'d\' must be an object"\n    }, {\n        name: \'e\',\n        type: [\'string\', \'number\'],\n        preTransform: (data) => parseInt(data),\n        validate: (data, minVal) => data > minVal,\n        validateArgs: 2\n    }, {\n        name: \'f\',\n        type: \'string\',\n        required: false,\n        errMsg: "\'f\' must be a string"\n    }\n]\n\nhelper.validateFieldsCb(obj, validations, false, (err) => console.log(err))\n// null\n                    ']
+    }, {
+        id: 'validateFields',
+        name: 'validateFields(obj: object, fieldSpecs: IFieldSpec[], strict: boolean): boolean;',
+        return: {
+            type: 'boolean',
+            desc: 'true - if all the fields are valid'
+        },
+        nav: 'validateFields',
+        desc: '(Recommend to use validateFieldsCb) Synchronous form validations. Params are same as validateFieldsCb except that validateFns and transformFns are all synchronous functions',
+        params: [{
+            name: 'obj',
+            desc: '[object] object to be validated'
+        }, {
+            name: 'fieldSpecs',
+            desc: '[object] Field Validation options'
+        }, {
+            name: '-> fieldSpec.name',
+            desc: '[string] Name of field'
+        }, {
+            name: '-> fieldSpec.type',
+            desc: '[string | string[]] Expected type of the field'
+        }, {
+            name: '-> fieldSpec.preTransform',
+            desc: '[(data, ...preTransformArgs) => any] Pre-Transform function'
+        }, {
+            name: '-> fieldSpec.preTransformArgs',
+            desc: '[any[]] Arguments for preTransform function'
+        }, {
+            name: '-> fieldSpec.validate',
+            desc: '[Function | Function[] : (data, ...validateArgs) => boolean] Validation function/s '
+        }, {
+            name: '-> fieldSpec.validateArgs',
+            desc: '[any[]] Arguments for validate function/s'
+        }, {
+            name: '-> fieldSpec.transform',
+            desc: '[(data, ...transformArgs) => any] Transform function'
+        }, {
+            name: '-> fieldSpec.transformArgs',
+            desc: '[any[]] Arguments for tranform function'
+        }],
+        example: ['\nvar obj = {a: 1, b: "asdf", c: [], d: {}, e: \'2\'};\nvar validations = [\n    {\n        name: \'a\',\n        type: "number",\n    }, {\n        name: \'b\',\n        type: \'string\',\n        validate: (data, len) => data.length > len,\n        validateArgs: 2,\n    }, {\n        name: \'c\',\n        type: \'array\',\n    }, {\n        name: \'d\',\n        type: \'object\',\n    }, {\n        name: \'e\',\n        type: [\'string\', \'number\'],\n        preTransform: (data) => parseInt(data),\n        validate:  [ minValueCheck, maxValueCheck ],\n        validateArgs: 2\n    }, {\n        name: \'f\',\n        type: \'string\',\n        required: false,\n    }\n]\n\nif(helper.validateFields(obj, validations, false)) {\n    // All Fields are valid\n}\n                    ']
+    }, {
+        id: 'saltHash',
+        name: 'saltHashsaltHash(pwd: string, saltLength?: number) => string',
+        nav: 'saltHash',
+        return: {
+            type: 'string',
+            desc: 'Salted and hashed password'
+        },
+        params: [{
+            name: 'pwd',
+            desc: '[string] String to be salted and hashed'
+        }, {
+            name: 'saltLength (optional)',
+            desc: '[number] Length of salt to be Prefixed',
+            default: '16'
+        }],
+        desc: 'Adds a salt and hashes the password',
+        example: ['\nvar password = "password";\nconsole.log(helper.saltHash(password, 10));\n// 567981784abc67f9678fa760bc679e67879a7c - this is just an indicative password\n                    ']
+    }, {
+        id: 'verifySaltHash',
+        name: 'verifySaltHash(salted: string, pwd: string, saltLength?: number) => boolean',
+        nav: 'verifySaltHash',
+        return: {
+            type: 'boolean',
+            desc: 'true - if the password matches the salted hash'
+        },
+        params: [{
+            name: 'salted',
+            desc: '[string] Salted and hashed password'
+        }, {
+            name: 'pwd',
+            desc: '[string] Password to be validated'
+        }, {
+            name: 'saltLength (optional)',
+            desc: '[number] Length of salt prefix in the salted hash',
+            default: '16'
+        }],
+        desc: 'Verifies if the salted hash password matches the password',
+        example: ['\nvar password = "password"\nvar salted = "567981784abc67f9678fa760bc679e67879a7c"; // this is just an indicative password\nhelper.verifySaltHash(salted, password, 10) // returns true\n                    ']
+    }]
+};
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    desc: 'HTTP Response helper implementation',
+    initialCode: '\nvar HelperResp = require("express-toppings").HelperResp;\nvar helperResp = new HelperResp();\n\n// Please note the response format followed in this library is in the form\n{\n    error: true|false,\n    data: {}\n}\n                ',
+    methods: [{
+        id: 'success',
+        name: 'success(res: express.Response, data?: any)',
+        nav: 'success',
+        desc: 'HTTP 200 Success handler',
+        params: [{
+            name: 'res',
+            desc: 'Express Response object'
+        }, {
+            name: 'data',
+            desc: '[any] Response data'
+        }],
+        example: ['\n// if the request was a success then\nhelperResp.success(res);\n                        ']
+    }, {
+        id: 'failed',
+        name: 'failed(res: express.Response, msg?: string)',
+        nav: 'failed',
+        desc: 'HTTP 400 Success handler',
+        params: [{
+            name: 'res',
+            desc: 'Express Response object'
+        }, {
+            name: 'msg',
+            default: 'Failed',
+            desc: '[string] Error Message'
+        }],
+        example: ['\n// if the request was a failure\nhelperResp.failed(res, \'Name missing\')\n                        ']
+    }, {
+        id: 'post',
+        name: 'post(res: express.Response, data?: any)',
+        nav: 'post',
+        desc: 'CRUD - Create handler',
+        params: [{
+            name: 'res',
+            desc: 'Express Response object'
+        }, {
+            name: 'data',
+            desc: '[any] Response data',
+            default: "CREATED"
+        }],
+        example: ['\n// If the data was successfully inserted into DB then\ndb.collection(\'test\').insert(data, (err, result) => {\n    if(result) {\n        helperResp.post(res, result)\n    } else {\n        if(err) {\n            helperResp.serverError(res, err)\n        } else {\n            helperResp.failed(res, "Creation Failed")\n        }\n    }\n})\n                    ']
+    }, {
+        id: 'put',
+        name: 'put(res: express.Response, data?: any)',
+        nav: 'put',
+        desc: 'CRUD - Update handler',
+        params: [{
+            name: 'res',
+            desc: 'Express Response object'
+        }, {
+            name: 'data',
+            desc: '[any] Response data',
+            default: "UPDATED"
+        }],
+        example: ['\n// If the data was successfully updated in DB then\ndb.collection(\'test\').update({}, {$set: data}, (err, result) => {\n    if(result && result.nModified) {\n        helperResp.put(res, result)\n    } else {\n        if(err) {\n            helperResp.serverError(res, err)\n        } else {\n            helperResp.failed(res, "Update Failed")\n        }\n    }\n})\n                    ']
+    }, {
+        id: 'delete',
+        name: 'delete(res: express.Response, data?: any)',
+        nav: 'delete',
+        desc: 'CRUD - Delete Handler',
+        params: [{
+            name: 'res',
+            desc: 'Express Response object'
+        }, {
+            name: 'data',
+            desc: '[any] Response data',
+            default: "DELETED"
+        }],
+        example: ['\n// If the data was successfully removed from DB then\ndb.collection(\'test\').remove(data, (err, result) => {\n    if(result) {\n        helperResp.delete(res, result)\n    } else {\n        if(err) {\n            helperResp.serverError(res, err)\n        } else {\n            helperResp.failed(res, "Delete Failed")\n        }\n    }\n})\n                    ']
+    }, {
+        id: 'get',
+        name: 'get(res: express.Response, data?: any, list?: boolean)',
+        nav: 'get',
+        desc: 'CRUD - get n list Handler',
+        params: [{
+            name: 'res',
+            desc: 'Express Response object'
+        }, {
+            name: 'data',
+            desc: '[any] Response data',
+            default: "[] | {} depending on .list"
+        }, {
+            name: 'list',
+            type: 'boolean',
+            default: 'true',
+            desc: '[boolean] if true then data defaults to [] else {}'
+        }],
+        example: ['\n// If the data was successfully obtained from DB then\ndb.collection(\'test\').find({}, (err, result) => {\n    if(result) {\n        helperResp.get(res, result, true);\n    } else {\n        if(err) {\n            helperResp.serverError(res, err)\n        } else {\n            helperResp.failed(res, "Failed to get data from DB")\n        }\n    }\n})\n                    ']
+    }, {
+        id: 'unauth',
+        name: 'unauth(res: express.Response, msg?: string)',
+        nav: 'unatuh',
+        desc: 'HTTP 401 handler',
+        params: [{
+            name: 'res',
+            desc: 'Express Response object'
+        }, {
+            name: 'msg',
+            desc: '[string] Response data',
+            default: "UNAUTHORIZED ACCESS"
+        }],
+        example: ['\n// If the user is unauthorized\nhelperResp.unauth(res);\n                    ']
+    }, {
+        id: 'serverError',
+        name: 'serverError(res: express.Response, msg?: string)',
+        nav: 'serverError',
+        desc: 'HTTP 500 Handler',
+        params: [{
+            name: 'res',
+            desc: 'Express Response object'
+        }, {
+            name: 'msg',
+            desc: '[string] Response data',
+            default: "INTERNAL SERVER ERROR"
+        }],
+        example: ['\n// On Internal Server Error                     \nhelperResp.serverError(res);\n                    ']
+    }, {
+        id: 'handleResult',
+        name: 'handleResult(res: express.Response) => (err: any, result: any, type: string)',
+        nav: 'handleResult',
+        desc: 'Generic Callback Result handler',
+        params: [{
+            name: 'res',
+            desc: 'Express Response Object'
+        }]
+    }],
+    example: ['\n// If data is obtained from a callback(err, result), then replace it with handleResult\ndb.collection(\'test\').find({}, helperResp.handleResult(res));                \n                ']
+};
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    desc: "Includes common validation functions",
+    initialCode: '\nvar HelperValidate = require(\'express-toppings\').HelperValidate;\nvar helperValidate = new HelperValidate()\n\n// These Helper Function are commonly used in form validation along with helper.validateFieldsCb\n                ',
+    methods: [{
+        id: 'range',
+        name: 'range(data: number, min: number, max: number) => boolean',
+        nav: 'range',
+        desc: "Validates if the given number if within the specified range",
+        params: [{
+            name: 'data',
+            type: 'number',
+            desc: 'Data to be validated'
+        }, {
+            name: 'min',
+            type: 'number',
+            desc: 'Lower Limit'
+        }, {
+            name: 'max',
+            type: 'number',
+            desc: 'Upper Limit'
+        }],
+        example: ['\nvar data = 10;\nhelperValidate.range(10, 5, 15) // true                \n                    ']
+    }, {
+        id: 'length',
+        name: 'length(data: string, min: number, max?: number) => boolean',
+        nav: 'length',
+        desc: "Validates if the length of the array|string is within the limits",
+        params: [{
+            name: 'data',
+            type: 'string|array',
+            desc: 'Data to be validated'
+
+        }, {
+            name: 'min',
+            type: 'number',
+            desc: 'Lower Limit'
+        }, {
+            name: 'max (optional)',
+            type: 'number',
+            desc: 'Upper Limit. If this param is not provided then only lower limit validation is performed'
+        }],
+        example: ['\nvar data = "test";\nhelperValidate.length(data, 2, 6) // true\nvar arr = [1, 2]\nhelperValidate.length(data, 3, 5) // false                    \n                    ']
+    }, {
+        id: 'isMongoId',
+        name: 'isMongoId(id: string) => boolean',
+        nav: 'isMongoId',
+        desc: "Validates if the given string is a valid MongoId",
+        params: [{
+            name: 'id',
+            type: 'string',
+            desc: 'Id to be validated'
+        }],
+        example: ['\nvar id = "5968d825f7031236fed9ec5f"\nhelperValidate.isMongoId(id) // true                    \n                    ']
+    }, {
+        id: 'in',
+        name: 'in(data: any, arr: any[]) => boolean',
+        nav: 'in',
+        desc: 'Checks if the data is present in the given array',
+        params: [{
+            name: 'data',
+            type: 'string|number|object|array',
+            desc: 'Data to be checked'
+        }, {
+            name: 'arr',
+            type: 'array',
+            desc: 'Array to be searched for Data'
+        }],
+        example: ['\nvar data = \'a\',\n    arr = [\'a\', \'b\']\n\nhelperValidate.in(data, arr) // true                    \n                    ', '\nvar data = { name: 1, age: 3 }\nvar data2 = [1, 2]\nvar arr = [{ name: 2 }, { name: 1, age: 3 }, [1, 2]]\nhelperValidate.in(data, arr) // true\nhelperValidate.in(data2, arr) // true\n                    ']
+    }, {
+        id: 'isName',
+        name: 'isName(name: string) => boolean',
+        nav: 'isName',
+        desc: 'validate if the given string matches the Name format',
+        params: [{
+            name: 'name',
+            type: 'string',
+            desc: 'Data to be checked'
+        }],
+        example: ['\nvar name = \'isName_123\';\nhelperValidate.isName(name) // true                    \n                    ']
+    }, {
+        id: 'isEmail',
+        name: 'isEmail(email: string) => boolean',
+        nav: 'isEmail',
+        desc: 'Validate if the given string matches the Eamil format',
+        params: [{
+            name: 'email',
+            type: 'string',
+            desc: 'Data to be checked'
+        }],
+        example: ['\nvar email = \'123_asdf.jkl@co.com\';\nhelperValidate.isEmail(email) // true                    \n                    ']
+    }, {
+        id: 'isAlpha',
+        name: 'isAlpha(data: string) => boolean',
+        nav: 'isAlpha',
+        desc: 'validate if the given string contains only Alphabets',
+        params: [{
+            name: 'data',
+            type: 'string',
+            desc: 'Data to be checked'
+        }],
+        example: ['\nvar str = \'asdfAASDF\';\nhelperValidate.isAlpha(str) // true                    \n                    ']
+    }, {
+        id: 'isNumeric',
+        name: 'isNumeric(data: string): boolean',
+        nav: 'isNumeric',
+        desc: 'validate if the given string contains only numbers',
+        params: [{
+            name: 'data',
+            type: 'string',
+            desc: 'Data to be checked'
+        }],
+        example: ['\nvar str = \'2345678\';\nhelperValidate.isNumeric(str) // true                    \n                    ']
+    }, {
+        id: 'isAlphaNumeric',
+        name: 'isAlphaNumeric(data: string) => boolean',
+        nav: 'isAlphaNumeric',
+        desc: 'validate if the given string is Alphabets and numbers',
+        params: [{
+            name: 'data',
+            type: 'string',
+            desc: 'Data to be checked'
+        }],
+        example: ['\nvar str = \'isName123\';\nhelperValidate.isAlphaNumeric(str) // true                    \n                    ']
+    }, {
+        id: 'isDate',
+        name: 'isDate(dateStr: string, format?: string) => boolean',
+        nav: 'isDate',
+        desc: 'Validate if the given string is in Data format',
+        params: [{
+            name: 'dateStr',
+            type: 'string',
+            desc: 'Data to be checked'
+        }, {
+            name: 'format (optional)',
+            type: 'string',
+            desc: 'Moment Date format'
+        }],
+        example: ['\nvar dateStr = \'12-07-1993\';\nhelperValidate.isDate(dateStr, \'DD-MM-YYYY\') // true                    \n                    ']
+    }, {
+        id: 'isRegex',
+        name: 'isRegex(data: string, regexStr: string) => boolean',
+        nav: 'isRegex',
+        desc: 'Check if the data matches the regexStr pattern',
+        params: [{
+            name: 'data',
+            type: 'string',
+            desc: 'Data to be checked'
+        }, {
+            name: 'regexStr',
+            type: 'string',
+            desc: 'regex pattern to be used for validation'
+        }],
+        example: ['\nvar name = \'asdfASD_09\';\nhelperValidate.isRegex(name, \'^[a-fA-F09]+$\') // true                    \n                    ']
+    }]
+};
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    desc: "Common data transformation functions",
+    initialCode: '\nvar HelperTransform = require(\'express-toppings\').HelperTransform;\nvar helperTransform = new HelperTransform();\n\n// These function are typically used for transformation in helper.validateFieldsCb\n                ',
+    methods: [{
+        id: 'toLowerCase',
+        name: 'toLowerCase(data: string) => string',
+        nav: 'toLowerCase',
+        desc: 'Transforms the given string to Lower Case',
+        params: [{
+            name: 'data',
+            type: 'string',
+            desc: 'Data to be transformed'
+        }],
+        example: ['\nvar str = "asdfASDF";\nhelperTransform.toLowerCase(str) // asdfasdf\n                   ']
+    }, {
+        id: 'toUpperCase',
+        name: 'toUpperCase(data: string) => string',
+        nav: 'toUpperCase',
+        desc: 'Transforms the given string to Upper Case',
+        params: [{
+            name: 'data',
+            type: 'string',
+            desc: 'Data to be transformed'
+        }],
+        example: ['\nvar str = "asdfASDF";\nhelperTransform.toUpperCase(str) // ASDFASDF\n                   ']
+    }, {
+        id: 'toMongoId',
+        name: 'toMongoId(id: string) => object',
+        nav: 'toMongoId',
+        desc: 'Transforms mongo id to Mongo Object id',
+        params: [{
+            name: 'id',
+            type: 'string',
+            desc: 'Mongo document id as string'
+        }],
+        example: ['\nvar id = "5968d825f7031236fed9ec5f";\nhelperTransform.toMongoId(id) // ObjectId("5968d825f7031236fed9ec5f")\n                   ']
+    }, {
+        id: 'toDate',
+        name: 'toDate(dateStr: string) => Date',
+        nav: 'toDate',
+        desc: 'Transforms the given string to Date Object',
+        params: [{
+            name: 'dateStr',
+            type: 'string',
+            desc: 'Date string'
+        }],
+        example: ['\nvar dateStr = "1993-07-12T00:00:00.000Z"\nhelperTransform.toDate(dateStr) // Date()\n                   ']
+    }, {
+        id: 'toMoment',
+        name: 'toMoment(dateStr: string) => object',
+        nav: 'toMoment',
+        desc: 'Transforms the given string to moment object',
+        params: [{
+            name: 'dateStr',
+            type: 'string',
+            desc: 'Date String'
+        }],
+        example: ['\nvar dateStr = "1993-07-12"\nhelperTransform.toMoment(dateStr) // moment()\n                   ']
+    }, {
+        id: 'toInt',
+        name: 'toInt(data: string) => number',
+        nav: 'toInt',
+        desc: 'Parse string to number',
+        params: [{
+            name: 'data',
+            type: 'string',
+            desc: 'number in string'
+        }],
+        example: ['\nvar data = "2"\nhelperTransform.toInt(data) // 2\n                   ']
+    }, {
+        id: 'toFloat',
+        name: 'toFloat(data: string, decPoints?: number) => number',
+        nav: 'toFloat',
+        desc: 'Parse string to float',
+        params: [{
+            name: 'data',
+            type: 'string',
+            desc: 'number in string'
+        }, {
+            name: 'decPoints (optional)',
+            type: 'number',
+            desc: "Decimal points to be included in float",
+            default: "5"
+        }],
+        example: ['\nvar data = "2.1234"\nhelperTransform.toFloat(data, 2) // 2.12\n                   ']
+    }, {
+        id: 'toSaltHash',
+        name: 'toSaltHash(pwd: string) => string',
+        nav: 'toSaltHash',
+        desc: 'Adds salt and hashes the given the string',
+        params: [{
+            name: 'pwd',
+            type: 'string',
+            desc: 'password'
+        }],
+        example: ['\nvar pwd = "asdf";\nhelperTransform.toSaltHash(pwd) // 5678ab98fe988a98b67c89322efa779\n                   ']
+    }, {
+        id: 'stripXss',
+        name: 'stripXss(str: string) => string',
+        nav: 'stripXss',
+        desc: 'Removes all the html tags and the data inbetween the tags',
+        params: [{
+            name: 'str',
+            type: 'string',
+            desc: ''
+        }],
+        example: ['\nvar str = "hello <script>World</script>";\nhelperTransform.stripXss(str) // hello \n                   ']
+    }]
+};
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    desc: "Common MongoDb operation for CRUD",
+    initialCode: '\nvar HelperMongo = require(\'express-toppigs\').HelperMongo;\nvar helperMongo = new HelperMongo(connStr);\n                ',
+    methods: [{
+        id: 'validateExistence',
+        name: 'validateExistence(collName: string, validate: any, cb: Function)',
+        nav: 'validateExistence',
+        desc: 'Validates if there is any document matching the given query',
+        params: [{
+            name: 'collName',
+            type: 'string',
+            desc: 'Collection Name'
+        }, {
+            name: 'validate',
+            type: 'object',
+            desc: 'Mongo find() query object'
+        }, {
+            name: 'cb',
+            type: '(err, result) => void',
+            desc: 'Callback'
+        }],
+        example: ['\nvar data = {\n    name: "test"\n}\ndb.collection("validateExistenceColl").insert(data, (err, result) => {\n    if (result) {\n        helperMongo.validateExistence("validateExistenceColli { name: "test" }, (err, result) => {\n            console.log(result)\n        })\n    } else {\n        console.warn("Unable to insert data to test validateExistence")\n    }\n})\n                   ']
+    }, {
+        id: 'validateNonExistence',
+        name: 'validateNonExistence(collName: string, validations: object | object[], cb: ICallback)',
+        nav: 'validateNonExistence',
+        desc: 'Validate no document matches for all the given validations(queries)',
+        params: [{
+            name: 'collName',
+            type: 'string',
+            desc: 'Collection Name'
+        }, {
+            name: 'validations',
+            type: 'object | object[]',
+            desc: 'Validations for document'
+        }, {
+            name: '-> validation.query',
+            type: 'object',
+            desc: 'Mongo find() query object'
+        }, {
+            name: '-> validation.errMsg',
+            type: 'object | object[]',
+            desc: 'Validations for document'
+        }],
+        example: ['\nvar data1 = {\n    name: \'test1\',\n    checking: \'validations\',\n    type: "multi"\n}\nvar data2 = {\n    name: \'test2\',\n    checking: \'validations\',\n    type: "multi"\n}\n\ndb.collection(\'validateNonExistence\').insert([data1, data2], (err, result) => {\n    if (!err) {\n        let validations = [\n            {\n                query: {\n                    name: \'test3\'\n                },\n                errMsg: "Duplicate Name"\n            }, {\n                query: {\n                    checking: \'validations\',\n                    type: \'multi\'\n                },\n                errMsg: \'Duplicate Methods\'\n            }\n        ]\n        helperMongo.validateNonExistence(\'validateNonExistence\', validatins, (err, result) => {\n            should.exist(err);\n            should.not.exist(result);\n            err.should.be.eql("Duplicate Methods")\n\n            done()\n        })\n    }\n})\n                   ']
+    }, {
+        id: 'validateNonExistenceOnUpdate',
+        name: 'validateNonExistenceOnUpdate(collName: string, obj: IMongoDoc, validations: object | object[], cb: Function)',
+        nav: 'validateNonExistenceOnUpdate',
+        desc: 'Validates that the updated document does not collide with unique fields in the collection',
+        params: [{
+            name: 'collName',
+            type: 'string',
+            desc: 'Collection Name'
+        }, {
+            name: 'obj',
+            type: 'object',
+            desc: 'Updated object that has to updated in mongoDB'
+        }, {
+            name: 'validations',
+            type: 'object',
+            desc: 'Set of validations to avoid collision of unique field on update'
+        }, {
+            name: '-> validation.name',
+            type: 'string',
+            desc: 'Document field name'
+        }, {
+            name: '-> validation.query',
+            type: 'object',
+            desc: 'Mongo find() query object'
+        }, {
+            name: '-> validation.errMsg',
+            type: 'string',
+            desc: 'Error message to return on validation failure'
+        }, {
+            name: 'cb',
+            type: '(err, result) => void',
+            desc: 'Callback`'
+        }],
+        example: ['\nvar data1 = {\n    name: "test1",\n    checking: \'validateNonExistenceOnUpdate\'\n}\nvar data2 = {\n    name: "test2",\n    checking: \'validateNonExistenceOnUpdate\'\n}\ndb.collection("validateNonExistenceOnUpdate2").insert([data1, data2], (err, result) => {\n    if (!err) {\n        var validations = [\n            {\n                name: "name"\n            }\n        ]\n        result[0].name = \'test2\'\n        helperMongo.validateNonExistenceOnUpdate(\'validateNonExistenceOnUpdate2\', reilt[0], validations, (err, result) => {\n            should.exist(err);\n            err.should.be.eql("Duplicate name");\n            result.should.be.eql(1)\n\n            done()\n        })\n\n    }\n})\n                   ']
+    }, {
+        id: 'getById',
+        name: 'getById(collName: string, id: string, options: IGetByIdOptions, cb: ICallback)',
+        nav: 'getById',
+        desc: 'Get a document that matches the given id',
+        params: [{
+            name: 'collName',
+            type: 'string',
+            desc: 'Collection Name'
+        }, {
+            name: 'id',
+            type: 'string',
+            desc: 'Mongo Document id'
+        }, {
+            name: 'options (optional)',
+            type: 'IGetByIdOptions',
+            desc: "MongoDB Query n Project filters to be applied"
+        }, {
+            name: "-> options.query",
+            type: "object",
+            desc: "Mongodb Query filter"
+        }, {
+            name: '-> options.project',
+            type: "object",
+            desc: "Mongodb Project Filter"
+        }, {
+            name: 'cb',
+            type: "(err, document) => void",
+            desc: 'Callback'
+        }],
+        example: ['\n var data = {\n    name: \'test\'\n}\ndb.collection("getById2").insert(data, (err, result) => {\n    if (!err) {\n        helperMongo.getById("getById2", reilt._id, (err, result1) => {\n            should.not.exist(err);\n            result1._id.should.be.eql(result._id);\n            result1.name.should.be.eql(result.name);\n\n            done();\n        })\n    }\n})\n                   ', '\nvar data = {\n    name: \'test\',\n    get: true\n}\ndb.collection("getById2").insert(data, (err, result) => {\n    if (!err) {\n        var options = {\n            query: { get: true },\n            project: { name: 1 }\n        }\n        helperMongo.getById("getById2", result._id, options, (err, result1) => {\n            should.not.exist(err);\n            result1._id.should.be.eql(result._id);\n            result1.name.should.be.eql(result.name);\n            should.not.exist(result1.get)\n\n            done();\n        })\n    } else {\n        console.error(\'Failed to insert into getById2\');\n        done(err);\n    }\n})\n                   ']
+    }, {
+        id: 'getNextSeqNo',
+        name: 'getNextSeqNo(collName: string, obj: IMaxValue, cb: Function)',
+        nav: 'getNextSeqNo',
+        desc: 'Get the next sequence number of a numerical field in a collection',
+        params: [{
+            name: 'collName',
+            type: 'string',
+            desc: 'Collection Name'
+        }, {
+            name: 'obj',
+            type: 'object',
+            desc: 'Options'
+        }, {
+            name: '-> obj.key',
+            type: 'string',
+            desc: 'Key for which max value has to be found. Make sure that this field is of type number else erroneous output would be expected'
+        }, {
+            name: "-> obj.query",
+            type: 'object',
+            desc: 'MongoDB $match query object'
+        }, {
+            name: '-> obj.unwind',
+            type: 'object',
+            desc: 'if the max value has to be found within an array in a document, then specify the key',
+            default: 'null'
+        }, {
+            name: '-> obj.maxValue (optional)',
+            default: 'infinite',
+            type: 'number',
+            desc: 'Maximum allowed sequence number'
+        }, {
+            name: '-> obj.minValue (optional)',
+            default: '0',
+            type: 'number',
+            desc: 'Minimum allowed sequence number'
+        }, {
+            name: '-> obj.errMsg (optional)',
+            default: 'Could not Get Next Sequence Number',
+            type: 'string',
+            desc: "Error Message to return when a sequence number could not be found"
+        }],
+        example: ['\nvar data = [\n    {\n        num: 1\n    }, {\n        num: 2\n    }, {\n        num: 10\n    },\n]\ndb.collection("getNextSeqNo1").insert(data, (err) => {\n    if (!err) {\n        var nextSeqQuery = {\n            // query: {},\n            key: \'num\'\n        }\n        helperMongo.getNextSeqNo(\'getNextSeqNo1\', nextSeqQiry, (err, result) => {\n            should.not.exist(err);\n            result.should.be.eql(11);\n\n            done()\n        })\n    }\n})\n                   ']
+    }, {
+        id: 'update',
+        name: 'update(collName: string, obj: object, exclude?: string[], cb?: Function)',
+        nav: 'update',
+        desc: 'Updates the document excluding the specified fields from the object ',
+        params: [{
+            name: 'collName',
+            type: 'string',
+            desc: 'Collection Name'
+        }, {
+            name: 'obj',
+            type: 'object',
+            desc: 'Mongo document'
+        }, {
+            name: 'exclude (optional)',
+            default: '[]',
+            type: 'string[]',
+            desc: 'fields to excluded while updating the document'
+        }, {
+            name: 'cb',
+            type: '(err, result) => void',
+            desc: "Callback"
+        }],
+        example: ['\nvar data = {\n    name: \'test\',\n    field2: \'should Not Be Updated\'\n}\ndb.collection(\'update4\').insert(data, (err, result) => {\n    if (!err) {\n        result.field2 = "updated data";\n        result.name = "updated name";\n\n        helperMongo.update(\'update4\', reilt, ["field2"], (err, result1) => {\n            should.not.exist(err);\n            result1.should.be.an("object");\n            result1.n.should.be.eql(1);\n\n            db.collection("update4").findOne({ _id: result._id }, (err, result2) => {\n                should.not.exist(err);\n                result2.should.be.an("object");\n                result2.field2.should.be.eql("should Not Be Updated")\n                result2.name.should.be.eql("updated name")\n\n                done()\n            })\n        })\n    }\n})\n                   ']
+    }, {
+        id: 'getList',
+        name: 'getList(collName: string, obj: object, options: IGetByIdOptions, cb: Function)',
+        nav: 'getList',
+        desc: 'Get a list of documents in a collection - can be used for CRUD - list apis',
+        params: [{
+            name: 'collName',
+            type: 'string',
+            desc: 'Collection Name'
+        }, {
+            name: 'obj',
+            type: 'object',
+            desc: 'options'
+        }, {
+            name: '-> obj.pageNo (optional)',
+            default: '1',
+            type: 'number',
+            desc: 'Page number for pagination'
+        }, {
+            name: '-> obj.recordsPerPage (optional)',
+            default: 'all',
+            type: 'number',
+            desc: 'Number of records per page'
+        }, {
+            name: '-> obj.query (optional)',
+            default: '{}',
+            type: 'object',
+            desc: 'Mongo query filter for the list'
+        }, {
+            name: '-> obj.project (optional)',
+            default: '{}',
+            type: 'object',
+            desc: 'Mongo find() project object'
+        }, {
+            name: '-> obj.search (optional)',
+            type: 'string',
+            desc: 'Search Text'
+        }, {
+            name: "-> obj.searchField (optional)",
+            sdefault: 'name',
+            type: 'string',
+            desc: 'Field on which search text must be filtered'
+        }, {
+            name: '-> obj.sort (optional)',
+            default: '{}',
+            type: 'object',
+            desc: 'Order in which the documents must be sorted ex: -name| name'
+        }, {
+            name: 'options (optional)',
+            type: 'IGetByIdOptions',
+            desc: "MongoDB Query n Project filters to be applied"
+        }, {
+            name: "-> options.query",
+            type: "object",
+            desc: "Mongodb Query filter"
+        }, {
+            name: '-> options.project',
+            type: "object",
+            desc: "Mongodb Project Filter"
+        }, {
+            name: 'cb',
+            type: 'function',
+            desc: "Callback function of type (err, result)"
+        }],
+        example: ['\n var data = [\n    {\n        name: \'test1\'\n    }, {\n        name: \'test2\'\n    }, {\n        name: \'test3\'\n    }\n]\ndb.collection(\'getList8\').insert(data, (err, result) => {\n    if (!err) {\n        helperMongo.getList("getList8i {\n            project: { name: 1, _id: 0 },\n            sort: \'-name\'\n        }, (err, result1) => {\n            should.not.exist(err);\n            result1.should.be.an("object");\n            result1.count.should.be.eql(3);\n            result1.list.length.should.be.eql(3);\n            result1.list[0].name.should.be.eql("test3")\n            result1.list[1].name.should.be.eql("test2")\n            result1.list[2].name.should.be.eql("test1")\n\n            done();\n        })\n    }\n})\n                   ', '\nvar data = [\n    {\n        name: \'test1\',\n        age: 23\n    }, {\n        name: \'test2\',\n        age: 25\n    }, {\n        name: \'test3\',\n        age: 24\n    }\n]\ndb.collection(\'getList8\').insert(data, (err, result) => {\n    if (!err) {\n        helperMongo.getList("getList8", {\n            query: { name: "test2" },\n        }, {\n                query: { name: \'test1\' },\n            }, (err, res1) => {\n                should.not.exist(err);\n                res1.should.be.an("object");\n                res1.count.should.be.eql(1)\n                res1.list.length.should.be.eql(1)\n                res1.list[0].age.should.be.eql(23)\n\n                done();\n            })\n    } else {\n        console.error(\'Failed to insert into getList8\');\n        done(err);\n    }\n})\n                   ']
+    }, {
+        id: 'remove',
+        name: 'remove(collName: string, id: string, removeDoc?: boolean, cb: Function)',
+        nav: 'remove',
+        desc: 'Remove a document',
+        params: [{
+            name: 'collName',
+            type: 'string',
+            desc: 'Collection Name'
+        }, {
+            name: 'id',
+            type: 'string',
+            desc: 'Mongo Document Id'
+        }, {
+            name: 'removeDoc (optional)',
+            default: 'true',
+            type: 'boolean',
+            desc: 'if true would remove the document else would set isDeleted flag and delTime(Deleted time) on the document. Please note that if isDeleted flag is set, then the corresponding query should be maintained while fetching the documents that are not deleted. This can be used only when a history is crucial'
+        }, {
+            name: 'cb',
+            type: 'function',
+            desc: "Callback Function of type (err, result)"
+        }],
+        example: ['\nvar data = {\n    name: \'test\'\n}\ndb.collection(\'remove3\').insert(data, (err, result) => {\n    if (!err) {\n        helperMongo.remove("remove3", reilt._id, false, (err, result1) => {\n            should.not.exist(err);\n\n            db.collection(\'remove3\').findOne({ _id: result._id }, (err, result2) => {\n                should.not.exist(err);\n                result2.should.be.an("object");\n                result2.isDeleted.should.be.ok;\n                should.exist(result2.deltime)\n\n                done();\n            })\n        })\n    }\n})\n                   ']
+    }, {
+        id: "removeMulti",
+        name: "removeMulti(collName: string, ids: string[], removeDoc?: boolean, verbose?: boolean, cb: Function)",
+        nav: "removeMulti",
+        desc: "Removes Multiple documents",
+        params: [{
+            name: 'collName',
+            type: 'string',
+            desc: 'Collection Name'
+        }, {
+            name: 'id',
+            type: 'string',
+            desc: 'Mongo Document Id'
+        }, {
+            name: 'removeDoc (optional)',
+            default: 'true',
+            type: 'boolean',
+            desc: 'if true would remove the document else would set isDeleted flag and delTime(Deleted time) on the document. Please note that if isDeleted flag is set, then the corresponding query should be maintained while fetching the documents that are not deleted. This can be used only when a history is crucial'
+        }, {
+            name: 'verbose (optional)',
+            default: "false",
+            type: 'boolean',
+            desc: "if true, then each 'id' would be used to remove individual documents (Takes more time), but if any operation fails, then the corresponding error message would be accompanied with the 'id'. if false then all the valid ids would be removed in just one Mongo Operation"
+        }, {
+            name: 'cb',
+            type: 'function',
+            desc: 'Callback function of type (err, results)'
+        }],
+        example: ['\nvar docs = [{\n    name: \'doc1\'\n}, {\n    name: \'doc2\'\n}, {\n    name: \'doc3\'\n}, {\n    name: \'doc4\'\n}]\n\nvar ids = []\ndb.collection("removeMulti").insert(docs, (err, results) => {\n    if (!err) {\n        ids = results.map(res => res._id)\n    }\n    \n    helperMongo.removeMulti("removeMulti", ids, true, (err, results) => {\n        should.not.exist(err)\n        results.should.be.an("object")\n        results.n.should.be.eql(4)\n\n        done();\n    })\n})\n                    ']
+    }, {
+        id: 'splitTimeThenGrp',
+        name: 'splitTimeThenGrp(collName: string, obj: object, cb: Function)',
+        nav: 'splitTimeThenGrp',
+        desc: 'Splits the selected range of documents by time and then groups them based on grouping logic',
+        params: [{
+            name: 'collName',
+            type: 'string',
+            desc: 'Collection Name'
+        }, {
+            name: 'obj',
+            type: 'object',
+            desc: 'options'
+        }, {
+            name: '-> obj.key',
+            type: 'object',
+            desc: 'Timestamp key Options'
+        }, {
+            name: '---> obj.key.name',
+            type: 'string',
+            desc: 'Timestamp field name in the document'
+        }, {
+            name: '---> obj.key.min',
+            type: 'Date',
+            desc: 'Lower limit of query selection for timestamp field'
+        }, {
+            name: '---> obj.key.max',
+            type: 'Date',
+            desc: 'Upper limit of query selection for timestamp field'
+        }, {
+            name: '-> obj.project',
+            type: 'string[]',
+            desc: 'Fields to included in the final result'
+        }, {
+            name: '-> obj.groupBy',
+            type: 'string',
+            desc: 'Grouping interval. Possible values are : year, month, day, hour, minute, second, millisecond'
+        }, {
+            name: '-> obj.groupLogic',
+            type: 'string',
+            desc: 'Mongo Aggregation Group logic ex: $first, $last, $avg, $sum etc'
+        }],
+        example: ['\nvar data = []\nvar currTs = moment()\nvar count = 1000;\nvar interval = 10;\nfor (var i = 0; i < count; i++) {\n    data.push({\n        ts: moment().add(i * interval, "seconds")._d,\n        // ts: currTs + i * 10,\n        x: i\n    })\n}\nvar totalSeconds = count * interval\ndb.collection("splitTimeThenGroup1").insert(data, (err, result) => {\n    if (!err) {\n        var option = {\n            key: {\n                name: "ts",\n                min: moment()._d,\n                max: moment().add(totalSeconds, "seconds")._d,\n            },\n            project: [\'x\'],\n            groupBy: \'hour\',\n            groupLogic: \'$first\'\n        }\n        var expectedCount = Math.ceil(totalSeconds / 60 / 60);\n\n        helperMongo.splitTimeThenGrp("splitTimeThenGroup1", opion, (err, result1) => {\n            result1.should.be.an("array");\n            console.log("Result:", result)\n\n            done();\n        })\n    } else {\n        console.error("Failed to insert into splitTimeThenGroup1", err)\n    }\n})\n                   ']
+    }, {
+        id: 'selectNinM',
+        name: 'selectNinM(collName: string, obj: object, cb: Function)',
+        nav: 'selectNinM',
+        desc: 'Selects n number of documents from m range of selected documents based on grouping logic',
+        params: [{
+            name: 'collName',
+            type: 'string',
+            desc: 'Collection Name'
+        }, {
+            name: 'obj',
+            type: 'object',
+            desc: 'Options'
+        }, {
+            name: '-> obj.numOfPoints',
+            type: 'number',
+            desc: 'Number of points expected in result (M)'
+        }, {
+            name: '-> obj.query',
+            type: 'object',
+            desc: 'Mongo find() query object'
+        }, {
+            name: '-> obj.project',
+            type: 'object',
+            desc: 'Fields to be projected in final result'
+        }, {
+            name: '-> obj.groupLogic',
+            type: 'string',
+            desc: 'Mongo Aggregation Group logic ex: $first, $last, $avg, $sum etc'
+        }],
+        example: ['\nvar data = [];\nfor (var i = 0; i < 100; i++) {\n    data.push({\n        name: \'test\' + i,\n        num: i\n    })\n}\n\ndb.collection("selectNinM1").insert(data, (err, result) => {\n    if (!err) {\n        var obj = {\n            numOfPoints: 10,\n            groupLogic: \'$first\',\n            project: [\'name\', \'num\'],\n            query: {}\n        }\n        helperMongo.selectNinM(\'selectNinM1\',ibj, (err, result1) => {\n            should.not.exist(err);\n            result1.should.be.an(\'array\');\n            result1.length.should.be.eql(10);\n\n            done()\n        })\n    }\n})\n                   ']
+    }]
+};
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    desc: "Create standard CRUD APIs",
+    initialCode: "\nvar CRUD = require('express-toppings').Crud;\nfunction create() {\n    return (req, res, next) => {\n        // Some Operation\n    }\n}\nvar user = {\n    create: create(),\n    get: get(),\n    list: list(),\n    update: update(),\n    remove: remove(),\n    removeMulti: removeMulti()\n}            \n\nvar router = express.Router();\n\nrouter.use(\"/user\", new CRUD(user));\n\n// The above line would create 5 APIs as follows\n// POST /users/ -- user.create\n// GET /users/:id -- user.get\n// GET /users/ -- user.list\n// PUT /users/:id -- user.update\n// DELETE /users/:id -- user.remove\n// DELETE /users?ids=12345&ids=56789 -- user.removeMulti\n                "
+};
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    desc: "JWT implementation on express",
+    initialCode: '\nvar JWT = require("express-toppings").Session.JWT\ninterface IJWTOptions {\n    collName: string;\n    connStr: string;\n    secret: string;\n    validity: number;\n    emailField?: string;\n    passwordField?: string;\n    login?: (user, cb) => void;\n    register?: (user, cb) => void;\n    validate?: (user, cb) => void;\n}\n\nvar options: IJWTOptions = {\n    collName: "users", // users collection\n    connStr: \'jwt_test\', // MongoDB connection string\n    secret: \'secret\',\n    validity: 1, // In days\n    emailField: "email",\n    passwordField: "password",\n}\nvar jwt = new JWT(options, true);\n\napp.post("/login", jwt.login())\napp.post("/register", jwt.register())\napp.use(jwt.validate())\n\n// all other authenticated routes follow this\n                ',
+    methods: [{
+        id: 'login',
+        name: 'login() => ExpressMiddleware',
+        nav: 'login',
+        return: {
+            type: 'ExpressMiddleware',
+            desc: 'Middleware that can handle user login'
+        },
+        desc: 'Middleware that by default handles user login by fetching an user matching the email and verifying saltHash of the password field and returning JWT token, if a login fn is provided then the same would be used for fetching and validating a user',
+        example: ['\napp.post("/login", jwt.login())\n                    ']
+    }, {
+        id: 'register',
+        name: "register() => ExpressMiddleware",
+        nav: 'register',
+        return: {
+            type: 'ExpressMiddleware',
+            desc: 'Middleware that can handle user register'
+        },
+        desc: 'Middleware that by default handles user register by checking uniqueness of email and salthashing password field and returning JWT token, if a register fn is provided then the same would be used',
+        example: ['\napp.post("/register", jwt.register())\n                        ']
+    }, {
+        id: 'validate',
+        name: 'validate() => ExpressMiddleware',
+        nav: 'validate',
+        return: {
+            type: 'ExpressMiddleware',
+            desc: 'Middleware that can handle validation'
+        },
+        desc: 'Middleware that by default handles validation by checking if the token has not been expired and the corresponding id is valid, if a validate fn is provided then the same would be used to fetch the user corresponding to the id',
+        example: ['\n// Use it from the point where authentication is expected\napp.use(jwt.validate())\n                        ']
+    }]
+};
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    desc: "Cookie Session implementation in Express",
+    initialCode: '\nvar Cookie = require(\'express-toppings\').Session.Cookie;\n\ninterface ICookieOptions {\n    collName: string;\n    connStr: string;\n    login: IPassportOptions;\n    register: IPassportOptions;\n    cookie: Object;\n    secret: string;\n    redisStore: Object;\n    passportSerializer?: (user, cb) => void;\n    passportDeserializer?: (userId, cb) => void;\n    passportLogin?: (req, email, passport, cb) => void;\n    passportRegister?: (req, email, passport, cb) => void;\n}\n\nvar options: ICookieOptions = {\n    collName: \'users\', // user collection name\n    connStr: \'test\', // mongoDB connection string\n    login: { // Passport Login options\n        successRedirect: \'/index.html\',\n        failureRedirect: \'/login.html\',\n        failureFlash: flash\n    },\n    register: { // Passport Register options\n        successRedirect: \'/index.html\',\n        failureRedirect: \'/register.html\',\n        failureFlash: flash\n    },\n    cookie: { // express-session cookie options\n        maxAge: 1000 * 60 * 60 * 24,\n        sameSite: true,\n    },\n    secret: \'secret\',\n    redisStore: { // Connect-redis connection options\n        ttl: 1000 * 60 * 60 * 24,\n        host: "localhost",\n        port: 6379,\n        prefix: "sess:"\n    }\n}\n// if you wish to have custom logic for passport local-strategy then\n// you must specify options.passportSerializer, options.passportDeserializer, options.passportLogin and options.passportRegister functions. \n// These function signature are similar to that of passport functions\n\nvar passport = require("passport");\nvar cookie = new Cookie(options);\nvar app = express();\n\n// this order has to be maintained\ncookie.configurePassport(passport);\ncookie.configureSession(app)\n\napp.use(cookie.validate([\'/login.html\', \'/register.html\', {method: \'POST\', url: \'/login\'}, \'/register\'], \'/portal/login\'))\n\napp.post(\'/login\', cookie.login());\napp.post(\'/register\', cookie.register());\n\napp.get("/logout", cookie.logout());\n                ',
+    methods: [{
+        id: 'login',
+        name: 'login() => Express Middleware',
+        nav: 'login',
+        desc: 'Validates if the user exists and then sets Session Cookie on the express response object'
+    }, {
+        id: 'register',
+        name: 'register() => Express Middleware',
+        nav: 'register',
+        desc: 'Will create and insert a User and sets Session Cookies on the express response object'
+    }, {
+        id: 'logout',
+        name: 'logout() => Express Middleware',
+        nav: 'logout',
+        desc: 'Will remove cookie session and go to next() router in the middlewares'
+    }, {
+        id: 'validate',
+        name: 'validate(whitelist?: (string | IUrl)[], failureRedirect?: string): Express Middleware',
+        nav: 'validate',
+        desc: 'If the url is whitelisted next() middleware is called. If the cookie exists n if the cookie is valid then req.user is set on express request object. If not then the user is redirected to failureRedirectUrl else 401 is sent'
+    }]
 };
 
 /***/ })
