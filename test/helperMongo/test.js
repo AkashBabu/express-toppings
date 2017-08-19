@@ -1,7 +1,7 @@
-/// <reference path="../../typings/index.d.ts" />
+/// <reference path="../../dist/index.d.ts" />
 
 var { HelperMongo } = require("../../dist/index")
-var connStr = "sh_test"
+var connStr = "sh_test";
 var helperMongo = new HelperMongo(connStr, true);
 var mongojs = require('mongojs')
 var db = mongojs(connStr)
@@ -9,8 +9,9 @@ var moment = require("moment")
 
 var should = require("chai").should()
 
-var userColl = "users"
-var diffHour = -5.5
+var userColl = "users";
+var diffHour = -5.5;
+
 
 describe("HelperMongo", () => {
 
@@ -18,7 +19,7 @@ describe("HelperMongo", () => {
         db.collection(userColl).remove({}, done)
     })
 
-    after(function (done) {
+    afterEach(function (done) {
         this.timeout(5000);
         db.dropDatabase(done)
     })
@@ -523,6 +524,31 @@ describe("HelperMongo", () => {
                 }
             })
         })
+        it("should apply project and query operations while fetching the data", done => {
+            var data = {
+                name: 'test',
+                get: true
+            }
+            db.collection("getById2").insert(data, (err, result) => {
+                if (!err) {
+                    var options = {
+                        query: { get: true },
+                        project: { name: 1 }
+                    }
+                    helperMongo.getById("getById2", result._id, options, (err, result1) => {
+                        should.not.exist(err);
+                        result1._id.should.be.eql(result._id);
+                        result1.name.should.be.eql(result.name);
+                        should.not.exist(result1.get)
+
+                        done();
+                    })
+                } else {
+                    console.error('Failed to insert into getById2');
+                    done(err);
+                }
+            })
+        })
     })
 
     describe("#getMaxValue()", () => {
@@ -879,6 +905,7 @@ describe("HelperMongo", () => {
     })
 
     describe("#getList()", () => {
+
         it("should fetch all the document in the collection if recordsPerPage is not specified", (done) => {
             var data = [
                 {
@@ -1127,6 +1154,74 @@ describe("HelperMongo", () => {
                 }
             })
         })
+        it("should apply query n project filters specified in the options", done => {
+            var data = [
+                {
+                    name: 'test1',
+                    age: 23
+                }, {
+                    name: 'test2',
+                    age: 25
+                }, {
+                    name: 'test3',
+                    age: 24
+                }
+            ]
+            db.collection('getList8').insert(data, (err, result) => {
+                if (!err) {
+                    helperMongo.getList("getList8", {}, {
+                        query: { name: 'test1' },
+                        project: { age: 1 }
+                    }, (err, res1) => {
+                        should.not.exist(err);
+                        res1.should.be.an("object");
+                        res1.count.should.be.eql(1)
+                        res1.list.length.should.be.eql(1)
+                        res1.list[0].age.should.be.eql(23)
+                        should.not.exist(res1.list[0].name)
+
+                        done();
+                    })
+                } else {
+                    console.error('Failed to insert into getList8');
+                    done(err);
+                }
+            })
+        })
+        it("should override the obj parameter when options has been specified", done => {
+            var data = [
+                {
+                    name: 'test1',
+                    age: 23
+                }, {
+                    name: 'test2',
+                    age: 25
+                }, {
+                    name: 'test3',
+                    age: 24
+                }
+            ]
+            db.collection('getList8').insert(data, (err, result) => {
+                if (!err) {
+                    helperMongo.getList("getList8", {
+                        query: { name: "test2" },
+                    }, {
+                            query: { name: 'test1' },
+                        }, (err, res1) => {
+                            should.not.exist(err);
+                            res1.should.be.an("object");
+                            res1.count.should.be.eql(1)
+                            res1.list.length.should.be.eql(1)
+                            res1.list[0].age.should.be.eql(23)
+
+                            done();
+                        })
+                } else {
+                    console.error('Failed to insert into getList8');
+                    done(err);
+                }
+            })
+        })
     })
 
     describe("#remove()", () => {
@@ -1184,6 +1279,72 @@ describe("HelperMongo", () => {
                 }
             })
         })
+    })
+    describe("#removeMulti()", () => {
+        var docs = [{
+            name: 'doc1'
+        }, {
+            name: 'doc2'
+        }, {
+            name: 'doc3'
+        }, {
+            name: 'doc4'
+        }]
+
+        var ids = []
+
+        beforeEach(done => {
+            db.collection("removeMulti").insert(docs, (err, results) => {
+                if (!err) {
+                    ids = results.map(res => res._id)
+                }
+                done(err)
+            })
+        })
+        afterEach(done => {
+            db.collection("removeMulti").remove({}, done)
+        })
+
+        it("should remove multiple documents rapidly", done => {
+            var lIds = ids.slice()
+            helperMongo.removeMulti("removeMulti", lIds, true, (err, results) => {
+                should.not.exist(err)
+                results.should.be.an("object")
+                results.n.should.be.eql(4)
+
+                done();
+            })
+
+        })
+        it("should remove multiple documents rapidly, and ignore invalid ids", done => {
+            var lIds = ids.slice()
+            lIds.push("asdf")
+            helperMongo.removeMulti("removeMulti", lIds, true, (err, results) => {
+                should.not.exist(err)
+                results.should.be.an("object")
+                results.n.should.be.eql(4)
+
+                done();
+            })
+        })
+        it("should remove multiple documents with verbose output", done => {
+            var lIds = ids.slice()
+            lIds.push("asdf")
+            var unknownId = db.ObjectId()
+            lIds.push(unknownId)
+            helperMongo.removeMulti("removeMulti", lIds, true, true, (err, results) => {
+                should.not.exist(err)
+
+                results.should.be.an("object")
+                results.removed.should.be.eql(4)
+                results.failed.should.be.an("object")
+                results.failed["asdf"].should.be.eql("Invalid Id")
+                results.failed[unknownId].should.be.eql("Document matching the given id does not exist")
+
+                done();
+            })
+        })
+
     })
 
     describe.skip("#splitTimeThenGrp()", () => {
