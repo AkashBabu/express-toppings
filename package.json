@@ -74,7 +74,8 @@
     "url": "git+https://github.com/AkashBabu/express-toppings.git"
   },
   "scripts": {
-    "test": "mocha test/**/* --recursive"
+    "test": "mocha test/**/* --recursive",
+    "coverage": "istanbul cover _mocha -R spec test/**/*"
   },
   "version": "1.2.0"
 }
