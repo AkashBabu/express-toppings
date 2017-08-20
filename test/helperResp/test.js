@@ -52,7 +52,7 @@ describe("HelperResp", () => {
         })
     })
 
-    describe.only("#handleResult", () => {
+    describe("#handleResult", () => {
         it("should respond with 200 [] when there  is no content", (done) => {
             request.get("/handleResult")
                 .end((err, res) => {

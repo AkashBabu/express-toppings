@@ -115,7 +115,7 @@ describe("CRUD on Users", function () {
             })
     })
 
-    it.only("should delete Multiple Users on /user Delete", done => {
+    it("should delete Multiple Users on /user Delete", done => {
         var lIds = ids.slice()
         var query = ""
         lIds.forEach(id => {
