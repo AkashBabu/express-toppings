@@ -3,4 +3,5 @@ node_modules/
 jsconfig.json
 dist/
 typings/
+coverage/
 
