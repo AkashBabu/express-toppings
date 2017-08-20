@@ -27,6 +27,32 @@ describe('helper', () => {
         })
     })
 
+    describe("#retainKeysInObj()", () => {
+        it("should retain only the specified keys in the given object", () => {
+            var obj = {
+                a: 1,
+                b: 1,
+                c: 1
+            }
+            var modObj = helper.retainKeysInObj(obj, ["a", 'b'])
+            should.not.exist(modObj.c)
+            modObj.a.should.be.eql(obj.a)
+            modObj.b.should.be.eql(obj.b)
+            should.exist(obj.c)
+        })
+        it("should alter the given obj if sameObj=true", () => {
+            var obj = {
+                a: 1,
+                b: 1,
+                c: 1
+            }
+            helper.retainKeysInObj(obj, ["a", 'b'], true)
+            obj.a.should.be.eql(1)
+            obj.b.should.be.eql(1)
+            should.not.exist(obj.c)
+        })
+    })
+
     describe("#weakPwd()", () => {
         it("should return error if password length is not greater than minLen", () => {
             var pwd = "asdf"

@@ -101,7 +101,7 @@ export class Helper implements IHelper {
             return obj;
         } else {
 
-            let result = {};
+            const result = {};
             retain.forEach((key) => {
                 result[key] = obj[key];
             })

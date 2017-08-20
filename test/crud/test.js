@@ -122,7 +122,7 @@ describe("CRUD on Users", function () {
             query += "&ids=" + id
         })
 
-        console.log("query:", query);
+        // console.log("query:", query);
         request.del("/users?" + query)
             .end((err, res) => {
                 should.not.exist(err)
