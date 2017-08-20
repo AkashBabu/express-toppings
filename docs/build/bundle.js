@@ -555,7 +555,7 @@ var app = angular.module('app', ['ngAria', 'ngAnimate', 'ngMaterial', "ngRoute",
 
 __webpack_require__(24)(app);
 __webpack_require__(25)(app);
-__webpack_require__(26)(app);
+__webpack_require__(34)(app);
 // require("./app.directives")(app);
 
 /***/ }),
@@ -88637,159 +88637,20 @@ module.exports = function (app) {
 module.exports = function (app) {
     app.service('contentService', [function () {
         this.content = {
-            "Helper": __webpack_require__(27),
-            "Response": __webpack_require__(28),
-            "Validations": __webpack_require__(29),
-            "Transformations": __webpack_require__(30),
-            "MongoDB": __webpack_require__(31),
-            "CRUD": __webpack_require__(32),
-            "Session-JWT": __webpack_require__(33),
-            "Session-Cookie": __webpack_require__(34)
+            "Helper": __webpack_require__(26),
+            "Response": __webpack_require__(27),
+            "Validations": __webpack_require__(28),
+            "Transformations": __webpack_require__(29),
+            "MongoDB": __webpack_require__(30),
+            "CRUD": __webpack_require__(31),
+            "Session-JWT": __webpack_require__(32),
+            "Session-Cookie": __webpack_require__(33)
         };
     }]);
 };
 
 /***/ }),
 /* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function (app) {
-
-    app.controller("navCtrl", ['$mdMedia', '$scope', '$rootScope', '$location', "contentService", "$routeSegment", function ($mdMedia, $scope, $rootScope, $location, contentService, $routeSegment) {
-        var vm = this;
-        $rootScope.showSidenav = $mdMedia("gt-sm");
-
-        vm.content = contentService.content;
-
-        vm.changeLocation = function (location) {
-            $location.path(location);
-        };
-
-        vm.isSegment = function (segment) {
-            return $location.path() == $routeSegment.getSegmentUrl(segment);
-        };
-
-        vm.isUrl = function (url) {
-            return $location.path() == url;
-        };
-
-        vm.isApiSelected = function () {
-            return $location.path().startsWith("/api");
-        };
-
-        // Watch if the screen has been resized and Show/Hide the sidenav accordingly
-        $scope.$watch(function () {
-            return !$mdMedia("gt-sm");
-        }, function (newVal) {
-            if (newVal) {
-                $rootScope.showSidenav = false;
-            } else {
-                $rootScope.showSidenav = true;
-            }
-        });
-    }]);
-
-    app.controller("commonCtrl", ['$rootScope', "$timeout", function ($rootScope, $timeout) {
-        var vm = this;
-
-        vm.toggleSidenav = function () {
-            $rootScope.showSidenav = !$rootScope.showSidenav;
-        };
-
-        $timeout(function () {
-            Prism.highlightAll();
-        });
-    }]);
-
-    app.controller("introductionCtrl", ["$controller", "$scope", function ($controller, $scope) {
-        var vm = this;
-        angular.extend(vm, $controller("commonCtrl", { $scope: $scope }));
-        vm.heading = "Introduction";
-    }]);
-
-    app.controller("apiCtrl", ["$controller", "$mdMedia", "$scope", "$timeout", "$routeSegment", "$anchorScroll", "contentService", function ($controller, $mdMedia, $scope, $timeout, $routeSegment, $anchorScroll, contentService) {
-        var vm = this;
-        angular.extend(vm, $controller("commonCtrl", { $scope: $scope }));
-
-        vm.content = contentService.content;
-
-        vm.isString = function (data) {
-            return typeof data == 'string';
-        };
-
-        vm.goto = function (id) {
-            $anchorScroll(id);
-        };
-
-        vm.changeContent = function (heading) {
-            vm.currHeading = heading;
-            vm.heading = "API - " + vm.currHeading;
-            vm.currContent = vm.content[vm.currHeading];
-            $timeout(function () {
-                Prism.highlightAll();
-            });
-        };
-
-        vm.getType = function (param) {
-            if (param.type) {
-                return param.type;
-            }
-
-            var desc = param.desc;
-            if (desc) {
-                var start = desc.indexOf('[');
-                var end = desc.lastIndexOf(']');
-
-                if (start == -1 || end == -1) {
-                    return false;
-                } else {
-                    return desc.slice(start + 1, end);
-                }
-            } else {
-                return false;
-            }
-        };
-
-        vm.getDesc = function (param) {
-            if (param.type) {
-                return param.desc;
-            }
-
-            var desc = param.desc;
-            if (desc) {
-                var end = desc.lastIndexOf("]");
-
-                if (end > -1) {
-                    return desc.slice(end + 2);
-                } else {
-                    return desc;
-                }
-            } else {
-                return false;
-            }
-        };
-
-        vm.changeContent($routeSegment.$routeParams.module || "Helper");
-    }]);
-
-    app.controller("buildAnAppCtrl", ["$controller", "$scope", function ($controller, $scope) {
-        var vm = this;
-        angular.extend(vm, $controller("commonCtrl", { $scope: $scope }));
-        vm.heading = "Building an app with Express-Toppings";
-    }]);
-
-    app.controller("changeLogCtrl", ["$controller", "$scope", function ($controller, $scope) {
-        var vm = this;
-        angular.extend(vm, $controller("commonCtrl", { $scope: $scope }));
-        vm.heading = 'Change Log';
-    }]);
-};
-
-/***/ }),
-/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -89025,7 +88886,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -89046,7 +88907,7 @@ module.exports = {
             name: 'data',
             desc: '[any] Response data'
         }],
-        example: ['\n// if the request was a success then\nhelperResp.success(res);\n                        ']
+        example: ['\n// if the request was a success then\nhelperResp.success(res, data);\n// Response would be like:\n// 200\n// {error: false, data: data}\n// data: Defaults --> {}\n                        ']
     }, {
         id: 'failed',
         name: 'failed(res: express.Response, msg?: string)',
@@ -89060,7 +88921,7 @@ module.exports = {
             default: 'Failed',
             desc: '[string] Error Message'
         }],
-        example: ['\n// if the request was a failure\nhelperResp.failed(res, \'Name missing\')\n                        ']
+        example: ['\n// if the request was a failure\nhelperResp.failed(res, errMsg)\n// Response would be like:\n// 400\n// {error: true, data: errMsg}\n// data: Defaults --> "Failed"\n\n                        ']
     }, {
         id: 'post',
         name: 'post(res: express.Response, data?: any)',
@@ -89074,7 +88935,7 @@ module.exports = {
             desc: '[any] Response data',
             default: "CREATED"
         }],
-        example: ['\n// If the data was successfully inserted into DB then\ndb.collection(\'test\').insert(data, (err, result) => {\n    if(result) {\n        helperResp.post(res, result)\n    } else {\n        if(err) {\n            helperResp.serverError(res, err)\n        } else {\n            helperResp.failed(res, "Creation Failed")\n        }\n    }\n})\n                    ']
+        example: ['\n// If the data was successfully inserted into DB then\ndb.collection(\'test\').insert(data, (err, result) => {\n    if(result) {\n        helperResp.post(res, result)\n    }\n})\n// Response would be like:\n// 201\n// {error: false, data: result}\n// data: Defaults --> "CREATED"\n                    ']
     }, {
         id: 'put',
         name: 'put(res: express.Response, data?: any)',
@@ -89088,7 +88949,7 @@ module.exports = {
             desc: '[any] Response data',
             default: "UPDATED"
         }],
-        example: ['\n// If the data was successfully updated in DB then\ndb.collection(\'test\').update({}, {$set: data}, (err, result) => {\n    if(result && result.nModified) {\n        helperResp.put(res, result)\n    } else {\n        if(err) {\n            helperResp.serverError(res, err)\n        } else {\n            helperResp.failed(res, "Update Failed")\n        }\n    }\n})\n                    ']
+        example: ['\n// If the data was successfully updated in DB then\ndb.collection(\'test\').update({}, {$set: data}, (err, result) => {\n    if(result && result.nModified) {\n        helperResp.put(res, result)\n    }\n})\n// Response would be like:\n// 202\n// {error: false, data: result}\n// data: Defaults --> "UPDATED"\n                    ']
     }, {
         id: 'delete',
         name: 'delete(res: express.Response, data?: any)',
@@ -89102,7 +88963,7 @@ module.exports = {
             desc: '[any] Response data',
             default: "DELETED"
         }],
-        example: ['\n// If the data was successfully removed from DB then\ndb.collection(\'test\').remove(data, (err, result) => {\n    if(result) {\n        helperResp.delete(res, result)\n    } else {\n        if(err) {\n            helperResp.serverError(res, err)\n        } else {\n            helperResp.failed(res, "Delete Failed")\n        }\n    }\n})\n                    ']
+        example: ['\n// If the data was successfully removed from DB then\ndb.collection(\'test\').remove(data, (err, result) => {\n    if(result) {\n        helperResp.delete(res, result)\n    }\n})\n// Response would be like:\n// 202\n// {error: false, data: result}\n// data: Defaults --> "DELETED"\n                    ']
     }, {
         id: 'get',
         name: 'get(res: express.Response, data?: any, list?: boolean)',
@@ -89121,11 +88982,11 @@ module.exports = {
             default: 'true',
             desc: '[boolean] if true then data defaults to [] else {}'
         }],
-        example: ['\n// If the data was successfully obtained from DB then\ndb.collection(\'test\').find({}, (err, result) => {\n    if(result) {\n        helperResp.get(res, result, true);\n    } else {\n        if(err) {\n            helperResp.serverError(res, err)\n        } else {\n            helperResp.failed(res, "Failed to get data from DB")\n        }\n    }\n})\n                    ']
+        example: ['\n// If the data was successfully obtained from DB then\ndb.collection(\'test\').find({}, (err, result) => {\n    if(result) {\n        helperResp.get(res, result, true);\n    }\n})\n// Response would be like:\n// 200\n// {error: false, data: result}\n// data: Defaults --> {count: 0, list: []}\n                    ']
     }, {
         id: 'unauth',
         name: 'unauth(res: express.Response, msg?: string)',
-        nav: 'unatuh',
+        nav: 'unauth',
         desc: 'HTTP 401 handler',
         params: [{
             name: 'res',
@@ -89135,7 +88996,7 @@ module.exports = {
             desc: '[string] Response data',
             default: "UNAUTHORIZED ACCESS"
         }],
-        example: ['\n// If the user is unauthorized\nhelperResp.unauth(res);\n                    ']
+        example: ['\n// If the user is unauthorized\nhelperResp.unauth(res, msg);\n// Response would be like:\n// 401\n// {error: true, data: msg}\n// data: Defaults --> "UNAUTHORIZED ACCESS"\n                    ']
     }, {
         id: 'serverError',
         name: 'serverError(res: express.Response, msg?: string)',
@@ -89149,22 +89010,25 @@ module.exports = {
             desc: '[string] Response data',
             default: "INTERNAL SERVER ERROR"
         }],
-        example: ['\n// On Internal Server Error                     \nhelperResp.serverError(res);\n                    ']
+        example: ['\n// On Internal Server Error                     \nhelperResp.serverError(res, msg);\n// Response would be like:\n// 500\n// {error: true, data: msg}\n// data: Defaults --> "INTERNAL SERVER ERROR"\n                    ']
     }, {
         id: 'handleResult',
-        name: 'handleResult(res: express.Response) => (err: any, result: any, type: string)',
+        name: 'handleResult(res: express.Response, defaultResult: any) => (err: any, result: any)',
         nav: 'handleResult',
         desc: 'Generic Callback Result handler',
         params: [{
             name: 'res',
             desc: 'Express Response Object'
-        }]
-    }],
-    example: ['\n// If data is obtained from a callback(err, result), then replace it with handleResult\ndb.collection(\'test\').find({}, helperResp.handleResult(res));                \n                ']
+        }, {
+            name: 'defaultResult',
+            desc: "Default data to be used when no result was passed to callback function"
+        }],
+        example: ['\n    // If data is obtained from a callback(err, result), then replace it with handleResult\n    db.collection(\'test\').find({}, helperResp.handleResult(res)); \n    // Response would be like:\n    // 1. 200\n    //    {error: false, data: result}\n    //    data: Defaults --> []\n    // 2. 500\n    //    {error: true, data: []}\n                    ', '\n    // If data is obtained from a callback(err, result), then replace it with handleResult\n    db.collection(\'test\').findOne({}, helperResp.handleResult(res, {}));             \n    // Response would be like:\n    // 1. 200\n    //    {error: false, data: result}\n    //    data: Defaults --> []\n    // 2. 500\n    //    {error: true, data: {}}\n\n\n    // **By Default when no result is passed to the callback function, \'data\' uses whatever is specified as \'defaultResult\'**\n        ']
+    }]
 };
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -89327,7 +89191,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -89444,7 +89308,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -89824,7 +89688,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -89836,7 +89700,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -89879,7 +89743,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -89909,6 +89773,145 @@ module.exports = {
         nav: 'validate',
         desc: 'If the url is whitelisted next() middleware is called. If the cookie exists n if the cookie is valid then req.user is set on express request object. If not then the user is redirected to failureRedirectUrl else 401 is sent'
     }]
+};
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (app) {
+
+    app.controller("navCtrl", ['$mdMedia', '$scope', '$rootScope', '$location', "contentService", "$routeSegment", function ($mdMedia, $scope, $rootScope, $location, contentService, $routeSegment) {
+        var vm = this;
+        $rootScope.showSidenav = $mdMedia("gt-sm");
+
+        vm.content = contentService.content;
+
+        vm.changeLocation = function (location) {
+            $location.path(location);
+        };
+
+        vm.isSegment = function (segment) {
+            return $location.path() == $routeSegment.getSegmentUrl(segment);
+        };
+
+        vm.isUrl = function (url) {
+            return $location.path() == url;
+        };
+
+        vm.isApiSelected = function () {
+            return $location.path().startsWith("/api");
+        };
+
+        // Watch if the screen has been resized and Show/Hide the sidenav accordingly
+        $scope.$watch(function () {
+            return !$mdMedia("gt-sm");
+        }, function (newVal) {
+            if (newVal) {
+                $rootScope.showSidenav = false;
+            } else {
+                $rootScope.showSidenav = true;
+            }
+        });
+    }]);
+
+    app.controller("commonCtrl", ['$rootScope', "$timeout", function ($rootScope, $timeout) {
+        var vm = this;
+
+        vm.toggleSidenav = function () {
+            $rootScope.showSidenav = !$rootScope.showSidenav;
+        };
+
+        $timeout(function () {
+            Prism.highlightAll();
+        });
+    }]);
+
+    app.controller("introductionCtrl", ["$controller", "$scope", function ($controller, $scope) {
+        var vm = this;
+        angular.extend(vm, $controller("commonCtrl", { $scope: $scope }));
+        vm.heading = "Introduction";
+    }]);
+
+    app.controller("apiCtrl", ["$controller", "$mdMedia", "$scope", "$timeout", "$routeSegment", "$anchorScroll", "contentService", function ($controller, $mdMedia, $scope, $timeout, $routeSegment, $anchorScroll, contentService) {
+        var vm = this;
+        angular.extend(vm, $controller("commonCtrl", { $scope: $scope }));
+
+        vm.content = contentService.content;
+
+        vm.isString = function (data) {
+            return typeof data == 'string';
+        };
+
+        vm.goto = function (id) {
+            $anchorScroll(id);
+        };
+
+        vm.changeContent = function (heading) {
+            vm.currHeading = heading;
+            vm.heading = "API - " + vm.currHeading;
+            vm.currContent = vm.content[vm.currHeading];
+            $timeout(function () {
+                Prism.highlightAll();
+            });
+        };
+
+        vm.getType = function (param) {
+            if (param.type) {
+                return param.type;
+            }
+
+            var desc = param.desc;
+            if (desc) {
+                var start = desc.indexOf('[');
+                var end = desc.lastIndexOf(']');
+
+                if (start == -1 || end == -1) {
+                    return false;
+                } else {
+                    return desc.slice(start + 1, end);
+                }
+            } else {
+                return false;
+            }
+        };
+
+        vm.getDesc = function (param) {
+            if (param.type) {
+                return param.desc;
+            }
+
+            var desc = param.desc;
+            if (desc) {
+                var end = desc.lastIndexOf("]");
+
+                if (end > -1) {
+                    return desc.slice(end + 2);
+                } else {
+                    return desc;
+                }
+            } else {
+                return false;
+            }
+        };
+
+        vm.changeContent($routeSegment.$routeParams.module || "Helper");
+    }]);
+
+    app.controller("buildAnAppCtrl", ["$controller", "$scope", function ($controller, $scope) {
+        var vm = this;
+        angular.extend(vm, $controller("commonCtrl", { $scope: $scope }));
+        vm.heading = "Building an app with Express-Toppings";
+    }]);
+
+    app.controller("changeLogCtrl", ["$controller", "$scope", function ($controller, $scope) {
+        var vm = this;
+        angular.extend(vm, $controller("commonCtrl", { $scope: $scope }));
+        vm.heading = 'Change Log';
+    }]);
 };
 
 /***/ })

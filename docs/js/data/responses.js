@@ -25,7 +25,11 @@ var helperResp = new HelperResp();
         example: [
             `
 // if the request was a success then
-helperResp.success(res);
+helperResp.success(res, data);
+// Response would be like:
+// 200
+// {error: false, data: data}
+// data: Defaults --> {}
                         `
         ]
     }, {
@@ -44,7 +48,12 @@ helperResp.success(res);
         example: [
             `
 // if the request was a failure
-helperResp.failed(res, 'Name missing')
+helperResp.failed(res, errMsg)
+// Response would be like:
+// 400
+// {error: true, data: errMsg}
+// data: Defaults --> "Failed"
+
                         `
         ]
     }, {
@@ -65,14 +74,12 @@ helperResp.failed(res, 'Name missing')
 db.collection('test').insert(data, (err, result) => {
     if(result) {
         helperResp.post(res, result)
-    } else {
-        if(err) {
-            helperResp.serverError(res, err)
-        } else {
-            helperResp.failed(res, "Creation Failed")
-        }
     }
 })
+// Response would be like:
+// 201
+// {error: false, data: result}
+// data: Defaults --> "CREATED"
                     `]
     }, {
         id: 'put',
@@ -92,14 +99,12 @@ db.collection('test').insert(data, (err, result) => {
 db.collection('test').update({}, {$set: data}, (err, result) => {
     if(result && result.nModified) {
         helperResp.put(res, result)
-    } else {
-        if(err) {
-            helperResp.serverError(res, err)
-        } else {
-            helperResp.failed(res, "Update Failed")
-        }
     }
 })
+// Response would be like:
+// 202
+// {error: false, data: result}
+// data: Defaults --> "UPDATED"
                     `]
     }, {
         id: 'delete',
@@ -119,14 +124,12 @@ db.collection('test').update({}, {$set: data}, (err, result) => {
 db.collection('test').remove(data, (err, result) => {
     if(result) {
         helperResp.delete(res, result)
-    } else {
-        if(err) {
-            helperResp.serverError(res, err)
-        } else {
-            helperResp.failed(res, "Delete Failed")
-        }
     }
 })
+// Response would be like:
+// 202
+// {error: false, data: result}
+// data: Defaults --> "DELETED"
                     `]
     }, {
         id: 'get',
@@ -151,19 +154,17 @@ db.collection('test').remove(data, (err, result) => {
 db.collection('test').find({}, (err, result) => {
     if(result) {
         helperResp.get(res, result, true);
-    } else {
-        if(err) {
-            helperResp.serverError(res, err)
-        } else {
-            helperResp.failed(res, "Failed to get data from DB")
-        }
     }
 })
+// Response would be like:
+// 200
+// {error: false, data: result}
+// data: Defaults --> {count: 0, list: []}
                     `]
     }, {
         id: 'unauth',
         name: 'unauth(res: express.Response, msg?: string)',
-        nav: 'unatuh',
+        nav: 'unauth',
         desc: 'HTTP 401 handler',
         params: [{
             name: 'res',
@@ -175,7 +176,11 @@ db.collection('test').find({}, (err, result) => {
         }],
         example: [`
 // If the user is unauthorized
-helperResp.unauth(res);
+helperResp.unauth(res, msg);
+// Response would be like:
+// 401
+// {error: true, data: msg}
+// data: Defaults --> "UNAUTHORIZED ACCESS"
                     `]
     }, {
         id: 'serverError',
@@ -192,22 +197,47 @@ helperResp.unauth(res);
         }],
         example: [`
 // On Internal Server Error                     
-helperResp.serverError(res);
+helperResp.serverError(res, msg);
+// Response would be like:
+// 500
+// {error: true, data: msg}
+// data: Defaults --> "INTERNAL SERVER ERROR"
                     `]
     }, {
         id: 'handleResult',
-        name: 'handleResult(res: express.Response) => (err: any, result: any, type: string)',
+        name: 'handleResult(res: express.Response, defaultResult: any) => (err: any, result: any)',
         nav: 'handleResult',
         desc: 'Generic Callback Result handler',
         params: [
             {
                 name: 'res',
                 desc: 'Express Response Object'
+            }, {
+                name: 'defaultResult',
+                desc: "Default data to be used when no result was passed to callback function"
             }
-        ]
+        ],
+        example: [`
+    // If data is obtained from a callback(err, result), then replace it with handleResult
+    db.collection('test').find({}, helperResp.handleResult(res)); 
+    // Response would be like:
+    // 1. 200
+    //    {error: false, data: result}
+    //    data: Defaults --> []
+    // 2. 500
+    //    {error: true, data: []}
+                    `, `
+    // If data is obtained from a callback(err, result), then replace it with handleResult
+    db.collection('test').findOne({}, helperResp.handleResult(res, {}));             
+    // Response would be like:
+    // 1. 200
+    //    {error: false, data: result}
+    //    data: Defaults --> []
+    // 2. 500
+    //    {error: true, data: {}}
+
+
+    // **By Default when no result is passed to the callback function, 'data' uses whatever is specified as 'defaultResult'**
+        `]
     }],
-    example: [`
-// If data is obtained from a callback(err, result), then replace it with handleResult
-db.collection('test').find({}, helperResp.handleResult(res));                
-                `]
 }
