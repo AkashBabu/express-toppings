@@ -32,40 +32,26 @@ class HelperResp {
     /**
      * Callback Handler
      * @param res Express Response object
+     * @param defaultResult Default data, if no result was passed to callback
      */
-    handleResult(res) {
-        return (err, result, type = "array") => {
-            type = type.toLowerCase();
+    handleResult(res, defaultResult) {
+        return (err, result) => {
+            defaultResult = defaultResult || [];
             if (!err) {
                 res.status(200).send({
                     error: false,
-                    data: this.isUndefined(result) ? (type == "array" ? [] : {}) : result
+                    data: this.isUndefined(result) ? defaultResult : result
                 });
             }
             else {
                 this.logger.error("HELPER_RESP HandleResult Err:", err);
                 res.status(500).send({
                     error: true,
-                    data: type == "array" ? [] : {}
+                    data: defaultResult
                 });
             }
         };
     }
-    // public handleResult(res: IHTTPResp, err: Error, result: any, type = "array"): void {
-    //     type = type.toLowerCase();
-    //     if (!err) {
-    //         res.status(200).send({
-    //             error: false,
-    //             data: this.isUndefined(result) ? (type == "array" ? [] : {}) : result
-    //         })
-    //     } else {
-    //         this.logger.error("HELPER_RESP HandleResult Err:", err)
-    //         res.status(500).send({
-    //             error: true,
-    //             data: type == "array" ? [] : {}
-    //         })
-    //     }
-    // }
     /**
      * 200 handler
      * @param res Express Response object

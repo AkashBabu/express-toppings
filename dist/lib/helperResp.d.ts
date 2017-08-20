@@ -1,8 +1,11 @@
 import { IHTTPResp } from "./helper";
+export interface ICallback {
+    (err: Error, result: any): void;
+}
 export interface IHelperResp {
     unauth(res: IHTTPResp, comment?: string): void;
     serverError(res: IHTTPResp, comment?: string): void;
-    handleResult(res: IHTTPResp, err: Error, result: any, type?: string): void;
+    handleResult(res: IHTTPResp, defaultResult: any): ICallback;
     success(res: IHTTPResp, data?: any): void;
     failed(res: IHTTPResp, data?: string): void;
     post(res: IHTTPResp, data?: any): void;
@@ -28,8 +31,9 @@ export declare class HelperResp implements IHelperResp {
     /**
      * Callback Handler
      * @param res Express Response object
+     * @param defaultResult Default data, if no result was passed to callback
      */
-    handleResult(res: IHTTPResp): Function;
+    handleResult(res: IHTTPResp, defaultResult: any): ICallback;
     /**
      * 200 handler
      * @param res Express Response object
