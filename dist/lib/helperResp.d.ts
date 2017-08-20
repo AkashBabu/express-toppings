@@ -33,7 +33,7 @@ export declare class HelperResp implements IHelperResp {
      * @param res Express Response object
      * @param defaultResult Default data, if no result was passed to callback
      */
-    handleResult(res: IHTTPResp, defaultResult: any): ICallback;
+    handleResult(res: IHTTPResp, defaultResult?: any): ICallback;
     /**
      * 200 handler
      * @param res Express Response object

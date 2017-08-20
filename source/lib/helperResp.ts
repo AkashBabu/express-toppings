@@ -53,7 +53,7 @@ export class HelperResp implements IHelperResp {
      * @param res Express Response object
      * @param defaultResult Default data, if no result was passed to callback
      */
-    public handleResult(res: IHTTPResp, defaultResult: any): ICallback {
+    public handleResult(res: IHTTPResp, defaultResult?: any): ICallback {
         return (err: Error, result: any): void => {
             defaultResult = defaultResult || [];
 
