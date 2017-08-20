@@ -52,7 +52,7 @@ describe("HelperResp", () => {
         })
     })
 
-    describe("#handleResult", () => {
+    describe.only("#handleResult", () => {
         it("should respond with 200 [] when there  is no content", (done) => {
             request.get("/handleResult")
                 .end((err, res) => {
@@ -77,7 +77,7 @@ describe("HelperResp", () => {
                 })
         })
         it("should respond with 200 with data in response as array", (done) => {
-            request.get("/handleResult/array")
+            request.get("/handleResult/defaultRes/array")
                 .end((err, res) => {
                     res.should.have.status(200)
                     res.body.error.should.not.be.ok
@@ -88,7 +88,7 @@ describe("HelperResp", () => {
                 })
         })
         it("should respond with 200 with data in response as object", (done) => {
-            request.get("/handleResult/object")
+            request.get("/handleResult/defaultRes/object")
                 .end((err, res) => {
                     res.should.have.status(200)
                     res.body.error.should.not.be.ok
@@ -112,7 +112,7 @@ describe("HelperResp", () => {
         })
     })
 
-    describe("#success", function() {
+    describe("#success", function () {
         it("should respond with http success", (done) => {
             request.get("/success")
                 .end((err, res) => {
@@ -126,7 +126,7 @@ describe("HelperResp", () => {
         })
     })
 
-    describe("#failed", function() {
+    describe("#failed", function () {
         it("should respond with http failure", (done) => {
             request.get("/failed")
                 .end((err, res) => {

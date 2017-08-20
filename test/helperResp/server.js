@@ -2,7 +2,7 @@ var express = require('express')
 var app = express();
 
 var { HelperResp } = require("../../dist/index")
-var helperResp = new HelperResp(false);
+var helperResp = new HelperResp(true);
 
 app.get("/unauth", (req, res) => {
     helperResp.unauth(res, req.query.comments)
@@ -15,7 +15,6 @@ app.get("/serverError", (req, res) => {
 app.get("/handleResult", (req, res) => {
     setTimeout(() => {
         helperResp.handleResult(res)(null, Object.keys(req.query).length ? req.query : null)
-        // helperResp.handleResult(res, null, Object.keys(req.query).length ? req.query : null)
     }, 100)
 })
 app.get("/handleResult/error", (req, res) => {
@@ -23,10 +22,11 @@ app.get("/handleResult/error", (req, res) => {
         helperResp.handleResult(res)("Test Error", null)
     }, 100)
 })
-app.get("/handleResult/:type", (req, res) => {
-    setTimeout(function () {
-        helperResp.handleResult(res)(null, Object.keys(req.query).length ? req.query : null, req.params.type)
-    }, 100)
+app.get("/handleResult/defaultRes/array", (req, res) => {
+    setTimeout(helperResp.handleResult(res, []), 100);
+})
+app.get("/handleResult/defaultRes/object", (req, res) => {
+    setTimeout(helperResp.handleResult(res, {}), 100);
 })
 
 app.get("/success", function (req, res) {
